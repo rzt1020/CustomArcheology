@@ -1,0 +1,38 @@
+name: CustomArcheology
+authors: ['rzt1020', 'PQguanfang']
+version: '${project.version}'
+main: cn.myrealm.customarcheology.CustomArcheology
+api-version: '1.20'
+commands:
+  customarcheology:
+    description: CustomArcheology Main Command
+    usage: /customarcheology
+    aliases: [ca, archeology]
+
+permissions:
+  customarcheology.*:
+    default: op
+    children:
+      customarcheology.command.*: true
+      customarcheology.play.*: true
+  customarcheology.command.*:
+    default: op
+    children:
+      customarcheology.command.help: true
+      customarcheology.command.give: true
+  customarcheology.command.help:
+    default: op
+  customarcheology.command.give:
+    default: op
+  customarcheology.play.*:
+    default: true
+    children:
+      customarcheology.play.craft: true
+      customarcheology.play.archeology: true
+      customarcheology.play.highlight: true
+  customarcheology.play.craft:
+    default: true
+  customarcheology.play.archeology:
+    default: true
+  customarcheology.play.highlight:
+    default: true
