@@ -2,7 +2,8 @@ package cn.myrealm.customarcheology.commands.subcommands;
 
 import cn.myrealm.customarcheology.commands.SubCommand;
 import cn.myrealm.customarcheology.managers.managers.BlockManager;
-import cn.myrealm.customarcheology.util.Permissions;
+import cn.myrealm.customarcheology.utils.enums.Messages;
+import cn.myrealm.customarcheology.utils.enums.Permissions;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -21,7 +22,7 @@ public class GiveCommand implements SubCommand {
 
     @Override
     public String getDescription() {
-        return "Give player custom archeology block";
+        return Messages.COMMAND_GIVE.getMessage();
     }
 
     @Override
@@ -50,7 +51,7 @@ public class GiveCommand implements SubCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) throws Exception {
-        if (Permissions.GIVE.hasPermission(sender)) {
+        if (!Permissions.GIVE.hasPermission(sender)) {
             return;
         }
 

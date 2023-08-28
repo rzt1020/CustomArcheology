@@ -1,4 +1,4 @@
-package cn.myrealm.customarcheology.util.player;
+package cn.myrealm.customarcheology.utils.player;
 
 import cn.myrealm.customarcheology.CustomArcheology;
 import org.bukkit.Color;
@@ -45,14 +45,8 @@ public class PlayerLookAt {
     }
     public void lookAtBlockChange(Block before, Block after) {
         if (after.getType().equals(Material.DIAMOND_BLOCK)) {
-            Particle.DustOptions dustOptions = new Particle.DustOptions(Color.RED, 1); // Color.RED and size 1
+            Particle.DustOptions dustOptions = new Particle.DustOptions(Color.RED, 1);
             after.getWorld().spawnParticle(Particle.REDSTONE, after.getLocation().add(0.5, 0.5, 0.5), 10, 0.5, 0.5, 0.5, 0, dustOptions);
         }
-    }
-    public Block getLookAtBlock() {
-        return lookAtBlock;
-    }
-    public void save() {
-
     }
 }

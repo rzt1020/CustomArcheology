@@ -2,7 +2,8 @@ package cn.myrealm.customarcheology.commands.subcommands;
 
 import cn.myrealm.customarcheology.commands.MainCommand;
 import cn.myrealm.customarcheology.commands.SubCommand;
-import cn.myrealm.customarcheology.util.Permissions;
+import cn.myrealm.customarcheology.utils.enums.Messages;
+import cn.myrealm.customarcheology.utils.enums.Permissions;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class HelpCommand implements SubCommand {
 
     @Override
     public String getDescription() {
-        return "Get descriptions of all commands";
+        return Messages.COMMAND_HELP.getMessage();
     }
 
     @Override
@@ -42,9 +43,9 @@ public class HelpCommand implements SubCommand {
         if (!Permissions.HELP.hasPermission(sender)) {
             return;
         }
-        sender.sendMessage("------CustomArcheology Help------");
+        sender.sendMessage(Messages.COMMAND_HELP_HEAD.getMessage());
         for (SubCommand subCommand : MainCommand.SUB_COMMANDS.values()) {
-            sender.sendMessage(subCommand.getUsage() + " - " + subCommand.getDescription());
+            sender.sendMessage(Messages.COMMAND_HELP_DETAIL.getMessage("command_name", subCommand.getName(), "description", subCommand.getDescription()));
         }
     }
 }

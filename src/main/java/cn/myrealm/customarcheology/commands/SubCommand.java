@@ -4,7 +4,11 @@ import org.bukkit.command.CommandSender;
 
 import java.util.List;
 
+/**
+ * @author rzt10
+ */
 public interface SubCommand {
+
     String getName();
     String getDescription();
     String getUsage();

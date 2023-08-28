@@ -1,6 +1,6 @@
 package cn.myrealm.customarcheology.commands;
 
-import cn.myrealm.customarcheology.util.Permissions;
+import cn.myrealm.customarcheology.utils.enums.Permissions;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -50,6 +50,8 @@ public class MainCommand implements CommandExecutor, TabCompleter {
 
         if (Permissions.HELP.hasPermission(sender)) {
             sender.sendMessage("Unknown subcommand. Type \"/customarcheology help\" for a list of commands.");
+        } else {
+            sender.sendMessage("You don't have permission to use this command.");
         }
 
         return true;

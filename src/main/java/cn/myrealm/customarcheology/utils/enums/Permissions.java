@@ -1,4 +1,4 @@
-package cn.myrealm.customarcheology.util;
+package cn.myrealm.customarcheology.utils.enums;
 
 import org.bukkit.command.CommandSender;
 
