@@ -14,6 +14,6 @@ public interface SubCommand {
     String getUsage();
     List<String> getSubCommandAliases();
 
-    List<String> onTabComplete(int args_num);
+    List<String> onTabComplete(int argsNum);
     void execute(CommandSender sender, String[] args) throws Exception;
 }

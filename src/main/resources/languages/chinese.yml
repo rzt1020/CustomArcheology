@@ -1,0 +1,12 @@
+info:
+  enable-message: ""
+  reload-success: ""
+error:
+  incorrect-command: ""
+  no-permission: ""
+command:
+  help: ""
+  reload: ""
+  give: ""
+  help-head: ""
+  help-detail: ""

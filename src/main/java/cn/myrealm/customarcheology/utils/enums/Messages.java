@@ -9,14 +9,16 @@ import cn.myrealm.customarcheology.managers.managers.LanguageManager;
 
 public enum Messages {
     // information
-    ENABLE_MASSAGE("info.enable-message"),
+    ENABLE_MESSAGE("info.enable-message"),
+    RELOAD_SUCCESS("info.reload-success"),
     // errors
     ERROR_INCORRECT_COMMAND("error.incorrect-command"),
+    ERROR_NO_PERMISSION("error.no-permission"),
     // command descriptions
     COMMAND_HELP("command.help"),
     COMMAND_RELOAD("command.reload"),
     COMMAND_GIVE("command.give"),
-    // help messages
+    // command help messages
     COMMAND_HELP_HEAD("command.help-head"),
     COMMAND_HELP_DETAIL("command.help-detail");
 

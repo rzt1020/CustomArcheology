@@ -20,7 +20,10 @@ permissions:
     children:
       customarcheology.command.help: true
       customarcheology.command.give: true
+      customarcheology.command.reload: true
   customarcheology.command.help:
+    default: op
+  customarcheology.command.reload:
     default: op
   customarcheology.command.give:
     default: op
