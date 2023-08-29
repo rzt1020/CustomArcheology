@@ -9,6 +9,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+/**
+ * @author rzt10
+ */
 public abstract class AbstractListener extends PacketAdapter implements Listener {
 
     private final JavaPlugin plugin;

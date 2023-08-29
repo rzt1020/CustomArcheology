@@ -12,33 +12,35 @@ import java.util.Map;
  * @author rzt10
  */
 public class PlayerManager extends AbstractManager {
-    private Map<Player, PlayerLookAt> playerCacheMap;
+    private static PlayerManager instance;
+    private Map<Player, PlayerLookAt> playerLookAtMap;
 
     public PlayerManager(JavaPlugin plugin) {
         super(plugin);
+        instance = this;
     }
 
     @Override
     protected void onInit() {
         super.onInit();
-        playerCacheMap = new HashMap<>(5);
+        playerLookAtMap = new HashMap<>(5);
         for (Player player : plugin.getServer().getOnlinePlayers()) {
-            playerCacheMap.put(player,new PlayerLookAt(player));
+            playerLookAtMap.put(player,new PlayerLookAt(player));
         }
     }
 
-    public PlayerLookAt getPlayerCache(Player player) {
-        return playerCacheMap.get(player);
+    public static PlayerManager getInstance() {
+        return instance;
     }
 
     public void playerJoin(Player player) {
-        playerCacheMap.put(player,new PlayerLookAt(player));
+        playerLookAtMap.put(player,new PlayerLookAt(player));
     }
 
     public void playerQuit(Player player) {
-        if(playerCacheMap.containsKey(player)) {
-            playerCacheMap.get(player).cancelTask();
-            playerCacheMap.remove(player);
+        if(playerLookAtMap.containsKey(player)) {
+            playerLookAtMap.get(player).cancelTask();
+            playerLookAtMap.remove(player);
         }
     }
 }

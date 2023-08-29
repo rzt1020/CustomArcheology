@@ -9,10 +9,10 @@ import org.bukkit.command.CommandSender;
 public enum Permissions {
     // root
     ROOT("customarcheology."),
+    //commands
     COMMAND(ROOT + "command."),
-    // help command
     HELP(COMMAND + "help"),
-    // give command
+    RELOAD(COMMAND + "reload"),
     GIVE(COMMAND + "give");
 
 

@@ -1,0 +1,24 @@
+display_name: "Suspicious Stone"
+loot_tables: ["minecraft:suspicious_sand", "suspicious_stone"]
+brush_tools:
+  wooden_tiny_pickaxe: 1.0
+  stone_tiny_pickaxe: 1.2
+  iron_tiny_pickaxe: 1.5
+  diamond_tiny_pickaxe: 2.0
+  golden_tiny_pickaxe: 1.8
+  netherite_tiny_pickaxe: 3.0
+states:
+  default:
+    texture: "suspicious_stone"
+    hardness: 1.0
+  state_1:
+    texture: "suspicious_stone_1"
+    hardness: 1.0
+  state_2:
+    texture: "suspicious_stone_2"
+    hardness: 1.0
+  state_3:
+    texture: "suspicious_stone_3"
+    hardness: 1.0
+  finished:
+    material: "minecraft:stone"

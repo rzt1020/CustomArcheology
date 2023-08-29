@@ -1,0 +1,14 @@
+prefix: "&7[&bCustomArcheology&7]&r "
+info:
+  enable-message: "成功加载插件，感谢使用CustomArcheology！"
+  reload-success: "成功重载插件"
+error:
+  incorrect-command: "指令错误"
+  executing-command: "执行指令时遇到问题:{error}"
+  no-permission: "您没有权限执行此命令"
+command:
+  help: "获取帮助列表"
+  reload: "重新加载插件"
+  give: "给玩家由CustomArcheology创建的物品"
+  help-head:   "-----------CustomArcheology-帮助列表-------------"
+  help-detail: "{command-usage} - {command-description}"

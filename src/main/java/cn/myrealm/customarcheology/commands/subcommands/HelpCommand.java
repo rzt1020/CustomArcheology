@@ -39,13 +39,13 @@ public class HelpCommand implements SubCommand {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) throws Exception {
+    public void execute(CommandSender sender, String[] args) {
         if (!Permissions.HELP.hasPermission(sender)) {
             return;
         }
         sender.sendMessage(Messages.COMMAND_HELP_HEAD.getMessage());
         for (SubCommand subCommand : MainCommand.SUB_COMMANDS.values()) {
-            sender.sendMessage(Messages.COMMAND_HELP_DETAIL.getMessage("command_name", subCommand.getName(), "description", subCommand.getDescription()));
+            sender.sendMessage(Messages.COMMAND_HELP_DETAIL.getMessage("command-usage", subCommand.getUsage(), "command-description", subCommand.getDescription()));
         }
     }
 }

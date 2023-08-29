@@ -1,5 +1,6 @@
 package cn.myrealm.customarcheology.commands;
 
+import cn.myrealm.customarcheology.utils.enums.Messages;
 import cn.myrealm.customarcheology.utils.enums.Permissions;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -32,7 +33,7 @@ public class MainCommand implements CommandExecutor, TabCompleter {
             try {
                 SUB_COMMANDS.get("help").execute(sender, args);
             } catch (Exception e) {
-                sender.sendMessage("Error executing command: " + e.getMessage());
+                sender.sendMessage(Messages.ERROR_EXECUTING_COMMAND + e.getMessage());
             }
             return true;
         }
@@ -43,15 +44,15 @@ public class MainCommand implements CommandExecutor, TabCompleter {
             try {
                 subCommand.execute(sender, args);
             } catch (Exception e) {
-                sender.sendMessage("Error executing command: " + e.getMessage());
+                sender.sendMessage(Messages.ERROR_EXECUTING_COMMAND.getMessageWithPrefix("error", e.getMessage()));
             }
             return true;
         }
 
         if (Permissions.HELP.hasPermission(sender)) {
-            sender.sendMessage("Unknown subcommand. Type \"/customarcheology help\" for a list of commands.");
+            sender.sendMessage(Messages.ERROR_INCORRECT_COMMAND.getMessageWithPrefix());
         } else {
-            sender.sendMessage("You don't have permission to use this command.");
+            sender.sendMessage(Messages.ERROR_NO_PERMISSION.getMessageWithPrefix());
         }
 
         return true;
@@ -62,7 +63,7 @@ public class MainCommand implements CommandExecutor, TabCompleter {
         List<String> suggestions = new ArrayList<>();
         if (args.length == 1) {
             for (String subCommandName : SUB_COMMANDS.keySet()) {
-                if (subCommandName.startsWith(args[0].toLowerCase()) && sender.hasPermission("customarcheology." + subCommandName)) {
+                if (subCommandName.startsWith(args[0].toLowerCase()) && sender.hasPermission(Permissions.COMMAND + subCommandName)) {
                     suggestions.add(subCommandName);
                 }
             }

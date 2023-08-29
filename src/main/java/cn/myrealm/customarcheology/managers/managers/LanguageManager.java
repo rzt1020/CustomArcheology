@@ -2,6 +2,7 @@ package cn.myrealm.customarcheology.managers.managers;
 
 
 import cn.myrealm.customarcheology.managers.AbstractManager;
+import cn.myrealm.customarcheology.utils.enums.Config;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -17,21 +18,28 @@ import java.util.regex.Pattern;
  */
 public class LanguageManager extends AbstractManager {
 
+    private static LanguageManager instance;
     private String language;
     private FileConfiguration languageConfig;
 
     public LanguageManager(JavaPlugin plugin) {
         super(plugin);
+        instance = this;
     }
 
     @Override
     protected void onInit() {
-        language = plugin.getConfig().getString("config_files.language", "chinese");
+        language = Config.CONFIG_FILES_LANGUAGE.asString();
         loadLanguageFile();
+
+    }
+
+    public static LanguageManager getInstance() {
+        return instance;
     }
 
     private void loadLanguageFile() {
-        File languageFile = new File(plugin.getDataFolder(), "language/" + language + ".yml");
+        File languageFile = new File(plugin.getDataFolder(), "languages/" + language + ".yml");
         languageConfig = YamlConfiguration.loadConfiguration(languageFile);
     }
 
@@ -43,7 +51,7 @@ public class LanguageManager extends AbstractManager {
         return parseColor(message);
     }
 
-    public static final Pattern PATTERN = Pattern.compile("<#[a-fA-F0-9]{6}>");
+    static final Pattern PATTERN = Pattern.compile("<#[a-fA-F0-9]{6}>");
     public static String parseColor(String message) {
         Matcher match = PATTERN.matcher(message);
         while (match.find()) {

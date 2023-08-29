@@ -8,11 +8,14 @@ import cn.myrealm.customarcheology.managers.managers.LanguageManager;
  */
 
 public enum Messages {
+    // prefix
+    PREFIX("prefix"),
     // information
     ENABLE_MESSAGE("info.enable-message"),
     RELOAD_SUCCESS("info.reload-success"),
     // errors
     ERROR_INCORRECT_COMMAND("error.incorrect-command"),
+    ERROR_EXECUTING_COMMAND("error.executing-command"),
     ERROR_NO_PERMISSION("error.no-permission"),
     // command descriptions
     COMMAND_HELP("command.help"),
@@ -34,7 +37,7 @@ public enum Messages {
             message = languageManager.getMessage(key);
         } catch (Exception e) {
             CustomArcheology.plugin.getLogger().warning(e.getMessage());
-            message = "&cMissing message for key: &4" + key;
+            message = "Missing message for key: " + key;
         }
 
         for (int i = 0; i < args.length; i += 2) {
@@ -43,5 +46,16 @@ public enum Messages {
         }
 
         return message;
+    }
+    public String getMessageWithPrefix(String... args) {
+        if (this.equals(Messages.PREFIX)) {
+            return getMessage();
+        }
+        return Messages.PREFIX.getMessage() + getMessage(args);
+    }
+
+    @Override
+    public String toString() {
+        return getMessage();
     }
 }

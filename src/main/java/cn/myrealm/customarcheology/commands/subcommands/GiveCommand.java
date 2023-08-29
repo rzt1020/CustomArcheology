@@ -27,7 +27,7 @@ public class GiveCommand implements SubCommand {
 
     @Override
     public String getUsage() {
-        return "/customarcheology <Player> <BlockID>";
+        return "/customarcheology give <Player> <BlockID>";
     }
 
     @Override
