@@ -13,10 +13,13 @@ public enum Messages {
     // information
     ENABLE_MESSAGE("info.enable-message"),
     RELOAD_SUCCESS("info.reload-success"),
+    TEXTURE_PACK_CREATED("info.texture-pack-created"),
     // errors
     ERROR_INCORRECT_COMMAND("error.incorrect-command"),
     ERROR_EXECUTING_COMMAND("error.executing-command"),
     ERROR_NO_PERMISSION("error.no-permission"),
+    ERROR_FAILED_TO_CREATE_TEXTURE_PACK("error.failed-to-create-texture-pack"),
+    MISSING_RESOURCE("error.missing-resource"),
     // command descriptions
     COMMAND_HELP("command.help"),
     COMMAND_RELOAD("command.reload"),

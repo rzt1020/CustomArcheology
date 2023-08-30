@@ -1,11 +1,14 @@
-prefix: "&7[&bCustomArcheology&7]&r "
+prefix: "<#98FB98>[CustomArcheology]&r "
 info:
   enable-message: "成功加载插件，感谢使用CustomArcheology！"
   reload-success: "成功重载插件"
+  texture-pack-created: "成功创建纹理包"
 error:
   incorrect-command: "指令错误"
   executing-command: "执行指令时遇到问题:{error}"
   no-permission: "您没有权限执行此命令"
+  failed-to-create-texture-pack: "无法创建纹理包"
+  missing-resource: "缺少资源:{resource-name}"
 command:
   help: "获取帮助列表"
   reload: "重新加载插件"

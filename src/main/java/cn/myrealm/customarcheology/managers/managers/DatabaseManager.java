@@ -7,7 +7,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -62,13 +64,15 @@ public class DatabaseManager extends AbstractManager {
                 try {
                     Statement statement = connection.createStatement();
                     ResultSet resultSet = statement.executeQuery(query);
-                    Map<String, Object> resultData = new HashMap<>(5);
+                    List<Map<String, Object>> result = new ArrayList<>();
                     while (resultSet.next()) {
+                        Map<String, Object> resultData = new HashMap<>(5);
                         for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++) {
                             resultData.put(resultSet.getMetaData().getColumnName(i), resultSet.getObject(i));
                         }
+                        result.add(resultData);
                     }
-                    callback.onSuccess(resultData);
+                    callback.onSuccess(result);
                 } catch (SQLException e) {
                     callback.onFailure(e);
                 }
@@ -103,9 +107,9 @@ public class DatabaseManager extends AbstractManager {
     public interface Callback<T> {
         /**
          * call back the result of query
-         * @param result result of query
+         * @param results result of query
          */
-        void onSuccess(T result);
+        void onSuccess(List<T> results);
 
         /**
          * call back the error of query

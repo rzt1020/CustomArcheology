@@ -4,11 +4,10 @@ import cn.myrealm.customarcheology.commands.MainCommand;
 import cn.myrealm.customarcheology.commands.subcommands.GiveCommand;
 import cn.myrealm.customarcheology.commands.subcommands.HelpCommand;
 import cn.myrealm.customarcheology.commands.subcommands.ReloadCommand;
+import cn.myrealm.customarcheology.commands.subcommands.TestCommand;
 import cn.myrealm.customarcheology.listeners.bukkit.PlayerJoinListener;
 import cn.myrealm.customarcheology.managers.AbstractManager;
-import cn.myrealm.customarcheology.managers.managers.BlockManager;
-import cn.myrealm.customarcheology.managers.managers.LanguageManager;
-import cn.myrealm.customarcheology.managers.managers.PlayerManager;
+import cn.myrealm.customarcheology.managers.managers.*;
 import cn.myrealm.customarcheology.utils.enums.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,7 +21,7 @@ import java.util.List;
  */
 public final class CustomArcheology extends JavaPlugin {
     public static CustomArcheology plugin;
-    private final List<AbstractManager> managers = new ArrayList<>();;
+    private final List<AbstractManager> managers = new ArrayList<>();
 
     @Override
     public void onEnable() {
@@ -51,6 +50,8 @@ public final class CustomArcheology extends JavaPlugin {
     public void initPlugin() {
         managers.clear();
         managers.add(new LanguageManager(this));
+        managers.add(new DatabaseManager(this));
+        managers.add(new TextureManager(this));
         managers.add(new PlayerManager(this));
         managers.add(new BlockManager(this));
     }
@@ -71,6 +72,7 @@ public final class CustomArcheology extends JavaPlugin {
         command.registerSubCommand(new HelpCommand());
         command.registerSubCommand(new ReloadCommand());
         command.registerSubCommand(new GiveCommand());
+        command.registerSubCommand(new TestCommand());
         //noinspection ConstantConditions
         getCommand("customarcheology").setExecutor(command);
         //noinspection ConstantConditions
@@ -79,11 +81,21 @@ public final class CustomArcheology extends JavaPlugin {
 
     static final List<String> FILES = Arrays.asList(
             "config.yml",
+            "pack/pack.mcmeta",
             "blocks/suspicious_stone.yml",
+            "textures/blocks/suspicious_stone.png",
+            "textures/blocks/suspicious_stone_1.png",
+            "textures/blocks/suspicious_stone_2.png",
+            "textures/blocks/suspicious_stone_3.png",
             "languages/zh_CN.yml");
     public void outputDefaultFiles() {
         for (String file : FILES) {
-            saveResource(file, false);
+            try {
+                saveResource(file, false);
+            } catch (Exception e) {
+                String[] names = file.split("/");
+                Bukkit.getConsoleSender().sendMessage(Messages.MISSING_RESOURCE.getMessageWithPrefix("resource-name", names[names.length - 1]));
+            }
         }
     }
 }
