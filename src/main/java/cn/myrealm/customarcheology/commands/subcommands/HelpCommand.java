@@ -2,8 +2,8 @@ package cn.myrealm.customarcheology.commands.subcommands;
 
 import cn.myrealm.customarcheology.commands.MainCommand;
 import cn.myrealm.customarcheology.commands.SubCommand;
-import cn.myrealm.customarcheology.utils.enums.Messages;
-import cn.myrealm.customarcheology.utils.enums.Permissions;
+import cn.myrealm.customarcheology.enums.Messages;
+import cn.myrealm.customarcheology.enums.Permissions;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;

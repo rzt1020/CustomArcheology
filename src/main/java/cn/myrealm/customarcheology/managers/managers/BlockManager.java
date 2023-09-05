@@ -1,8 +1,17 @@
 package cn.myrealm.customarcheology.managers.managers;
 
+import cn.myrealm.customarcheology.CustomArcheology;
 import cn.myrealm.customarcheology.managers.AbstractManager;
-import cn.myrealm.customarcheology.utils.block.ArcheologyBlock;
+import cn.myrealm.customarcheology.mechanics.ArcheologyBlock;
+import cn.myrealm.customarcheology.utils.PacketUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -43,6 +52,25 @@ public class BlockManager extends AbstractManager {
 
     public Set<String> getBlocksName() {
         return blocksMap.keySet();
+    }
+
+    public boolean isBlockExists(String name) {
+        return blocksMap.containsKey(name);
+    }
+
+    public ItemStack generateItemStack(String name, int amount) {
+        return blocksMap.get(name).generateItemStack(amount);
+    }
+    public void placeBlock(String blockId, Location location) {
+        blocksMap.get(blockId).placeBlock(location);
+        Bukkit.getScheduler().runTaskLater(CustomArcheology.plugin, () -> {
+            for (Entity entity : Objects.requireNonNull(location.getWorld()).getNearbyEntities(location, 20, 20, 20)) {
+                if (entity.getType().equals(EntityType.PLAYER)) {
+                    PacketUtil.changeBlock((Player) entity, location, Material.BARRIER);
+                }
+            }
+        }, 1);
+
     }
 
 }

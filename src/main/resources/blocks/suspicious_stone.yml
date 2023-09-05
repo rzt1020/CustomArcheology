@@ -1,4 +1,5 @@
 display_name: "Suspicious Stone"
+replace_block: stone
 loot_tables: ["minecraft:suspicious_sand", "suspicious_stone"]
 brush_tools:
   wooden_tiny_pickaxe: 1.0

@@ -1,7 +1,7 @@
 package cn.myrealm.customarcheology.commands;
 
-import cn.myrealm.customarcheology.utils.enums.Messages;
-import cn.myrealm.customarcheology.utils.enums.Permissions;
+import cn.myrealm.customarcheology.enums.Messages;
+import cn.myrealm.customarcheology.enums.Permissions;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

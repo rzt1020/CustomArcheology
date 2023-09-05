@@ -1,8 +1,8 @@
 package cn.myrealm.customarcheology.managers.managers.SysyemManager;
 
 import cn.myrealm.customarcheology.managers.AbstractManager;
-import cn.myrealm.customarcheology.utils.enums.Messages;
-import cn.myrealm.customarcheology.utils.enums.SQLs;
+import cn.myrealm.customarcheology.enums.Messages;
+import cn.myrealm.customarcheology.enums.SQLs;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -18,9 +18,15 @@ import java.util.*;
 public class TextureManager extends AbstractManager {
     private Map<String, Integer> blockCustommodeldataMap;
     private List<Integer> blockCustommodeldataList;
+    public static TextureManager instance;
 
     public TextureManager(JavaPlugin plugin) {
         super(plugin);
+        instance = this;
+    }
+
+    public static TextureManager getInstance() {
+        return instance;
     }
 
     @Override

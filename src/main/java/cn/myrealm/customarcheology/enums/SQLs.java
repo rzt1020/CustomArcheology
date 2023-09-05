@@ -1,4 +1,4 @@
-package cn.myrealm.customarcheology.utils.enums;
+package cn.myrealm.customarcheology.enums;
 
 /**
  * @author rzt10

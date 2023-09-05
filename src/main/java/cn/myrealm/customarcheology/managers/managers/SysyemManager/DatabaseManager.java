@@ -1,8 +1,8 @@
 package cn.myrealm.customarcheology.managers.managers.SysyemManager;
 
 import cn.myrealm.customarcheology.managers.AbstractManager;
-import cn.myrealm.customarcheology.utils.enums.Config;
-import cn.myrealm.customarcheology.utils.enums.SQLs;
+import cn.myrealm.customarcheology.enums.Config;
+import cn.myrealm.customarcheology.enums.SQLs;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 

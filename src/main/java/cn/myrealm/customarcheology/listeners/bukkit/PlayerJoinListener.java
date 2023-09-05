@@ -25,4 +25,5 @@ public class PlayerJoinListener extends AbstractListener{
         PlayerManager playerManager = PlayerManager.getInstance();
         playerManager.playerQuit(event.getPlayer());
     }
+
 }

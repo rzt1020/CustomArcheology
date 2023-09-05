@@ -6,12 +6,16 @@ import cn.myrealm.customarcheology.commands.subcommands.HelpCommand;
 import cn.myrealm.customarcheology.commands.subcommands.ReloadCommand;
 import cn.myrealm.customarcheology.commands.subcommands.TestCommand;
 import cn.myrealm.customarcheology.listeners.bukkit.PlayerJoinListener;
+import cn.myrealm.customarcheology.listeners.bukkit.PlayerPlaceBlockListener;
 import cn.myrealm.customarcheology.managers.AbstractManager;
 import cn.myrealm.customarcheology.managers.managers.*;
 import cn.myrealm.customarcheology.managers.managers.SysyemManager.DatabaseManager;
 import cn.myrealm.customarcheology.managers.managers.SysyemManager.LanguageManager;
 import cn.myrealm.customarcheology.managers.managers.SysyemManager.TextureManager;
-import cn.myrealm.customarcheology.utils.enums.Messages;
+import cn.myrealm.customarcheology.enums.Messages;
+import com.comphenix.protocol.ProtocolLib;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -25,11 +29,12 @@ import java.util.List;
 public final class CustomArcheology extends JavaPlugin {
     public static CustomArcheology plugin;
     private final List<AbstractManager> managers = new ArrayList<>();
+    public static ProtocolManager protocolManager;
 
     @Override
     public void onEnable() {
         plugin = this;
-
+        protocolManager = ProtocolLibrary.getProtocolManager();
         if (!getDataFolder().exists()) {
             outputDefaultFiles();
         }
@@ -57,6 +62,7 @@ public final class CustomArcheology extends JavaPlugin {
         managers.add(new TextureManager(this));
         managers.add(new PlayerManager(this));
         managers.add(new BlockManager(this));
+//        managers.add(new ChunkManager(this));
     }
     public void disablePlugin() {
         for (AbstractManager manager : managers) {
@@ -69,6 +75,7 @@ public final class CustomArcheology extends JavaPlugin {
 
         // Bukkit Listener
         new PlayerJoinListener(this).registerBukkitListener();
+        new PlayerPlaceBlockListener(this).registerBukkitListener();
     }
     public void registerDefaultCommands() {
         MainCommand command = new MainCommand();

@@ -1,7 +1,8 @@
 package cn.myrealm.customarcheology.managers.managers;
 
 import cn.myrealm.customarcheology.managers.AbstractManager;
-import cn.myrealm.customarcheology.utils.player.PlayerLookAt;
+import cn.myrealm.customarcheology.mechanics.players.PlayerInChunk;
+import cn.myrealm.customarcheology.mechanics.players.PlayerLookAt;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -14,6 +15,7 @@ import java.util.Map;
 public class PlayerManager extends AbstractManager {
     private static PlayerManager instance;
     private Map<Player, PlayerLookAt> playerLookAtMap;
+    private Map<Player, PlayerInChunk> playerInChunkMap;
 
     public PlayerManager(JavaPlugin plugin) {
         super(plugin);
@@ -24,8 +26,10 @@ public class PlayerManager extends AbstractManager {
     protected void onInit() {
         super.onInit();
         playerLookAtMap = new HashMap<>(5);
+//        playerInChunkMap = new HashMap<>(5);
         for (Player player : plugin.getServer().getOnlinePlayers()) {
             playerLookAtMap.put(player,new PlayerLookAt(player));
+//            playerInChunkMap.put(player, new PlayerInChunk(player));
         }
     }
 
@@ -35,6 +39,7 @@ public class PlayerManager extends AbstractManager {
 
     public void playerJoin(Player player) {
         playerLookAtMap.put(player,new PlayerLookAt(player));
+//        playerInChunkMap.put(player, new PlayerInChunk(player));
     }
 
     public void playerQuit(Player player) {
@@ -42,5 +47,9 @@ public class PlayerManager extends AbstractManager {
             playerLookAtMap.get(player).cancelTask();
             playerLookAtMap.remove(player);
         }
+//        if (playerInChunkMap.containsKey(player)) {
+//            playerInChunkMap.get(player).cancelTask();
+//            playerInChunkMap.remove(player);
+//        }
     }
 }

@@ -1,4 +1,4 @@
-package cn.myrealm.customarcheology.utils.player;
+package cn.myrealm.customarcheology.mechanics.players;
 
 import cn.myrealm.customarcheology.CustomArcheology;
 import org.bukkit.Color;
@@ -13,7 +13,7 @@ import java.util.Objects;
 /**
  * @author rzt10
  */
-public class PlayerLookAt {
+public class PlayerLookAt implements PlayerTask {
     private final Player player;
     private Block lookAtBlock;
     private final BukkitRunnable lookAtBlockTask;
@@ -28,6 +28,7 @@ public class PlayerLookAt {
         lookAtBlockTask.runTaskTimer(CustomArcheology.plugin, 0, 1);
     }
 
+    @Override
     public void cancelTask() {
         lookAtBlockTask.cancel();
     }
