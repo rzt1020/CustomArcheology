@@ -16,7 +16,9 @@ public enum Config {
     MYSQL_PORT("database.mysql.port", 3306),
     MYSQL_USER("database.mysql.user", "root"),
     MYSQL_PASSWORD("database.mysql.password", "root"),
-    MYSQL_DATABASE("database.mysql.database", "minecraft");
+    MYSQL_DATABASE("database.mysql.database", "minecraft"),
+    // settings
+    VISIBLE_DISTANCE("settings.visible-distance", 20);
 
 
     private final String key;

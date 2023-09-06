@@ -11,6 +11,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -77,6 +78,10 @@ public class PlayerPlaceBlockListener extends AbstractListener {
             blockManager.placeBlock(blockId, location);
             event.getPlayer().playSound(event.getPlayer(), Sound.BLOCK_STONE_PLACE, 1, 1);
         },1);
+        if (event.getPlayer().getGameMode().equals(GameMode.SURVIVAL)) {
+            itemStack.setAmount(itemStack.getAmount() - 1);
+            event.getPlayer().getInventory().setItemInMainHand(itemStack);
+        }
     }
 
 

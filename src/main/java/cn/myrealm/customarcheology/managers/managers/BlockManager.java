@@ -1,6 +1,8 @@
 package cn.myrealm.customarcheology.managers.managers;
 
 import cn.myrealm.customarcheology.CustomArcheology;
+import cn.myrealm.customarcheology.enums.Config;
+import cn.myrealm.customarcheology.listeners.bukkit.BlockBreakListener;
 import cn.myrealm.customarcheology.managers.AbstractManager;
 import cn.myrealm.customarcheology.mechanics.ArcheologyBlock;
 import cn.myrealm.customarcheology.utils.PacketUtil;
@@ -62,15 +64,27 @@ public class BlockManager extends AbstractManager {
         return blocksMap.get(name).generateItemStack(amount);
     }
     public void placeBlock(String blockId, Location location) {
-        blocksMap.get(blockId).placeBlock(location);
+        ArcheologyBlock block = blocksMap.get(blockId);
+        block.placeBlock(location);
         Bukkit.getScheduler().runTaskLater(CustomArcheology.plugin, () -> {
-            for (Entity entity : Objects.requireNonNull(location.getWorld()).getNearbyEntities(location, 20, 20, 20)) {
+            int visibleDistance = Config.VISIBLE_DISTANCE.asInt();
+            for (Entity entity : Objects.requireNonNull(location.getWorld()).getNearbyEntities(location, visibleDistance, visibleDistance, visibleDistance)) {
                 if (entity.getType().equals(EntityType.PLAYER)) {
                     PacketUtil.changeBlock((Player) entity, location, Material.BARRIER);
+                    ItemStack itemStack = block.generateItemStack(1);
+                    int entityId = PacketUtil.spawnItemDisplay((Player) entity, location.getBlock().getLocation(), itemStack, null, null);
+                    BlockBreakListener.addEntityId(location.getBlock().getLocation(), entityId);
                 }
             }
         }, 1);
-
+    }
+    public void removeEntity(int entityId, Location location) {
+        int visibleDistance = Config.VISIBLE_DISTANCE.asInt();
+        for (Entity entity : Objects.requireNonNull(location.getWorld()).getNearbyEntities(location, visibleDistance, visibleDistance, visibleDistance))  {
+            if (entity.getType().equals(EntityType.PLAYER)) {
+                PacketUtil.removeEntity((Player) entity, entityId);
+            }
+        }
     }
 
 }

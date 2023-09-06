@@ -5,6 +5,7 @@ import cn.myrealm.customarcheology.commands.subcommands.GiveCommand;
 import cn.myrealm.customarcheology.commands.subcommands.HelpCommand;
 import cn.myrealm.customarcheology.commands.subcommands.ReloadCommand;
 import cn.myrealm.customarcheology.commands.subcommands.TestCommand;
+import cn.myrealm.customarcheology.listeners.bukkit.BlockBreakListener;
 import cn.myrealm.customarcheology.listeners.bukkit.PlayerJoinListener;
 import cn.myrealm.customarcheology.listeners.bukkit.PlayerPlaceBlockListener;
 import cn.myrealm.customarcheology.managers.AbstractManager;
@@ -76,6 +77,7 @@ public final class CustomArcheology extends JavaPlugin {
         // Bukkit Listener
         new PlayerJoinListener(this).registerBukkitListener();
         new PlayerPlaceBlockListener(this).registerBukkitListener();
+        new BlockBreakListener(this).registerBukkitListener();
     }
     public void registerDefaultCommands() {
         MainCommand command = new MainCommand();
