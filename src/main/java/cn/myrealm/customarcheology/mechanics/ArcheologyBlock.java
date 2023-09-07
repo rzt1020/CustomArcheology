@@ -2,8 +2,8 @@ package cn.myrealm.customarcheology.mechanics;
 
 
 import cn.myrealm.customarcheology.enums.NamespacedKeys;
-import cn.myrealm.customarcheology.managers.managers.SysyemManager.LanguageManager;
-import cn.myrealm.customarcheology.managers.managers.SysyemManager.TextureManager;
+import cn.myrealm.customarcheology.managers.managers.system.LanguageManager;
+import cn.myrealm.customarcheology.managers.managers.system.TextureManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -24,11 +24,12 @@ public class ArcheologyBlock {
     private final YamlConfiguration config;
     private final String name;
     private String displayName;
-    private Material replace_block;
+    private Material replaceBlock;
     private boolean valid;
     private State defaultState,
                   finishedState;
     private List<State> states;
+    private List<CustomLootTable> customLootTables;
 
     public ArcheologyBlock(YamlConfiguration config, String name) {
         this.config = config;
@@ -54,13 +55,13 @@ public class ArcheologyBlock {
     }
 
     public void placeBlock(Location location) {
-        location.getBlock().setType(replace_block);
+        location.getBlock().setType(replaceBlock);
     }
     private void loadConfig() {
         ConfigurationSection section = Keys.STATES.asSection(config);
-        replace_block = Material.getMaterial(Keys.REPLACE_BLOCK.asString(config).toUpperCase());
-        System.out.println(replace_block);
-        if (Objects.isNull(section) || Objects.isNull(replace_block) || !replace_block.isBlock()) {
+        replaceBlock = Material.getMaterial(Keys.REPLACE_BLOCK.asString(config).toUpperCase());
+        System.out.println(replaceBlock);
+        if (Objects.isNull(section) || Objects.isNull(replaceBlock) || !replaceBlock.isBlock()) {
             return;
         }
         Map<String,Object> stateSections = section.getValues(false);
@@ -77,6 +78,10 @@ public class ArcheologyBlock {
         }
         if (Objects.isNull(defaultState) || Objects.isNull(finishedState)) {
             return;
+        }
+        customLootTables = new ArrayList<>();
+        for (String lootTableName : Keys.LOOT_TABLES.asStringList(config)) {
+
         }
         valid = true;
         displayName = Keys.DISPLAY_NAME.asString(config);
@@ -99,7 +104,7 @@ enum Keys {
     // block keys
     DISPLAY_NAME("display_name", null),
     REPLACE_BLOCK("replace_block", "stone"),
-    LOOT_TABLE("loot_table", null),
+    LOOT_TABLES("loot_tables", null),
     BLUSH_TOOLS("blush_tools", null),
     STATES("states", null);
 
@@ -130,6 +135,13 @@ enum Keys {
             return (Double) def;
         }
         return section.getDouble(key, (Double) def);
+    }
+
+    public List<String> asStringList(ConfigurationSection section) {
+        if (Objects.isNull(section)) {
+            return new ArrayList<>();
+        }
+        return section.getStringList(key);
     }
 }
 

@@ -25,7 +25,7 @@ public class PlayerInChunk implements PlayerTask{
                 updateChunk();
             }
         };
-        inChunkTask.runTaskTimer(CustomArcheology.plugin, 0, 10);
+        inChunkTask.runTaskTimer(CustomArcheology.plugin, 0, 1);
     }
 
     public void updateChunk() {
@@ -43,13 +43,16 @@ public class PlayerInChunk implements PlayerTask{
 
     public void inChunkChange(Chunk before, Chunk after) {
         ChunkManager chunkManager = ChunkManager.getInstance();
-        chunkManager.loadChunk(after);
-        Bukkit.getScheduler().runTaskLater(CustomArcheology.plugin, () -> chunkManager.unloadChunk(before),200);
+        if (Objects.nonNull(after)) {
+            chunkManager.loadChunk(after);
+        }
+//        Bukkit.getScheduler().runTaskLater(CustomArcheology.plugin, () -> chunkManager.unloadChunk(before),200);
     }
 
     @Override
     public void cancelTask() {
         inChunkTask.cancel();
+        updateChunk();
     }
 
 }

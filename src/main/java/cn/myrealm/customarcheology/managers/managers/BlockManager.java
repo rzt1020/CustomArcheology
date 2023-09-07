@@ -7,6 +7,7 @@ import cn.myrealm.customarcheology.managers.AbstractManager;
 import cn.myrealm.customarcheology.mechanics.ArcheologyBlock;
 import cn.myrealm.customarcheology.utils.PacketUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -25,6 +26,7 @@ import java.util.*;
 public class BlockManager extends AbstractManager {
     private static BlockManager instance;
     private Map<String, ArcheologyBlock> blocksMap;
+    private int visibleDistance;
     public BlockManager(JavaPlugin plugin) {
         super(plugin);
         instance = this;
@@ -32,6 +34,7 @@ public class BlockManager extends AbstractManager {
 
     @Override
     public void onInit() {
+        visibleDistance = Config.VISIBLE_DISTANCE.asInt();
         blocksMap = new HashMap<>(5);
         File[] files = new File(plugin.getDataFolder(), "blocks").listFiles();
         if (files == null) {
@@ -64,27 +67,43 @@ public class BlockManager extends AbstractManager {
         return blocksMap.get(name).generateItemStack(amount);
     }
     public void placeBlock(String blockId, Location location) {
+        if (!blocksMap.containsKey(blockId)) {
+            return;
+        }
         ArcheologyBlock block = blocksMap.get(blockId);
         block.placeBlock(location);
         Bukkit.getScheduler().runTaskLater(CustomArcheology.plugin, () -> {
-            int visibleDistance = Config.VISIBLE_DISTANCE.asInt();
+            List<Player> players = new ArrayList<>();
             for (Entity entity : Objects.requireNonNull(location.getWorld()).getNearbyEntities(location, visibleDistance, visibleDistance, visibleDistance)) {
                 if (entity.getType().equals(EntityType.PLAYER)) {
-                    PacketUtil.changeBlock((Player) entity, location, Material.BARRIER);
-                    ItemStack itemStack = block.generateItemStack(1);
-                    int entityId = PacketUtil.spawnItemDisplay((Player) entity, location.getBlock().getLocation(), itemStack, null, null);
-                    BlockBreakListener.addEntityId(location.getBlock().getLocation(), entityId);
+                    players.add((Player) entity);
                 }
             }
+            PacketUtil.changeBlock(players, location, Material.BARRIER);
+            ItemStack itemStack = block.generateItemStack(1);
+            int entityId = PacketUtil.spawnItemDisplay(players, location.getBlock().getLocation(), itemStack, null, null);
+            BlockBreakListener.addEntityId(location.getBlock().getLocation(), entityId);
+            registerNewBlock(blockId, location);
         }, 1);
     }
     public void removeEntity(int entityId, Location location) {
-        int visibleDistance = Config.VISIBLE_DISTANCE.asInt();
+        List<Player> players = new ArrayList<>();
         for (Entity entity : Objects.requireNonNull(location.getWorld()).getNearbyEntities(location, visibleDistance, visibleDistance, visibleDistance))  {
             if (entity.getType().equals(EntityType.PLAYER)) {
-                PacketUtil.removeEntity((Player) entity, entityId);
+                players.add((Player) entity);
             }
         }
+        PacketUtil.removeEntity(players, entityId);
+    }
+    public void registerNewBlock(String blockId, Location location) {
+        if (!blocksMap.containsKey(blockId)) {
+            return;
+        }
+        ArcheologyBlock block = blocksMap.get(blockId);
+        location = location.getBlock().getLocation();
+        ChunkManager chunkManager = ChunkManager.getInstance();
+        Chunk chunk = location.getChunk();
+        chunkManager.registerNewBlock(chunk, block, location);
     }
 
 }

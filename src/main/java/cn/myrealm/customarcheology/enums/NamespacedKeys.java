@@ -9,7 +9,9 @@ import org.bukkit.NamespacedKey;
 
 public enum NamespacedKeys {
     // block
-    ARCHEOLOGY_DATA("archeology_{0}"),
+    ARCHEOLOGY_ARRAY("archeology_array"),
+    ARCHEOLOGY_BLOCK_LOC("archeology_block_loc.{0}"),
+    ARCHEOLOGY_BLOCK_ITEM("archeology_block_item_{{0}}"),
     // item
     IS_ARCHEOLOGY_ITEM("is_archeology_item"),
     ARCHEOLOGY_BLOCK_ID("archeology_block_id");

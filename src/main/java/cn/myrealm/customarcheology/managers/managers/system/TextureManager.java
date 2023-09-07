@@ -1,4 +1,4 @@
-package cn.myrealm.customarcheology.managers.managers.SysyemManager;
+package cn.myrealm.customarcheology.managers.managers.system;
 
 import cn.myrealm.customarcheology.managers.AbstractManager;
 import cn.myrealm.customarcheology.enums.Messages;

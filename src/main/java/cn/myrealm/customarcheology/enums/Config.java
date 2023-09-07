@@ -18,7 +18,9 @@ public enum Config {
     MYSQL_PASSWORD("database.mysql.password", "root"),
     MYSQL_DATABASE("database.mysql.database", "minecraft"),
     // settings
-    VISIBLE_DISTANCE("settings.visible-distance", 20);
+    VISIBLE_DISTANCE("settings.visible-distance", 20),
+    //symbols
+    VANILLA_SYMBOL("symbols.vanilla", "minecraft:");
 
 
     private final String key;

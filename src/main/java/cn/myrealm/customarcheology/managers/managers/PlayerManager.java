@@ -26,10 +26,10 @@ public class PlayerManager extends AbstractManager {
     protected void onInit() {
         super.onInit();
         playerLookAtMap = new HashMap<>(5);
-//        playerInChunkMap = new HashMap<>(5);
+        playerInChunkMap = new HashMap<>(5);
         for (Player player : plugin.getServer().getOnlinePlayers()) {
             playerLookAtMap.put(player,new PlayerLookAt(player));
-//            playerInChunkMap.put(player, new PlayerInChunk(player));
+            playerInChunkMap.put(player, new PlayerInChunk(player));
         }
     }
 
@@ -39,7 +39,7 @@ public class PlayerManager extends AbstractManager {
 
     public void playerJoin(Player player) {
         playerLookAtMap.put(player,new PlayerLookAt(player));
-//        playerInChunkMap.put(player, new PlayerInChunk(player));
+        playerInChunkMap.put(player, new PlayerInChunk(player));
     }
 
     public void playerQuit(Player player) {
@@ -47,9 +47,9 @@ public class PlayerManager extends AbstractManager {
             playerLookAtMap.get(player).cancelTask();
             playerLookAtMap.remove(player);
         }
-//        if (playerInChunkMap.containsKey(player)) {
-//            playerInChunkMap.get(player).cancelTask();
-//            playerInChunkMap.remove(player);
-//        }
+        if (playerInChunkMap.containsKey(player)) {
+            playerInChunkMap.get(player).cancelTask();
+            playerInChunkMap.remove(player);
+        }
     }
 }

@@ -14,7 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public abstract class AbstractListener extends PacketAdapter implements Listener {
 
-    private final JavaPlugin plugin;
+    protected final JavaPlugin plugin;
 
     public AbstractListener(JavaPlugin plugin, PacketType... types) {
         super(plugin, ListenerPriority.NORMAL, types);

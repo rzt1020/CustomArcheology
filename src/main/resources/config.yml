@@ -10,3 +10,5 @@ database:
     database: minecraft
 settings:
   visible-distance: 20
+  symbols:
+    vanilla: "minecraft:"

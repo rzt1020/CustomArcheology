@@ -1,7 +1,7 @@
 package cn.myrealm.customarcheology.enums;
 
 import cn.myrealm.customarcheology.CustomArcheology;
-import cn.myrealm.customarcheology.managers.managers.SysyemManager.LanguageManager;
+import cn.myrealm.customarcheology.managers.managers.system.LanguageManager;
 
 /**
  * @author rzt10

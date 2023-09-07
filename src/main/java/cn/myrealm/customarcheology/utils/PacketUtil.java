@@ -29,15 +29,17 @@ public class PacketUtil {
 
         CustomArcheology.protocolManager.sendServerPacket(player, animationPacket);
     }
-    public static void changeBlock(Player player, Location blockLocation, Material material) {
+    public static void changeBlock(List<Player> player, Location blockLocation, Material material) {
         PacketContainer blockChangePacket = CustomArcheology.protocolManager.createPacket(PacketType.Play.Server.BLOCK_CHANGE);
 
         blockChangePacket.getBlockPositionModifier().write(0, new BlockPosition(blockLocation.getBlockX(), blockLocation.getBlockY(), blockLocation.getBlockZ()));
         blockChangePacket.getBlockData().write(0, WrappedBlockData.createData(material));
 
-        CustomArcheology.protocolManager.sendServerPacket(player, blockChangePacket);
+        for (Player p : player) {
+            CustomArcheology.protocolManager.sendServerPacket(p, blockChangePacket);
+        }
     }
-    public static int spawnItemDisplay(Player player, Location location, ItemStack displayItem, @Nullable Vector3f scale, @Nullable Quaternionf rotation) {
+    public static int spawnItemDisplay(List<Player> player, Location location, ItemStack displayItem, @Nullable Vector3f scale, @Nullable Quaternionf rotation) {
         PacketContainer spawnPacket = new PacketContainer(PacketType.Play.Server.SPAWN_ENTITY);
         int entityId = new Random().nextInt();
         UUID entityUuid = UUID.randomUUID();
@@ -71,17 +73,21 @@ public class PacketUtil {
             }
         }
         metaDataPacket.getDataValueCollectionModifier().write(0, wrappedDataValueList);
-        CustomArcheology.protocolManager.sendServerPacket(player, spawnPacket);
-        CustomArcheology.protocolManager.sendServerPacket(player, metaDataPacket);
+        for (Player p : player) {
+            CustomArcheology.protocolManager.sendServerPacket(p, spawnPacket);
+            CustomArcheology.protocolManager.sendServerPacket(p, metaDataPacket);
+        }
         return entityId;
     }
 
-    public static void removeEntity(Player player, int entityId) {
+    public static void removeEntity(List<Player> player, int entityId) {
         PacketContainer entityDestroyPacket = new PacketContainer(PacketType.Play.Server.ENTITY_DESTROY);
 
         entityDestroyPacket.getIntLists().write(0, Collections.singletonList(entityId));
 
-        CustomArcheology.protocolManager.sendServerPacket(player, entityDestroyPacket);
+        for (Player p : player) {
+            CustomArcheology.protocolManager.sendServerPacket(p, entityDestroyPacket);
+        }
 
     }
 }

@@ -10,11 +10,10 @@ import cn.myrealm.customarcheology.listeners.bukkit.PlayerJoinListener;
 import cn.myrealm.customarcheology.listeners.bukkit.PlayerPlaceBlockListener;
 import cn.myrealm.customarcheology.managers.AbstractManager;
 import cn.myrealm.customarcheology.managers.managers.*;
-import cn.myrealm.customarcheology.managers.managers.SysyemManager.DatabaseManager;
-import cn.myrealm.customarcheology.managers.managers.SysyemManager.LanguageManager;
-import cn.myrealm.customarcheology.managers.managers.SysyemManager.TextureManager;
+import cn.myrealm.customarcheology.managers.managers.system.DatabaseManager;
+import cn.myrealm.customarcheology.managers.managers.system.LanguageManager;
+import cn.myrealm.customarcheology.managers.managers.system.TextureManager;
 import cn.myrealm.customarcheology.enums.Messages;
-import com.comphenix.protocol.ProtocolLib;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import org.bukkit.Bukkit;
@@ -63,7 +62,7 @@ public final class CustomArcheology extends JavaPlugin {
         managers.add(new TextureManager(this));
         managers.add(new PlayerManager(this));
         managers.add(new BlockManager(this));
-//        managers.add(new ChunkManager(this));
+        managers.add(new ChunkManager(this));
     }
     public void disablePlugin() {
         for (AbstractManager manager : managers) {
