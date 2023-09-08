@@ -1,6 +1,6 @@
 display_name: "Suspicious Stone"
 replace_block: stone
-loot_tables: ["minecraft:suspicious_sand"]
+loot_tables: ["minecraft:desert_pyramid"]
 brush_tools:
   wooden_tiny_pickaxe: 1.0
   stone_tiny_pickaxe: 1.2

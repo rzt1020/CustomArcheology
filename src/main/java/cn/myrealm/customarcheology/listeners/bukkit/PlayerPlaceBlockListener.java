@@ -66,13 +66,9 @@ public class PlayerPlaceBlockListener extends AbstractListener {
         }
         Location location = Objects.requireNonNull(event.getClickedBlock()).getRelative(event.getBlockFace()).getLocation();
         Bukkit.getScheduler().runTaskLater(CustomArcheology.plugin, () -> {
-            if (event.getPlayer().getLocation().getBlock().equals(location.getBlock())) {
+            Location playerLocation = event.getPlayer().getLocation().getBlock().getLocation();
+            if (playerLocation.equals(location) || playerLocation.add(0, 1, 0).equals(location)) {
                 return;
-            }
-            for (Entity entity : event.getPlayer().getNearbyEntities(10, 10, 10)) {
-                if (entity.getLocation().getBlock().equals(location.getBlock())) {
-                    return;
-                }
             }
             PacketUtil.swingItem(event.getPlayer());
             blockManager.placeBlock(blockId, location);

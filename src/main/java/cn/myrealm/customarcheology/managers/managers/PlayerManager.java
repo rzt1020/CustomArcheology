@@ -1,10 +1,12 @@
 package cn.myrealm.customarcheology.managers.managers;
 
 import cn.myrealm.customarcheology.managers.AbstractManager;
-import cn.myrealm.customarcheology.mechanics.players.PlayerInChunk;
+import cn.myrealm.customarcheology.mechanics.FakeTileBlock;
 import cn.myrealm.customarcheology.mechanics.players.PlayerLookAt;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +17,7 @@ import java.util.Map;
 public class PlayerManager extends AbstractManager {
     private static PlayerManager instance;
     private Map<Player, PlayerLookAt> playerLookAtMap;
-    private Map<Player, PlayerInChunk> playerInChunkMap;
+    private Map<Player, FakeTileBlock> playerBlockMap;
 
     public PlayerManager(JavaPlugin plugin) {
         super(plugin);
@@ -24,12 +26,17 @@ public class PlayerManager extends AbstractManager {
 
     @Override
     protected void onInit() {
-        super.onInit();
+        playerBlockMap = new HashMap<>(5);
         playerLookAtMap = new HashMap<>(5);
-        playerInChunkMap = new HashMap<>(5);
         for (Player player : plugin.getServer().getOnlinePlayers()) {
             playerLookAtMap.put(player,new PlayerLookAt(player));
-            playerInChunkMap.put(player, new PlayerInChunk(player));
+        }
+    }
+
+    @Override
+    protected void onDisable() {
+        for (PlayerLookAt playerLookAt : playerLookAtMap.values()) {
+            playerLookAt.cancelTask();
         }
     }
 
@@ -39,7 +46,6 @@ public class PlayerManager extends AbstractManager {
 
     public void playerJoin(Player player) {
         playerLookAtMap.put(player,new PlayerLookAt(player));
-        playerInChunkMap.put(player, new PlayerInChunk(player));
     }
 
     public void playerQuit(Player player) {
@@ -47,9 +53,28 @@ public class PlayerManager extends AbstractManager {
             playerLookAtMap.get(player).cancelTask();
             playerLookAtMap.remove(player);
         }
-        if (playerInChunkMap.containsKey(player)) {
-            playerInChunkMap.get(player).cancelTask();
-            playerInChunkMap.remove(player);
+    }
+
+    public void setBrush(Player player, FakeTileBlock fakeTileBlock, BlockFace blockFace) {
+        System.out.println("Setting brush");
+        if (playerBlockMap.containsValue(fakeTileBlock)) {
+            player.sendMessage("Other player is already archeology here");
+            return;
+        }
+        playerBlockMap.put(player,  fakeTileBlock);
+        playerLookAtMap.get(player).setTask(new BukkitRunnable() {
+            @Override
+            public void run() {
+                cancelBrush(player);
+            }
+        });
+        fakeTileBlock.play(blockFace);
+    }
+
+    public void cancelBrush(Player player) {
+        System.out.println("Cancelling brush");
+        if (playerBlockMap.containsKey(player)) {
+            playerBlockMap.get(player).cancel();
         }
     }
 }

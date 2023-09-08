@@ -1,6 +1,8 @@
 package cn.myrealm.customarcheology.mechanics.players;
 
 import cn.myrealm.customarcheology.CustomArcheology;
+import cn.myrealm.customarcheology.managers.managers.ChunkManager;
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -17,6 +19,7 @@ public class PlayerLookAt implements PlayerTask {
     private final Player player;
     private Block lookAtBlock;
     private final BukkitRunnable lookAtBlockTask;
+    private BukkitRunnable task;
     public PlayerLookAt(Player player) {
         this.player = player;
         lookAtBlockTask = new BukkitRunnable() {
@@ -32,6 +35,9 @@ public class PlayerLookAt implements PlayerTask {
     public void cancelTask() {
         lookAtBlockTask.cancel();
     }
+    public void setTask(BukkitRunnable task) {
+        this.task = task;
+    }
     public void updateLookAtBlock() {
         Block block = player.getTargetBlock(null, 10);
         if (Objects.isNull(lookAtBlock)) {
@@ -45,9 +51,14 @@ public class PlayerLookAt implements PlayerTask {
         }
     }
     public void lookAtBlockChange(Block before, Block after) {
-        if (after.getType().equals(Material.DIAMOND_BLOCK)) {
+        ChunkManager chunkManager = ChunkManager.getInstance();
+        if (chunkManager.isArcheologyBlock(after.getLocation())) {
             Particle.DustOptions dustOptions = new Particle.DustOptions(Color.RED, 1);
             after.getWorld().spawnParticle(Particle.REDSTONE, after.getLocation().add(0.5, 0.5, 0.5), 10, 0.5, 0.5, 0.5, 0, dustOptions);
+        }
+        if (Objects.nonNull(task)) {
+            task.run();
+            task = null;
         }
     }
 }

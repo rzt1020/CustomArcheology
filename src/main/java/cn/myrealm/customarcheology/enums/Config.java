@@ -18,9 +18,11 @@ public enum Config {
     MYSQL_PASSWORD("database.mysql.password", "root"),
     MYSQL_DATABASE("database.mysql.database", "minecraft"),
     // settings
-    VISIBLE_DISTANCE("settings.visible-distance", 20),
+    VISIBLE_DISTANCE("settings.visible-distance", 8),
+    ITEM_SCALE("settings.item-scale", 0.5),
+    BLOCK_SCALE("settings.block-scale", 0.25),
     //symbols
-    VANILLA_SYMBOL("symbols.vanilla", "minecraft:");
+    VANILLA_SYMBOL("settings.symbols.vanilla", "minecraft:");
 
 
     private final String key;
@@ -44,6 +46,10 @@ public enum Config {
     public boolean asBoolean() {
         FileConfiguration config = CustomArcheology.plugin.getConfig();
         return config.getBoolean(key, (Boolean) def);
+    }
+    public double asDouble() {
+        FileConfiguration config = CustomArcheology.plugin.getConfig();
+        return config.getDouble(key, (Double) def);
     }
 
 }

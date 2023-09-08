@@ -6,8 +6,10 @@ import cn.myrealm.customarcheology.commands.subcommands.HelpCommand;
 import cn.myrealm.customarcheology.commands.subcommands.ReloadCommand;
 import cn.myrealm.customarcheology.commands.subcommands.TestCommand;
 import cn.myrealm.customarcheology.listeners.bukkit.BlockBreakListener;
+import cn.myrealm.customarcheology.listeners.bukkit.PlayerBrushListener;
 import cn.myrealm.customarcheology.listeners.bukkit.PlayerJoinListener;
 import cn.myrealm.customarcheology.listeners.bukkit.PlayerPlaceBlockListener;
+import cn.myrealm.customarcheology.listeners.protocol.PlayerDigListener;
 import cn.myrealm.customarcheology.managers.AbstractManager;
 import cn.myrealm.customarcheology.managers.managers.*;
 import cn.myrealm.customarcheology.managers.managers.system.DatabaseManager;
@@ -61,6 +63,7 @@ public final class CustomArcheology extends JavaPlugin {
         managers.add(new DatabaseManager(this));
         managers.add(new TextureManager(this));
         managers.add(new PlayerManager(this));
+        managers.add(new LootManager(this));
         managers.add(new BlockManager(this));
         managers.add(new ChunkManager(this));
     }
@@ -72,11 +75,12 @@ public final class CustomArcheology extends JavaPlugin {
 
     public void registerDefaultListeners() {
         // Protocol Listener
-
+        new PlayerDigListener(this).registerProtocolListener();
         // Bukkit Listener
         new PlayerJoinListener(this).registerBukkitListener();
         new PlayerPlaceBlockListener(this).registerBukkitListener();
         new BlockBreakListener(this).registerBukkitListener();
+        new PlayerBrushListener(this).registerBukkitListener();
     }
     public void registerDefaultCommands() {
         MainCommand command = new MainCommand();

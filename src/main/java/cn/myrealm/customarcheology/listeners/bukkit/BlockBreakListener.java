@@ -22,13 +22,6 @@ import java.util.*;
  * @author rzt10
  */
 public class BlockBreakListener extends AbstractListener {
-    public static Map<Location, Integer> entityIdMap = new HashMap<>();
-    public static void addEntityId(Location loc, int id) {
-        entityIdMap.put(loc, id);
-    }
-    public static void removeEntityId(Location loc) {
-        entityIdMap.remove(loc);
-    }
 
     public BlockBreakListener(JavaPlugin plugin) {
         super(plugin);
@@ -37,13 +30,9 @@ public class BlockBreakListener extends AbstractListener {
     @EventHandler
     public void onBreakBlock(BlockBreakEvent event) {
         Location loc = event.getBlock().getLocation();
-        if (entityIdMap.containsKey(loc)) {
-            int id = entityIdMap.get(loc);
-            BlockManager blockManager = BlockManager.getInstance();
-            blockManager.removeEntity(id, loc);
-            ChunkManager chunkManager = ChunkManager.getInstance();
+        ChunkManager chunkManager = ChunkManager.getInstance();
+        if (chunkManager.isArcheologyBlock(loc)) {
             chunkManager.removeBlock(loc);
-            removeEntityId(loc);
         }
     }
 
@@ -53,7 +42,8 @@ public class BlockBreakListener extends AbstractListener {
             return;
         }
         Location loc = Objects.requireNonNull(event.getClickedBlock()).getLocation();
-        if (entityIdMap.containsKey(loc)) {
+        ChunkManager chunkManager = ChunkManager.getInstance();
+        if (chunkManager.isArcheologyBlock(loc)) {
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
                 PacketUtil.changeBlock(Collections.singletonList(event.getPlayer()), loc, Material.BARRIER);
             },1);

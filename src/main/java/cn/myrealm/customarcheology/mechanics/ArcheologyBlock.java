@@ -2,6 +2,7 @@ package cn.myrealm.customarcheology.mechanics;
 
 
 import cn.myrealm.customarcheology.enums.NamespacedKeys;
+import cn.myrealm.customarcheology.managers.managers.LootManager;
 import cn.myrealm.customarcheology.managers.managers.system.LanguageManager;
 import cn.myrealm.customarcheology.managers.managers.system.TextureManager;
 import org.bukkit.Location;
@@ -12,10 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author rzt10
@@ -53,6 +51,15 @@ public class ArcheologyBlock {
         itemStack.setAmount(amount);
         return itemStack;
     }
+    public ItemStack generateItemStack(int amount, int stateIndex) {
+        ItemStack itemStack = generateItemStack(amount);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        if (itemMeta != null) {
+            itemMeta.setCustomModelData(states.get(stateIndex).getCustomModelData());
+        }
+        itemStack.setItemMeta(itemMeta);
+        return itemStack;
+    }
 
     public void placeBlock(Location location) {
         location.getBlock().setType(replaceBlock);
@@ -80,8 +87,12 @@ public class ArcheologyBlock {
             return;
         }
         customLootTables = new ArrayList<>();
+        LootManager lootManager = LootManager.getInstance();
         for (String lootTableName : Keys.LOOT_TABLES.asStringList(config)) {
-
+            customLootTables.add(lootManager.getCustomLootTable(lootTableName));
+        }
+        if (customLootTables.isEmpty()) {
+            return;
         }
         valid = true;
         displayName = Keys.DISPLAY_NAME.asString(config);
@@ -93,6 +104,21 @@ public class ArcheologyBlock {
 
     public boolean isValid() {
         return valid;
+    }
+
+    public ItemStack roll() {
+        CustomLootTable customLootTable = customLootTables.get(new Random().nextInt(customLootTables.size()));
+        return customLootTable.generateItem();
+    }
+
+    public State getDefaultState() {
+        return defaultState;
+    }
+    public State getFinishedState() {
+        return finishedState;
+    }
+    public List<State> getStates() {
+        return states;
     }
 }
 
@@ -191,6 +217,8 @@ class State {
         }
         return customModelData;
     }
-
+    public double getHardness() {
+        return hardness;
+    }
 
 }

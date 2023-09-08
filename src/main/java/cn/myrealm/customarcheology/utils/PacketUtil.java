@@ -39,9 +39,8 @@ public class PacketUtil {
             CustomArcheology.protocolManager.sendServerPacket(p, blockChangePacket);
         }
     }
-    public static int spawnItemDisplay(List<Player> player, Location location, ItemStack displayItem, @Nullable Vector3f scale, @Nullable Quaternionf rotation) {
+    public static int spawnItemDisplay(List<Player> player, Location location, ItemStack displayItem, int entityId, @Nullable Vector3f scale, @Nullable Quaternionf rotation) {
         PacketContainer spawnPacket = new PacketContainer(PacketType.Play.Server.SPAWN_ENTITY);
-        int entityId = new Random().nextInt();
         UUID entityUuid = UUID.randomUUID();
 
         spawnPacket.getIntegers()
