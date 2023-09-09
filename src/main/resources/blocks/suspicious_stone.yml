@@ -22,4 +22,4 @@ states:
     texture: "suspicious_stone_3"
     hardness: 1.0
   finished:
-    material: "minecraft:stone"
+    material: stone

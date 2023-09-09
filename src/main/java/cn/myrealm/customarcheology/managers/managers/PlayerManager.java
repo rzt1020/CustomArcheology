@@ -46,6 +46,7 @@ public class PlayerManager extends AbstractManager {
 
     public void playerJoin(Player player) {
         playerLookAtMap.put(player,new PlayerLookAt(player));
+        System.out.println(playerLookAtMap);
     }
 
     public void playerQuit(Player player) {
@@ -62,6 +63,7 @@ public class PlayerManager extends AbstractManager {
             return;
         }
         playerBlockMap.put(player,  fakeTileBlock);
+        System.out.println(playerLookAtMap);
         playerLookAtMap.get(player).setTask(new BukkitRunnable() {
             @Override
             public void run() {
@@ -74,7 +76,19 @@ public class PlayerManager extends AbstractManager {
     public void cancelBrush(Player player) {
         System.out.println("Cancelling brush");
         if (playerBlockMap.containsKey(player)) {
-            playerBlockMap.get(player).cancel();
+            playerBlockMap.get(player).pause();
+            playerBlockMap.remove(player);
         }
+    }
+
+    public void cancelBlock(FakeTileBlock fakeTileBlock) {
+        Player removedPlayer = null;
+        for (Player player : playerBlockMap.keySet()) {
+            if (playerBlockMap.get(player).equals(fakeTileBlock)) {
+                removedPlayer = player;
+                break;
+            }
+        }
+        playerBlockMap.remove(removedPlayer);
     }
 }

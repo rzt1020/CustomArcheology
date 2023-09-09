@@ -39,7 +39,7 @@ public class PacketUtil {
             CustomArcheology.protocolManager.sendServerPacket(p, blockChangePacket);
         }
     }
-    public static int spawnItemDisplay(List<Player> player, Location location, ItemStack displayItem, int entityId, @Nullable Vector3f scale, @Nullable Quaternionf rotation) {
+    public static void spawnItemDisplay(List<Player> player, Location location, ItemStack displayItem, int entityId, @Nullable Vector3f scale, @Nullable Quaternionf rotation) {
         PacketContainer spawnPacket = new PacketContainer(PacketType.Play.Server.SPAWN_ENTITY);
         UUID entityUuid = UUID.randomUUID();
 
@@ -53,6 +53,12 @@ public class PacketUtil {
         spawnPacket.getEntityTypeModifier().write(0, EntityType.ITEM_DISPLAY);
 
 
+        for (Player p : player) {
+            CustomArcheology.protocolManager.sendServerPacket(p, spawnPacket);
+        }
+        updateItemDisplay(player, displayItem, entityId, scale, rotation);
+    }
+    public static void updateItemDisplay(List<Player> player, ItemStack displayItem, int entityId, @Nullable Vector3f scale, @Nullable Quaternionf rotation) {
         PacketContainer metaDataPacket = new PacketContainer(PacketType.Play.Server.ENTITY_METADATA);
         metaDataPacket.getIntegers().write(0, entityId);
 
@@ -72,11 +78,10 @@ public class PacketUtil {
             }
         }
         metaDataPacket.getDataValueCollectionModifier().write(0, wrappedDataValueList);
+
         for (Player p : player) {
-            CustomArcheology.protocolManager.sendServerPacket(p, spawnPacket);
             CustomArcheology.protocolManager.sendServerPacket(p, metaDataPacket);
         }
-        return entityId;
     }
 
     public static void removeEntity(List<Player> player, int entityId) {
@@ -87,6 +92,20 @@ public class PacketUtil {
         for (Player p : player) {
             CustomArcheology.protocolManager.sendServerPacket(p, entityDestroyPacket);
         }
+    }
 
+    public static void teleportEntity(List<Player> players, int entityId, Location location) {
+        PacketContainer teleportPacket = new PacketContainer(PacketType.Play.Server.ENTITY_TELEPORT);
+
+
+        teleportPacket.getIntegers().write(0, entityId);
+        teleportPacket.getDoubles().write(0, location.getX() + 0.5);
+        teleportPacket.getDoubles().write(1, location.getY() + 0.5);
+        teleportPacket.getDoubles().write(2, location.getZ() + 0.5);
+
+
+        for (Player player : players) {
+            CustomArcheology.protocolManager.sendServerPacket(player, teleportPacket);
+        }
     }
 }

@@ -14,6 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author rzt10
@@ -51,11 +52,11 @@ public class ArcheologyBlock {
         itemStack.setAmount(amount);
         return itemStack;
     }
-    public ItemStack generateItemStack(int amount, int stateIndex) {
+    public ItemStack generateItemStack(int amount, State state) {
         ItemStack itemStack = generateItemStack(amount);
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta != null) {
-            itemMeta.setCustomModelData(states.get(stateIndex).getCustomModelData());
+            itemMeta.setCustomModelData(state.getCustomModelData());
         }
         itemStack.setItemMeta(itemMeta);
         return itemStack;
@@ -83,6 +84,7 @@ public class ArcheologyBlock {
                 states.add(state);
             }
         }
+        states = states.stream().sorted(Comparator.comparing(State::getIndex)).collect(Collectors.toList());
         if (Objects.isNull(defaultState) || Objects.isNull(finishedState)) {
             return;
         }
@@ -205,6 +207,9 @@ class State {
         }
         valid = true;
     }
+    public int getIndex() {
+        return Integer.parseInt(section.getName().substring(section.getName().length() - 1));
+    }
 
     public int getCustomModelData() {
         if (isFinished) {
@@ -219,6 +224,12 @@ class State {
     }
     public double getHardness() {
         return hardness;
+    }
+    public Material getMaterial() {
+        if (Objects.nonNull(material)) {
+            return Material.valueOf(material.toUpperCase());
+        }
+        return null;
     }
 
 }
