@@ -53,15 +53,11 @@ public class ChunkManager extends AbstractManager {
                 for (Chunk chunk : newChunks) {
                     loadChunk(chunk);
                 }
-                System.out.println(loadedChunks.keySet());
                 BlockManager blockManager = BlockManager.getInstance();
                 blockManager.updateBlocks();
             }
         };
         loadUnloadTask.runTaskTimer(plugin, 10, 20);
-//        Bukkit.getScheduler().runTaskTimer(plugin, () -> {
-//
-//        }, 0, 1);
     }
 
     @Override
@@ -129,10 +125,6 @@ public class ChunkManager extends AbstractManager {
         return loadedChunks.get(chunk);
     }
 
-    public ItemStack getReward(Location location) {
-        PersistentDataChunk dataChunk = getPersistentDataChunk(location);
-        return dataChunk.getReward(location);
-    }
 
     public List<FakeTileBlock> getFakeTileBlocks() {
         List<FakeTileBlock> fakeTileBlocks = new ArrayList<>();
@@ -149,4 +141,6 @@ public class ChunkManager extends AbstractManager {
         }
         return loadedChunks.get(chunk).getFakeTileBlock(location);
     }
+
+
 }

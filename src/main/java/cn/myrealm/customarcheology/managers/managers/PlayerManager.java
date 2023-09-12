@@ -46,7 +46,6 @@ public class PlayerManager extends AbstractManager {
 
     public void playerJoin(Player player) {
         playerLookAtMap.put(player,new PlayerLookAt(player));
-        System.out.println(playerLookAtMap);
     }
 
     public void playerQuit(Player player) {
@@ -57,13 +56,11 @@ public class PlayerManager extends AbstractManager {
     }
 
     public void setBrush(Player player, FakeTileBlock fakeTileBlock, BlockFace blockFace) {
-        System.out.println("Setting brush");
         if (playerBlockMap.containsValue(fakeTileBlock)) {
             player.sendMessage("Other player is already archeology here");
             return;
         }
         playerBlockMap.put(player,  fakeTileBlock);
-        System.out.println(playerLookAtMap);
         playerLookAtMap.get(player).setTask(new BukkitRunnable() {
             @Override
             public void run() {
@@ -74,7 +71,6 @@ public class PlayerManager extends AbstractManager {
     }
 
     public void cancelBrush(Player player) {
-        System.out.println("Cancelling brush");
         if (playerBlockMap.containsKey(player)) {
             playerBlockMap.get(player).pause();
             playerBlockMap.remove(player);

@@ -11,8 +11,8 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.joml.Vector3f;
 import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import java.util.*;
 

@@ -68,7 +68,6 @@ public class ArcheologyBlock {
     private void loadConfig() {
         ConfigurationSection section = Keys.STATES.asSection(config);
         replaceBlock = Material.getMaterial(Keys.REPLACE_BLOCK.asString(config).toUpperCase());
-        System.out.println(replaceBlock);
         if (Objects.isNull(section) || Objects.isNull(replaceBlock) || !replaceBlock.isBlock()) {
             return;
         }
@@ -134,7 +133,10 @@ enum Keys {
     REPLACE_BLOCK("replace_block", "stone"),
     LOOT_TABLES("loot_tables", null),
     BLUSH_TOOLS("blush_tools", null),
-    STATES("states", null);
+    STATES("states", null),
+    GENERATE_BIOMES("generate_biomes", "all"),
+    DISTRIBUTION("distribution", null),
+    MAX_PER_CHUNK("max_per_chunk", 3);
 
     private final String key;
     private final Object def;
@@ -174,7 +176,6 @@ enum Keys {
 }
 
 class State {
-    private boolean valid;
     private final ConfigurationSection section;
     public boolean isDefault,
                    isFinished;
@@ -205,7 +206,6 @@ class State {
         if (!textureManager.isBlockTextureExists(texture)) {
             return;
         }
-        valid = true;
     }
     public int getIndex() {
         return Integer.parseInt(section.getName().substring(section.getName().length() - 1));

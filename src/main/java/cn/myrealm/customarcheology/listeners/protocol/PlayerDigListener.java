@@ -5,8 +5,6 @@ import cn.myrealm.customarcheology.listeners.AbstractListener;
 import cn.myrealm.customarcheology.managers.managers.PlayerManager;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.wrappers.BlockPosition;
-import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**

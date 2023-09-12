@@ -2,9 +2,7 @@ package cn.myrealm.customarcheology.mechanics.players;
 
 import cn.myrealm.customarcheology.CustomArcheology;
 import cn.myrealm.customarcheology.managers.managers.ChunkManager;
-import org.bukkit.Bukkit;
 import org.bukkit.Color;
-import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -15,7 +13,7 @@ import java.util.Objects;
 /**
  * @author rzt10
  */
-public class PlayerLookAt implements PlayerTask {
+public class PlayerLookAt {
     private final Player player;
     private Block lookAtBlock;
     private final BukkitRunnable lookAtBlockTask;
@@ -31,7 +29,6 @@ public class PlayerLookAt implements PlayerTask {
         lookAtBlockTask.runTaskTimer(CustomArcheology.plugin, 0, 1);
     }
 
-    @Override
     public void cancelTask() {
         lookAtBlockTask.cancel();
     }

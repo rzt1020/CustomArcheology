@@ -2,21 +2,17 @@ package cn.myrealm.customarcheology.listeners.bukkit;
 
 
 import cn.myrealm.customarcheology.listeners.AbstractListener;
-import cn.myrealm.customarcheology.managers.managers.BlockManager;
 import cn.myrealm.customarcheology.managers.managers.ChunkManager;
 import cn.myrealm.customarcheology.utils.PacketUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Objects;
 
 /**
  * @author rzt10
@@ -50,4 +46,17 @@ public class BlockBreakListener extends AbstractListener {
         }
     }
 
+    @EventHandler
+    public void onLeftClick(PlayerInteractEvent event) {
+        if (!event.getAction().equals(Action.LEFT_CLICK_BLOCK) || !event.getPlayer().getGameMode().equals(GameMode.SURVIVAL)) {
+            return;
+        }
+        Location loc = Objects.requireNonNull(event.getClickedBlock()).getLocation();
+        ChunkManager chunkManager = ChunkManager.getInstance();
+        if (chunkManager.isArcheologyBlock(loc)) {
+            loc.getBlock().setType(Material.AIR);
+            chunkManager.removeBlock(loc);
+            event.getPlayer().playSound(event.getPlayer(), Sound.BLOCK_SUSPICIOUS_SAND_BREAK, 1, 1);
+        }
+    }
 }

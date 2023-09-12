@@ -1,8 +1,8 @@
 package cn.myrealm.customarcheology.managers.managers.system;
 
-import cn.myrealm.customarcheology.managers.AbstractManager;
 import cn.myrealm.customarcheology.enums.Config;
 import cn.myrealm.customarcheology.enums.SQLs;
+import cn.myrealm.customarcheology.managers.AbstractManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -54,7 +54,7 @@ public class DatabaseManager extends AbstractManager {
     }
 
     private void createTables() {
-        executeAsyncUpdate(SQLs.CREATE_BLOCK_TABLE.getSQL());
+        executeAsyncUpdate(SQLs.CREATE_BLOCK_TABLE.getSql());
     }
 
     public void executeAsyncQuery(final String query, final Callback<Map<String, Object>> callback) {

@@ -2,14 +2,12 @@ package cn.myrealm.customarcheology.commands.subcommands;
 
 
 import cn.myrealm.customarcheology.commands.SubCommand;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.util.Transformation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +47,9 @@ public class TestCommand implements SubCommand {
         if (args.length > 1) {
             ItemStack itemStack = player.getInventory().getItemInMainHand();
             ItemMeta itemMeta = itemStack.getItemMeta();
-            itemMeta.setCustomModelData(Integer.parseInt(args[1]));
+            if (itemMeta != null) {
+                itemMeta.setCustomModelData(Integer.parseInt(args[1]));
+            }
             itemStack.setItemMeta(itemMeta);
             player.getInventory().setItemInMainHand(itemStack);
             return;

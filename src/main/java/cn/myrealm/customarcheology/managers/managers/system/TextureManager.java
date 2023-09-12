@@ -1,8 +1,8 @@
 package cn.myrealm.customarcheology.managers.managers.system;
 
-import cn.myrealm.customarcheology.managers.AbstractManager;
 import cn.myrealm.customarcheology.enums.Messages;
 import cn.myrealm.customarcheology.enums.SQLs;
+import cn.myrealm.customarcheology.managers.AbstractManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -33,7 +33,7 @@ public class TextureManager extends AbstractManager {
     protected void onInit() {
         blockCustommodeldataMap = new HashMap<>(5);
         blockCustommodeldataList = new ArrayList<>();
-        DatabaseManager.getInstance().executeAsyncQuery(SQLs.QUERY_BLOCK_TABLE.getSQL(), new DatabaseManager.Callback<Map<String, Object>>() {
+        DatabaseManager.getInstance().executeAsyncQuery(SQLs.QUERY_BLOCK_TABLE.getSql(), new DatabaseManager.Callback<Map<String, Object>>() {
             @Override
             public void onSuccess(List<Map<String, Object>> results) {
                 for (Map<String, Object> result : results) {
@@ -79,7 +79,7 @@ public class TextureManager extends AbstractManager {
                     while (blockCustommodeldataList.contains(custommodeldata)) {
                         custommodeldata ++;
                     }
-                    String sql = SQLs.INSERT_BLOCK_TABLE.getSQL(blockId, String.valueOf(custommodeldata));
+                    String sql = SQLs.INSERT_BLOCK_TABLE.getSql(blockId, String.valueOf(custommodeldata));
                     DatabaseManager.getInstance().executeAsyncUpdate(sql);
                     blockCustommodeldataMap.put(blockId, custommodeldata);
                     blockCustommodeldataList.add(custommodeldata);

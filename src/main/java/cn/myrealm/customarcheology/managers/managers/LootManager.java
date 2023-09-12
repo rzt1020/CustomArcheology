@@ -7,8 +7,6 @@ import cn.myrealm.customarcheology.mechanics.CustomLootTable;
 import org.bukkit.loot.LootTables;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Objects;
-
 /**
  * @author rzt10
  */

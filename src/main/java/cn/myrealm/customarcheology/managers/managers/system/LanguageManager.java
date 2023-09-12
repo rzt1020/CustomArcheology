@@ -1,8 +1,8 @@
 package cn.myrealm.customarcheology.managers.managers.system;
 
 
-import cn.myrealm.customarcheology.managers.AbstractManager;
 import cn.myrealm.customarcheology.enums.Config;
+import cn.myrealm.customarcheology.managers.AbstractManager;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;

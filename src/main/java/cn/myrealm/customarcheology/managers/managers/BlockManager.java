@@ -67,9 +67,7 @@ public class BlockManager extends AbstractManager {
         }
         ArcheologyBlock block = blocksMap.get(blockId);
         block.placeBlock(location);
-        Bukkit.getScheduler().runTaskLater(CustomArcheology.plugin, () -> {
-            registerNewBlock(blockId, location);
-        }, 1);
+        Bukkit.getScheduler().runTaskLater(CustomArcheology.plugin, () -> registerNewBlock(blockId, location), 1);
     }
     public void registerNewBlock(String blockId, Location location) {
         if (!blocksMap.containsKey(blockId)) {

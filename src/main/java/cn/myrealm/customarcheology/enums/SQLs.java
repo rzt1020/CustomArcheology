@@ -29,7 +29,7 @@ public enum SQLs {
         this.sqlite = mysql;
     }
 
-    public String getSQL(String... args) {
+    public String getSql(String... args) {
         String sql;
         if (Config.USE_MYSQL.asBoolean()) {
             sql = mysql;

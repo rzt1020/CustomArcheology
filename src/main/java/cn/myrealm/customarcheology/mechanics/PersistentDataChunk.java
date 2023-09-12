@@ -2,7 +2,6 @@ package cn.myrealm.customarcheology.mechanics;
 
 
 import cn.myrealm.customarcheology.enums.NamespacedKeys;
-import cn.myrealm.customarcheology.managers.managers.BlockManager;
 import cn.myrealm.customarcheology.mechanics.persistent_data.ItemStackTagType;
 import cn.myrealm.customarcheology.mechanics.persistent_data.LocationTagType;
 import cn.myrealm.customarcheology.mechanics.persistent_data.StringArrayTagType;
@@ -12,7 +11,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author rzt10
@@ -36,10 +34,8 @@ public class PersistentDataChunk {
     private void loadBlockNames() {
         if (chunk.getPersistentDataContainer().has(NamespacedKeys.ARCHEOLOGY_ARRAY.getNamespacedKey(), STRING_ARRAY_TYPE)) {
             blockNameList = new ArrayList<>(Arrays.asList(Objects.requireNonNull(chunk.getPersistentDataContainer().get(NamespacedKeys.ARCHEOLOGY_ARRAY.getNamespacedKey(), STRING_ARRAY_TYPE))));
-            System.out.println(chunk.getX() + "," + chunk.getZ() + " loaded:" + blockNameList);
         } else {
             blockNameList = new ArrayList<>();
-            System.out.println(chunk.getX() + "," + chunk.getZ() + " loaded:null");
         }
     }
     private void loadBlockLocations() {
@@ -48,18 +44,14 @@ public class PersistentDataChunk {
             if (chunk.getPersistentDataContainer().has(NamespacedKeys.ARCHEOLOGY_BLOCK_LOC.getNamespacedKey(blockName), LOCATION_TYPE)) {
                 location = chunk.getPersistentDataContainer().get(NamespacedKeys.ARCHEOLOGY_BLOCK_LOC.getNamespacedKey(blockName), LOCATION_TYPE);
             }
+            ItemStack reward = null;
+            if (chunk.getPersistentDataContainer().has(NamespacedKeys.ARCHEOLOGY_BLOCK_ITEM.getNamespacedKey(blockName), ITEM_STACK_TYPE)) {
+                reward = chunk.getPersistentDataContainer().get(NamespacedKeys.ARCHEOLOGY_BLOCK_ITEM.getNamespacedKey(blockName), ITEM_STACK_TYPE);
+            }
             if (Objects.nonNull(location)) {
-                FakeTileBlock fakeTileBlock = new FakeTileBlock(blockName, location);
+                FakeTileBlock fakeTileBlock = new FakeTileBlock(blockName, location, reward);
                 if (fakeTileBlock.isValid()) {
                     loadedLocationBlocks.put(location, fakeTileBlock);
-                    System.out.println(chunk.getX() + "," + chunk.getZ() + " loaded:" + location);
-                    if (chunk.getPersistentDataContainer().has(NamespacedKeys.ARCHEOLOGY_BLOCK_ITEM.getNamespacedKey(blockName), ITEM_STACK_TYPE)) {
-                        ItemStack itemStack = chunk.getPersistentDataContainer().get(NamespacedKeys.ARCHEOLOGY_BLOCK_ITEM.getNamespacedKey(blockName), ITEM_STACK_TYPE);
-                        if (Objects.nonNull(itemStack)) {
-                            fakeTileBlock.setReward(itemStack);
-                            System.out.println(chunk.getX() + "," + chunk.getZ() + "reward:" + itemStack);
-                        }
-                    }
                 }
             }
         }
@@ -73,9 +65,18 @@ public class PersistentDataChunk {
             fakeTileBlock.removeBlock();
         }
         saveBlockNames();
-        System.out.println(chunk.getX() + "," + chunk.getZ() + " saved:" + blockNameList);
         saveBlockLocations();
+        saveBlockRewards();
     }
+
+    private void saveBlockRewards() {
+        for (FakeTileBlock fakeTileBlock : loadedLocationBlocks.values()) {
+            if (Objects.nonNull(fakeTileBlock.getReward())) {
+                chunk.getPersistentDataContainer().set(NamespacedKeys.ARCHEOLOGY_BLOCK_ITEM.getNamespacedKey(fakeTileBlock.getBlockName()), ITEM_STACK_TYPE, fakeTileBlock.getReward() );
+            }
+        }
+    }
+
     private void saveBlockNames() {
         String [] array = new String[blockNameList.size()];
         blockNameList.toArray(array);
@@ -85,7 +86,6 @@ public class PersistentDataChunk {
         for (Location location : loadedLocationBlocks.keySet()) {
             FakeTileBlock block = loadedLocationBlocks.get(location);
             chunk.getPersistentDataContainer().set(NamespacedKeys.ARCHEOLOGY_BLOCK_LOC.getNamespacedKey(block.getBlockName()), LOCATION_TYPE, location);
-            System.out.println(chunk.getX() + "," + chunk.getZ() + " saved:" + location);
         }
     }
     public void removeBlock(Location location) {
@@ -100,15 +100,16 @@ public class PersistentDataChunk {
         saveBlockNames();
         if (chunk.getPersistentDataContainer().has(NamespacedKeys.ARCHEOLOGY_BLOCK_LOC.getNamespacedKey(removedBlockData), LOCATION_TYPE)) {
             chunk.getPersistentDataContainer().remove(NamespacedKeys.ARCHEOLOGY_BLOCK_LOC.getNamespacedKey(removedBlockData));
-            System.out.println(chunk.getX()  + "," + chunk.getZ() + " removed:" + removedBlockData);
+        }
+        if (chunk.getPersistentDataContainer().has(NamespacedKeys.ARCHEOLOGY_BLOCK_ITEM.getNamespacedKey(removedBlockData), ITEM_STACK_TYPE)) {
+            chunk.getPersistentDataContainer().remove(NamespacedKeys.ARCHEOLOGY_BLOCK_ITEM.getNamespacedKey(removedBlockData));
         }
     }
 
     public void registerNewBlock(ArcheologyBlock block, Location location) {
         String blockName = block.getName() + "_" + new Random().nextInt();
-        System.out.println(blockName);
         blockNameList.add(blockName);
-        FakeTileBlock fakeTileBlock = new FakeTileBlock(blockName, location);
+        FakeTileBlock fakeTileBlock = new FakeTileBlock(blockName, location, null);
         if (fakeTileBlock.isValid()) {
             fakeTileBlock.placeBlock();
             loadedLocationBlocks.put(location, fakeTileBlock);
@@ -126,15 +127,6 @@ public class PersistentDataChunk {
         return null;
     }
 
-    public ItemStack getReward(Location location) {
-        if (loadedLocationBlocks.containsKey(location)) {
-            String name = loadedLocationBlocks.get(location).getBlockName();
-            if (chunk.getPersistentDataContainer().has(NamespacedKeys.ARCHEOLOGY_BLOCK_ITEM.getNamespacedKey(name), ITEM_STACK_TYPE)) {
-                return chunk.getPersistentDataContainer().get(NamespacedKeys.ARCHEOLOGY_BLOCK_ITEM.getNamespacedKey(name), ITEM_STACK_TYPE);
-            }
-        }
-        return null;
-    }
 
     public Collection<FakeTileBlock> getFakeTileBlocks() {
         return loadedLocationBlocks.values();
@@ -146,4 +138,5 @@ public class PersistentDataChunk {
         }
         return null;
     }
+
 }
