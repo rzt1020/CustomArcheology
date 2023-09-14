@@ -3,6 +3,7 @@ package cn.myrealm.customarcheology.managers.managers;
 
 import cn.myrealm.customarcheology.managers.AbstractManager;
 import cn.myrealm.customarcheology.mechanics.ArcheologyBlock;
+import cn.myrealm.customarcheology.mechanics.ArcheologyChunkSpawner;
 import cn.myrealm.customarcheology.mechanics.FakeTileBlock;
 import cn.myrealm.customarcheology.mechanics.PersistentDataChunk;
 import org.bukkit.Bukkit;
@@ -10,12 +11,12 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 /**
@@ -36,29 +37,31 @@ public class ChunkManager extends AbstractManager {
         loadUnloadTask = new BukkitRunnable() {
             @Override
             public void run() {
-                Set<Chunk> newChunks = new HashSet<>();
-                for (Player player :  Bukkit.getOnlinePlayers()) {
-                    Location location = player.getLocation();
-                    newChunks.add(location.clone().add(8,0,8).getChunk());
-                    newChunks.add(location.clone().add(8,0,-8).getChunk());
-                    newChunks.add(location.clone().add(-8,0,8).getChunk());
-                    newChunks.add(location.clone().add(-8,0,-8).getChunk());
-                }
-                Set<Chunk> oldChunks = new HashSet<>(loadedChunks.keySet());
-                oldChunks.removeAll(newChunks);
-                for (Chunk chunk : oldChunks) {
-                    unloadChunk(chunk);
-                }
+                Set<Chunk> newChunks = Bukkit.getOnlinePlayers().stream()
+                        .flatMap(player -> {
+                            Location loc = player.getLocation();
+                            return Stream.of(
+                                    loc.clone().add(8, 0, 8).getChunk(),
+                                    loc.clone().add(8, 0, -8).getChunk(),
+                                    loc.clone().add(-8, 0, 8).getChunk(),
+                                    loc.clone().add(-8, 0, -8).getChunk()
+                            );
+                        })
+                        .collect(Collectors.toSet());
+
+                Set<Chunk> toUnload = new HashSet<>(loadedChunks.keySet());
+                toUnload.removeAll(newChunks);
+                toUnload.forEach(instance::unloadChunk);
+
                 newChunks.removeAll(loadedChunks.keySet());
-                for (Chunk chunk : newChunks) {
-                    loadChunk(chunk);
-                }
-                BlockManager blockManager = BlockManager.getInstance();
-                blockManager.updateBlocks();
+                newChunks.forEach(instance::loadChunk);
+
+                BlockManager.getInstance().updateBlocks();
             }
         };
         loadUnloadTask.runTaskTimer(plugin, 10, 20);
     }
+
 
     @Override
     protected void onDisable() {
@@ -84,7 +87,9 @@ public class ChunkManager extends AbstractManager {
     }
 
     public void loadChunk(Chunk chunk) {
-        loadedChunks.put(chunk, new PersistentDataChunk(chunk));
+        PersistentDataChunk dataChunk = new PersistentDataChunk(chunk);
+        new ArcheologyChunkSpawner(chunk, dataChunk);
+        loadedChunks.put(chunk, dataChunk);
     }
 
 
@@ -110,10 +115,6 @@ public class ChunkManager extends AbstractManager {
     public boolean isArcheologyBlock(Location location) {
         PersistentDataChunk dataChunk = getPersistentDataChunk(location);
         return dataChunk.isArcheologyBlock(location);
-    }
-    public ArcheologyBlock getArcheologyBlock(Location location) {
-        PersistentDataChunk dataChunk = getPersistentDataChunk(location);
-        return dataChunk.getArcheologyBlock(location);
     }
 
     public PersistentDataChunk getPersistentDataChunk(Location location) {

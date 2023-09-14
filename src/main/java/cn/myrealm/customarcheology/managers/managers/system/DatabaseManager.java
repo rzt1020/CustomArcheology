@@ -54,7 +54,16 @@ public class DatabaseManager extends AbstractManager {
     }
 
     private void createTables() {
-        executeAsyncUpdate(SQLs.CREATE_BLOCK_TABLE.getSql());
+        executeUpdate(SQLs.CREATE_BLOCK_TABLE.getSql());
+        executeUpdate(SQLs.CREATE_WORLD_TABLE.getSql());
+    }
+
+    private void executeUpdate(String query) {
+        try {
+            connection.createStatement().executeUpdate(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void executeAsyncQuery(final String query, final Callback<Map<String, Object>> callback) {

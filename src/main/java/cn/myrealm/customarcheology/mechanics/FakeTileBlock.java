@@ -7,7 +7,7 @@ import cn.myrealm.customarcheology.managers.managers.BlockManager;
 import cn.myrealm.customarcheology.managers.managers.ChunkManager;
 import cn.myrealm.customarcheology.managers.managers.PlayerManager;
 import cn.myrealm.customarcheology.utils.PacketUtil;
-import cn.myrealm.customarcheology.utils.PlayerUtil;
+import cn.myrealm.customarcheology.utils.BasicUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
@@ -42,34 +42,42 @@ public class FakeTileBlock {
     public FakeTileBlock(String blockName, Location location, ItemStack reward) {
         this.blockName = blockName;
         this.location = location;
-        String suffix = blockName.split("_")[blockName.split("_").length - 1];
+        String[] nameParts = blockName.split("_");
+        String suffix = nameParts[nameParts.length - 1];
         String blockId = blockName.replace("_" + suffix, "");
-        BlockManager blockManager = BlockManager.getInstance();
-        this.block = blockManager.getBlock(blockId);
+        this.block = BlockManager.getInstance().getBlock(blockId);
         this.entityId = Integer.parseInt(suffix);
         this.reward = reward;
     }
+
     public String getBlockName() {
         return blockName;
     }
+
     public void placeBlock() {
         if (isPlaying) {
             return;
         }
-        List<Player> players = PlayerUtil.getNearbyPlayers(location);
+
+        List<Player> players = BasicUtil.getNearbyPlayers(location);
         players.removeAll(sentPlayers);
         sentPlayers.addAll(players);
+
         if (players.isEmpty()) {
             return;
         }
+
         PacketUtil.changeBlock(players, location, Material.BARRIER);
         PacketUtil.spawnItemDisplay(players, location, block.generateItemStack(1), entityId, null, null);
     }
+
     public void removeBlock() {
         List<Player> players = Objects.requireNonNull(location.getWorld()).getPlayers();
+
         if (players.isEmpty()) {
             return;
         }
+
         PacketUtil.changeBlock(players, location, location.getBlock().getType());
         PacketUtil.removeEntity(players, entityId);
     }
@@ -80,10 +88,6 @@ public class FakeTileBlock {
 
     public ArcheologyBlock getArcheologyBlock() {
         return block;
-    }
-
-    public void setReward(ItemStack reward) {
-        this.reward = reward;
     }
 
     public void play(BlockFace blockFace) {
@@ -106,34 +110,18 @@ public class FakeTileBlock {
             nextTask.runTaskLater(CustomArcheology.plugin, (long) (nextTask.getState().getHardness() * 20));
         }
     }
-
     private void effectInit(BlockFace blockFace) {
         order.clear();
         complete.clear();
-        Vector vector;
-        switch (blockFace) {
-            case UP:
-                vector = new Vector(0, 0.2, 0);
-                break;
-            case DOWN:
-                vector = new Vector(0, -0.2, 0);
-                break;
-            case NORTH:
-                vector = new Vector(0, 0, -0.2);
-                break;
-            case SOUTH:
-                vector = new Vector(0, 0, 0.2);
-                break;
-            case WEST:
-                vector = new Vector(-0.2, 0, 0);
-                break;
-            case EAST:
-                vector = new Vector(0.2, 0, 0);
-                break;
-            default:
-                vector = new Vector(0, 0, 0);
-                break;
-        }
+        Vector vector = switch (blockFace) {
+            case UP -> new Vector(0, 0.2, 0);
+            case DOWN -> new Vector(0, -0.2, 0);
+            case NORTH -> new Vector(0, 0, -0.2);
+            case SOUTH -> new Vector(0, 0, 0.2);
+            case WEST -> new Vector(-0.2, 0, 0);
+            case EAST -> new Vector(0.2, 0, 0);
+            default -> new Vector(0, 0, 0);
+        };
         Location loc = location.clone();
         taskMap.put(0, new EffectTask(this, block.getDefaultState(), loc.clone(), 0));
         for (int i = 1; i <= block.getStates().size(); i++) {
@@ -145,8 +133,9 @@ public class FakeTileBlock {
         }
         isEffectInitialized = true;
     }
+
     public void spawnReward(BlockFace blockFace) {
-        List<Player> players = PlayerUtil.getNearbyPlayers(location);
+        List<Player> players = BasicUtil.getNearbyPlayers(location);
         if (Objects.isNull(reward)) {
             reward = block.roll();
         }
@@ -165,12 +154,13 @@ public class FakeTileBlock {
         }
         PacketUtil.spawnItemDisplay(players, location, reward, entityId+1, scale, rotation);
     }
+
     public void effect(EffectTask task, State state, Location location) {
         if (Objects.isNull(task) || Objects.isNull(nextTask) || task.getTaskId() != nextTask.getTaskId()) {
             return;
         }
 
-        List<Player> players = PlayerUtil.getNearbyPlayers(location);
+        List<Player> players = BasicUtil.getNearbyPlayers(location);
 
         if (state.isFinished) {
             PacketUtil.removeEntity(players, entityId+1);
@@ -212,6 +202,7 @@ public class FakeTileBlock {
 
     }
 
+
     public void pause() {
         if (!isPlaying) {
             return;
@@ -229,6 +220,7 @@ public class FakeTileBlock {
         nextTask.runTaskLater(CustomArcheology.plugin, 40L);
 
     }
+
 
     public ItemStack getReward() {
         return reward;

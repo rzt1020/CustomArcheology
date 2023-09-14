@@ -41,14 +41,14 @@ public class GiveCommand implements SubCommand {
     @Override
     public List<String> onTabComplete(int argsNum) {
         List<String> suggestions = new ArrayList<>();
-        if (argsNum == 1) {
+        if (argsNum == FIRST_ARGUMENT) {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 suggestions.add(player.getName());
             }
-        } else if (argsNum == 2) {
+        } else if (argsNum == SECOND_ARGUMENT) {
             BlockManager blockManager = BlockManager.getInstance();
             suggestions.addAll(blockManager.getBlocksName());
-        } else if (argsNum == 3) {
+        } else if (argsNum == THIRD_ARGUMENT) {
             suggestions = Arrays.asList("1", "5", "10", "32", "64");
         }
         return suggestions;
@@ -59,17 +59,17 @@ public class GiveCommand implements SubCommand {
         if (!Permissions.GIVE.hasPermission(sender)) {
             return;
         }
-        if (args.length != 4) {
+        if (args.length != THREE_ARGUMENTS) {
             sender.sendMessage(this.getUsage());
         }
         BlockManager blockManager = BlockManager.getInstance();
-        if (blockManager.isBlockExists(args[2])) {
-            Player player = Bukkit.getPlayer(args[1]);
+        if (blockManager.isBlockExists(args[SECOND_ARGUMENT])) {
+            Player player = Bukkit.getPlayer(args[FIRST_ARGUMENT]);
             if (Objects.nonNull(player)) {
-                player.getInventory().addItem(blockManager.generateItemStack(args[2], Integer.parseInt(args[3])));
-                sender.sendMessage(ChatColor.GREEN + "Successfully give " + args[2] + " to " + args[1]);
+                player.getInventory().addItem(blockManager.generateItemStack(args[SECOND_ARGUMENT], Integer.parseInt(args[THIRD_ARGUMENT])));
+                sender.sendMessage(ChatColor.GREEN + "Successfully give " + args[SECOND_ARGUMENT] + " to " + args[FIRST_ARGUMENT]);
             } else {
-                sender.sendMessage(ChatColor.RED + "Player " + args[1] + " is not online!");
+                sender.sendMessage(ChatColor.RED + "Player " + args[FIRST_ARGUMENT] + " is not online!");
             }
         } else {
             sender.sendMessage( ChatColor.RED + "This block does not exist!");

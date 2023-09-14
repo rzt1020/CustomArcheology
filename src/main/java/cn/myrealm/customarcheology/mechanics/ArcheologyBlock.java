@@ -1,19 +1,25 @@
 package cn.myrealm.customarcheology.mechanics;
 
 
+import cn.myrealm.customarcheology.enums.Messages;
 import cn.myrealm.customarcheology.enums.NamespacedKeys;
 import cn.myrealm.customarcheology.managers.managers.LootManager;
 import cn.myrealm.customarcheology.managers.managers.system.LanguageManager;
 import cn.myrealm.customarcheology.managers.managers.system.TextureManager;
+import cn.myrealm.customarcheology.utils.BasicUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Biome;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -29,6 +35,9 @@ public class ArcheologyBlock {
                   finishedState;
     private List<State> states;
     private List<CustomLootTable> customLootTables;
+    private List<Biome> biomes;
+    private Point distribution;
+    private int maxPerChunk;
 
     public ArcheologyBlock(YamlConfiguration config, String name) {
         this.config = config;
@@ -95,8 +104,34 @@ public class ArcheologyBlock {
         if (customLootTables.isEmpty()) {
             return;
         }
+
         valid = true;
         displayName = Keys.DISPLAY_NAME.asString(config);
+        if (Keys.GENERATE_BIOMES.isDef(config)) {
+            biomes = null;
+        } else {
+            biomes = new ArrayList<>();
+            List<String> biomesName = Keys.GENERATE_BIOMES.asStringList(config);
+            biomesName.forEach(name -> {
+                try {
+                    Biome biome = Biome.valueOf(name.toUpperCase());
+                    biomes.add(biome);
+                } catch (IllegalArgumentException e) {
+                    Bukkit.getConsoleSender().sendMessage(Messages.ERROR_BIOMES_NOT_FOUND.getMessageWithPrefix("biomes-name", name));
+                }
+            });
+        }
+        distribution = BasicUtil.parseRange(Keys.DISTRIBUTION.asString(config));
+        maxPerChunk =  Keys.MAX_PER_CHUNK.asInt(config);
+    }
+    public List<Biome> getBiomes() {
+        return biomes;
+    }
+    public Point getDistribution() {
+        return distribution;
+    }
+    public int getMaxPerChunk() {
+        return maxPerChunk;
     }
 
     public String getName() {
@@ -121,6 +156,10 @@ public class ArcheologyBlock {
     public List<State> getStates() {
         return states;
     }
+
+    public Material getType() {
+        return replaceBlock;
+    }
 }
 
 enum Keys {
@@ -136,7 +175,7 @@ enum Keys {
     STATES("states", null),
     GENERATE_BIOMES("generate_biomes", "all"),
     DISTRIBUTION("distribution", null),
-    MAX_PER_CHUNK("max_per_chunk", 3);
+    MAX_PER_CHUNK("max_per_chunk", 0);
 
     private final String key;
     private final Object def;
@@ -144,6 +183,10 @@ enum Keys {
     Keys(String key, Object def) {
         this.key = key;
         this.def = def;
+    }
+
+    public boolean isDef(ConfigurationSection section) {
+        return Objects.equals(section.get(key), def);
     }
 
     public String asString(ConfigurationSection section) {
@@ -172,6 +215,12 @@ enum Keys {
             return new ArrayList<>();
         }
         return section.getStringList(key);
+    }
+    public Integer asInt(ConfigurationSection section) {
+        if (Objects.isNull(section)) {
+            return (Integer) def;
+        }
+        return section.getInt(key, (Integer) def);
     }
 }
 

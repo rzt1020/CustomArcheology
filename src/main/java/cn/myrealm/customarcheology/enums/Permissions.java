@@ -13,7 +13,9 @@ public enum Permissions {
     COMMAND(ROOT + "command."),
     HELP(COMMAND + "help"),
     RELOAD(COMMAND + "reload"),
-    GIVE(COMMAND + "give");
+    GIVE(COMMAND + "give"),
+    ARCHIFY(COMMAND + "archify"),
+    DEARCHIFY(COMMAND + "dearchify");
 
 
     private final String permission;

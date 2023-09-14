@@ -9,6 +9,7 @@ import org.bukkit.NamespacedKey;
 
 public enum NamespacedKeys {
     // block
+    ARCHIFY_ARRAY("archify_array"),
     ARCHEOLOGY_ARRAY("archeology_array"),
     ARCHEOLOGY_BLOCK_LOC("archeology_block_loc.{0}"),
     ARCHEOLOGY_BLOCK_ITEM("archeology_block_item.{0}"),

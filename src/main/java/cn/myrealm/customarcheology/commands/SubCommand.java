@@ -8,7 +8,13 @@ import java.util.List;
  * @author rzt10
  */
 public interface SubCommand {
+    int FIRST_ARGUMENT = 1,
+        SECOND_ARGUMENT = 2,
+        THIRD_ARGUMENT = 3;
 
+    int NONE_ARGUMENT = 1,
+        TWO_ARGUMENTS = 3,
+        THREE_ARGUMENTS = 4;
     /**
      * get sub command name
      * @return String

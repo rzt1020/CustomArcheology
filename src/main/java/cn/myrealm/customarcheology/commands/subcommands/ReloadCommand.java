@@ -46,6 +46,9 @@ public class ReloadCommand implements SubCommand {
         if (!Permissions.RELOAD.hasPermission(sender)) {
             return;
         }
+        if (args.length != NONE_ARGUMENT) {
+            sender.sendMessage(getUsage());
+        }
         CustomArcheology.plugin.reloadPlugin();
         if (sender instanceof Player) {
             sender.sendMessage(Messages.RELOAD_SUCCESS.getMessageWithPrefix());

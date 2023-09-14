@@ -18,9 +18,9 @@ import java.util.*;
 public class PersistentDataChunk {
     private final Chunk chunk;
     private List<String> blockNameList;
-    private final StringArrayTagType STRING_ARRAY_TYPE = new StringArrayTagType(StandardCharsets.UTF_8);
-    private final ItemStackTagType ITEM_STACK_TYPE = new ItemStackTagType();
-    private final LocationTagType LOCATION_TYPE = new LocationTagType();
+    private static final StringArrayTagType STRING_ARRAY_TYPE = new StringArrayTagType(StandardCharsets.UTF_8);
+    private static final ItemStackTagType ITEM_STACK_TYPE = new ItemStackTagType();
+    private static final LocationTagType LOCATION_TYPE = new LocationTagType();
     private final Map<Location, FakeTileBlock> loadedLocationBlocks = new HashMap<>();
     public PersistentDataChunk(Chunk chunk) {
         this.chunk = chunk;

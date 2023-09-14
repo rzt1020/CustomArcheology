@@ -14,19 +14,26 @@ public enum Messages {
     ENABLE_MESSAGE("info.enable-message"),
     RELOAD_SUCCESS("info.reload-success"),
     TEXTURE_PACK_CREATED("info.texture-pack-created"),
+    WORLD_HEAD("info.world-head"),
+    WORLD_DETAIL("info.world-detail"),
     // errors
     ERROR_INCORRECT_COMMAND("error.incorrect-command"),
     ERROR_EXECUTING_COMMAND("error.executing-command"),
     ERROR_NO_PERMISSION("error.no-permission"),
     ERROR_FAILED_TO_CREATE_TEXTURE_PACK("error.failed-to-create-texture-pack"),
-    MISSING_RESOURCE("error.missing-resource"),
+    ERROR_WORLD_NOT_FOUND("error.world-not-found"),
+    ERROR_BLOCK_NOT_FOUND("error.block-not-found"),
+    ERROR_MISSING_RESOURCE("error.missing-resource"),
+    ERROR_BIOMES_NOT_FOUND("error.biomes-not-found"),
     // command descriptions
     COMMAND_HELP("command.help"),
     COMMAND_RELOAD("command.reload"),
     COMMAND_GIVE("command.give"),
     // command help messages
     COMMAND_HELP_HEAD("command.help-head"),
-    COMMAND_HELP_DETAIL("command.help-detail");
+    COMMAND_HELP_DETAIL("command.help-detail"),
+    COMMAND_ARCHIFY("command.archify"),
+    COMMAND_DEARCHIFY("command.dearchify");
 
     private final String key;
     Messages(String key) {

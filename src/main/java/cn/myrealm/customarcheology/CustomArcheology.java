@@ -1,10 +1,7 @@
 package cn.myrealm.customarcheology;
 
 import cn.myrealm.customarcheology.commands.MainCommand;
-import cn.myrealm.customarcheology.commands.subcommands.GiveCommand;
-import cn.myrealm.customarcheology.commands.subcommands.HelpCommand;
-import cn.myrealm.customarcheology.commands.subcommands.ReloadCommand;
-import cn.myrealm.customarcheology.commands.subcommands.TestCommand;
+import cn.myrealm.customarcheology.commands.subcommands.*;
 import cn.myrealm.customarcheology.enums.Messages;
 import cn.myrealm.customarcheology.listeners.bukkit.BlockBreakListener;
 import cn.myrealm.customarcheology.listeners.bukkit.PlayerBrushListener;
@@ -62,8 +59,8 @@ public final class CustomArcheology extends JavaPlugin {
     }
     public void initPlugin() {
         managers.clear();
-        managers.add(new LanguageManager(this));
         managers.add(new DatabaseManager(this));
+        managers.add(new LanguageManager(this));
         managers.add(new TextureManager(this));
         managers.add(new PlayerManager(this));
         managers.add(new LootManager(this));
@@ -91,6 +88,8 @@ public final class CustomArcheology extends JavaPlugin {
         command.registerSubCommand(new ReloadCommand());
         command.registerSubCommand(new GiveCommand());
         command.registerSubCommand(new TestCommand());
+        command.registerSubCommand(new ArchifyCommand());
+        command.registerSubCommand(new DeArchifyCommand());
         //noinspection ConstantConditions
         getCommand("customarcheology").setExecutor(command);
         //noinspection ConstantConditions
@@ -112,7 +111,7 @@ public final class CustomArcheology extends JavaPlugin {
                 saveResource(file, false);
             } catch (Exception e) {
                 String[] names = file.split("/");
-                Bukkit.getConsoleSender().sendMessage(Messages.MISSING_RESOURCE.getMessageWithPrefix("resource-name", names[names.length - 1]));
+                Bukkit.getConsoleSender().sendMessage(Messages.ERROR_MISSING_RESOURCE.getMessageWithPrefix("resource-name", names[names.length - 1]));
             }
         }
     }
