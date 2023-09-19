@@ -1,6 +1,7 @@
 package cn.myrealm.customarcheology.mechanics;
 
 
+import cn.myrealm.customarcheology.CustomArcheology;
 import cn.myrealm.customarcheology.enums.Messages;
 import cn.myrealm.customarcheology.enums.NamespacedKeys;
 import cn.myrealm.customarcheology.managers.managers.LootManager;
@@ -143,7 +144,7 @@ public class ArcheologyBlock {
     }
 
     public ItemStack roll() {
-        CustomLootTable customLootTable = customLootTables.get(new Random().nextInt(customLootTables.size()));
+        CustomLootTable customLootTable = customLootTables.get(CustomArcheology.RANDOM.nextInt(customLootTables.size()));
         return customLootTable.generateItem();
     }
 

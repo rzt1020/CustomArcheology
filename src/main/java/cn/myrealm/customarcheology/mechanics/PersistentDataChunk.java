@@ -1,6 +1,7 @@
 package cn.myrealm.customarcheology.mechanics;
 
 
+import cn.myrealm.customarcheology.CustomArcheology;
 import cn.myrealm.customarcheology.enums.NamespacedKeys;
 import cn.myrealm.customarcheology.mechanics.persistent_data.ItemStackTagType;
 import cn.myrealm.customarcheology.mechanics.persistent_data.LocationTagType;
@@ -107,7 +108,7 @@ public class PersistentDataChunk {
     }
 
     public void registerNewBlock(ArcheologyBlock block, Location location) {
-        String blockName = block.getName() + "_" + new Random().nextInt();
+        String blockName = block.getName() + "_" + CustomArcheology.RANDOM.nextInt();
         blockNameList.add(blockName);
         FakeTileBlock fakeTileBlock = new FakeTileBlock(blockName, location, null);
         if (fakeTileBlock.isValid()) {

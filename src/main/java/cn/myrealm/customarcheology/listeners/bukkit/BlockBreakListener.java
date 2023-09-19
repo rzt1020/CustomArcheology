@@ -5,9 +5,11 @@ import cn.myrealm.customarcheology.listeners.AbstractListener;
 import cn.myrealm.customarcheology.managers.managers.ChunkManager;
 import cn.myrealm.customarcheology.utils.PacketUtil;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -31,6 +33,18 @@ public class BlockBreakListener extends AbstractListener {
             chunkManager.removeBlock(loc);
         }
     }
+
+    @EventHandler
+    public void onBlockBreakByTnt(EntityExplodeEvent event) {
+        ChunkManager chunkManager = ChunkManager.getInstance();
+        for (Block block : event.blockList()) {
+            Location loc = block.getLocation();
+            if (chunkManager.isArcheologyBlock(loc)) {
+                chunkManager.removeBlock(loc);
+            }
+        }
+    }
+
 
     @EventHandler
     public void onRightClick(PlayerInteractEvent event) {

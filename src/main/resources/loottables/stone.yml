@@ -1,0 +1,9 @@
+rewards:
+  reward_1:
+    material: minecraft:emerald
+    amount: 1
+    chance: 1
+  reward_2:
+    material: minecraft:diamond
+    amount: 1
+    chance: 1

@@ -24,6 +24,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 /**
  * @author rzt10
@@ -32,6 +33,7 @@ public final class CustomArcheology extends JavaPlugin {
     public static CustomArcheology plugin;
     private final List<AbstractManager> managers = new ArrayList<>();
     public static ProtocolManager protocolManager;
+    public static final Random RANDOM = new Random();
 
     @Override
     public void onEnable() {
@@ -104,7 +106,8 @@ public final class CustomArcheology extends JavaPlugin {
             "textures/blocks/suspicious_stone_1.png",
             "textures/blocks/suspicious_stone_2.png",
             "textures/blocks/suspicious_stone_3.png",
-            "languages/zh_CN.yml");
+            "languages/zh_CN.yml",
+            "loottables/stone.yml");
     public void outputDefaultFiles() {
         for (String file : FILES) {
             try {

@@ -1,6 +1,7 @@
 package cn.myrealm.customarcheology.utils;
 
 
+import cn.myrealm.customarcheology.CustomArcheology;
 import cn.myrealm.customarcheology.enums.Config;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -32,16 +33,24 @@ public class BasicUtil {
         }
         return players;
     }
-    private static final Pattern RANGE_PATTERN = Pattern.compile("(\\d+)\\s*~\\s*(\\d+)");
+    private static final Pattern RANGE_PATTERN = Pattern.compile("(\\d+)(?:\\s*~\\s*(\\d+))?");
+
     public static Point parseRange(String input) {
         if (Objects.isNull(input)) {
             return null;
         }
+
         Matcher matcher = RANGE_PATTERN.matcher(input);
 
         if (matcher.find()) {
             int start = Integer.parseInt(matcher.group(1));
-            int end = Integer.parseInt(matcher.group(2));
+            int end;
+
+            if (matcher.group(2) != null) {
+                end = Integer.parseInt(matcher.group(2));
+            } else {
+                end = start;
+            }
 
             return new Point(start, end);
         }
@@ -50,12 +59,10 @@ public class BasicUtil {
     }
 
     public static Block getRandomBlock(Chunk chunk, Point range) {
-        Random rand = new Random();
+        int x = CustomArcheology.RANDOM.nextInt(16);
+        int z = CustomArcheology.RANDOM.nextInt(16);
 
-        int x = rand.nextInt(16);
-        int z = rand.nextInt(16);
-
-        int y = range.x + rand.nextInt(range.y - range.x + 1);
+        int y = range.x + CustomArcheology.RANDOM.nextInt(range.y - range.x + 1);
 
         World world = chunk.getWorld();
 
@@ -63,5 +70,9 @@ public class BasicUtil {
         int actualZ = chunk.getZ() * 16 + z;
 
         return world.getBlockAt(actualX, y, actualZ);
+    }
+
+    public static int getRandomIntFromPoint(Point point) {
+        return CustomArcheology.RANDOM.nextInt((point.y - point.x) + 1) + point.x;
     }
 }

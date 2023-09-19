@@ -3,7 +3,7 @@ replace_block: stone
 generate_biomes: all
 distribution: 0 ~ 64
 max_per_chunk: 3
-loot_tables: ["minecraft:desert_pyramid"]
+loot_tables: ["stone"]
 brush_tools:
   wooden_tiny_pickaxe: 1.0
   stone_tiny_pickaxe: 1.2
