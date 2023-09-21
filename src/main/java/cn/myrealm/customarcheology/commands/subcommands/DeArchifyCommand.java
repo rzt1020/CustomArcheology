@@ -5,10 +5,9 @@ import cn.myrealm.customarcheology.commands.SubCommand;
 import cn.myrealm.customarcheology.enums.Messages;
 import cn.myrealm.customarcheology.enums.Permissions;
 import cn.myrealm.customarcheology.managers.managers.BlockManager;
-import cn.myrealm.customarcheology.mechanics.ArcheologyBlock;
+import cn.myrealm.customarcheology.mechanics.cores.ArcheologyBlock;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Color;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 

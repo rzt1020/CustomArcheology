@@ -1,4 +1,4 @@
-package cn.myrealm.customarcheology.mechanics;
+package cn.myrealm.customarcheology.mechanics.cores;
 
 
 import cn.myrealm.customarcheology.CustomArcheology;

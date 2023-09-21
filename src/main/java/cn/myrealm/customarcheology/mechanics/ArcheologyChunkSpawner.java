@@ -3,6 +3,8 @@ package cn.myrealm.customarcheology.mechanics;
 
 import cn.myrealm.customarcheology.enums.NamespacedKeys;
 import cn.myrealm.customarcheology.managers.managers.BlockManager;
+import cn.myrealm.customarcheology.mechanics.cores.ArcheologyBlock;
+import cn.myrealm.customarcheology.mechanics.cores.PersistentDataChunk;
 import cn.myrealm.customarcheology.mechanics.persistent_data.StringArrayTagType;
 import cn.myrealm.customarcheology.utils.BasicUtil;
 import org.bukkit.Chunk;

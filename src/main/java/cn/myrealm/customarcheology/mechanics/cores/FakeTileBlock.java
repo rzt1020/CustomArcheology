@@ -1,4 +1,4 @@
-package cn.myrealm.customarcheology.mechanics;
+package cn.myrealm.customarcheology.mechanics.cores;
 
 
 import cn.myrealm.customarcheology.CustomArcheology;
@@ -10,6 +10,7 @@ import cn.myrealm.customarcheology.utils.PacketUtil;
 import cn.myrealm.customarcheology.utils.BasicUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
@@ -37,6 +38,7 @@ public class FakeTileBlock {
     private final Stack<Integer> order = new Stack<>(), complete = new Stack<>();
     private final Map<Integer, EffectTask> taskMap = new HashMap<>();
     private EffectTask nextTask;
+    private BukkitRunnable particleTask;
 
 
     public FakeTileBlock(String blockName, Location location, ItemStack reward) {
@@ -109,7 +111,29 @@ public class FakeTileBlock {
             nextTask = taskMap.get(taskId).cloneTask();
             nextTask.runTaskLater(CustomArcheology.plugin, (long) (nextTask.getState().getHardness() * 20));
         }
+        playParticleEffect(blockFace);
     }
+
+    private void playParticleEffect(BlockFace blockFace) {
+        Location location = this.location.clone().add(0.5, 0.5, 0.5);
+        Location finalLocation = switch (blockFace) {
+            case UP -> location.add(0, 0.5, 0);
+            case DOWN -> location.add(0, -0.5, 0);
+            case NORTH -> location.add(0, 0, -0.5);
+            case SOUTH -> location.add(0, 0, 0.5);
+            case WEST -> location.add(-0.5, 0, 0);
+            case EAST -> location.add(0.5, 0, 0);
+            default -> location.add(0, 0, 0);
+        };
+        particleTask = new BukkitRunnable() {
+            @Override
+            public void run() {
+                Objects.requireNonNull(finalLocation.getWorld()).spawnParticle(Particle.BLOCK_DUST, finalLocation, 5, 0.1, 0.1, 0.1, block.getType().createBlockData());
+            }
+        };
+        particleTask.runTaskTimer(CustomArcheology.plugin, 0, 10);
+    }
+
     private void effectInit(BlockFace blockFace) {
         order.clear();
         complete.clear();
@@ -163,6 +187,9 @@ public class FakeTileBlock {
         List<Player> players = BasicUtil.getNearbyPlayers(location);
 
         if (state.isFinished) {
+            if (Objects.nonNull(particleTask) && !particleTask.isCancelled()) {
+                particleTask.cancel();
+            }
             PacketUtil.removeEntity(players, entityId+1);
             PacketUtil.removeEntity(players, entityId);
             PacketUtil.changeBlock(players, this.location, state.getMaterial());
@@ -172,6 +199,8 @@ public class FakeTileBlock {
             playerManager.cancelBlock(this);
             ChunkManager chunkManager = ChunkManager.getInstance();
             chunkManager.removeBlock(this.location);
+            this.location.getBlock().setType(state.getMaterial());
+            Objects.requireNonNull(this.location.getWorld()).spawnParticle(Particle.BLOCK_DUST, this.location.clone().add(0.5,0.5,0.5), 100, 0.3, 0.3, 0.3, block.getType().createBlockData());
         } else {
             PacketUtil.teleportEntity(players, entityId+1, location);
             PacketUtil.updateItemDisplay(players, block.generateItemStack(1, state), entityId,  null, null);
@@ -199,11 +228,13 @@ public class FakeTileBlock {
                 nextTask.runTaskLater(CustomArcheology.plugin, 5L);
             }
         }
-
     }
 
 
     public void pause() {
+        if (Objects.nonNull(particleTask) && !particleTask.isCancelled()) {
+            particleTask.cancel();
+        }
         if (!isPlaying) {
             return;
         }
@@ -249,6 +280,7 @@ class EffectTask extends BukkitRunnable{
     public EffectTask cloneTask() {
         return new EffectTask(block, state, location, taskId);
     }
+    @Override
     public int getTaskId() {
         return taskId;
     }

@@ -1,16 +1,26 @@
-display_name: "Suspicious Stone"
-replace_block: stone
-generate_biomes: all
-distribution: 0 ~ 64
-max_per_chunk: 3
-loot_tables: ["stone"]
+general:
+  display_name: "Suspicious Stone"
+  replace_block: stone
+  generate_biomes: all
+  distribution: 0 ~ 64
+  max_per_chunk: 3
+  loot_tables:
+    - "stone"
+
 brush_tools:
-  wooden_tiny_pickaxe: 1.0
-  stone_tiny_pickaxe: 1.2
-  iron_tiny_pickaxe: 1.5
-  diamond_tiny_pickaxe: 2.0
-  golden_tiny_pickaxe: 1.8
-  netherite_tiny_pickaxe: 3.0
+  wooden_tiny_pickaxe:
+    efficiency: 1.0
+  stone_tiny_pickaxe:
+    efficiency: 1.2
+  iron_tiny_pickaxe:
+    efficiency: 1.5
+  diamond_tiny_pickaxe:
+    efficiency: 2.0
+  golden_tiny_pickaxe:
+    efficiency: 1.8
+  netherite_tiny_pickaxe:
+    efficiency: 3.0
+
 states:
   default:
     texture: "suspicious_stone"

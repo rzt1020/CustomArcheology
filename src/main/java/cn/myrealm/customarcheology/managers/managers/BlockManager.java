@@ -1,11 +1,12 @@
 package cn.myrealm.customarcheology.managers.managers;
 
 import cn.myrealm.customarcheology.CustomArcheology;
+import cn.myrealm.customarcheology.enums.Messages;
 import cn.myrealm.customarcheology.enums.SQLs;
 import cn.myrealm.customarcheology.managers.AbstractManager;
 import cn.myrealm.customarcheology.managers.managers.system.DatabaseManager;
-import cn.myrealm.customarcheology.mechanics.ArcheologyBlock;
-import cn.myrealm.customarcheology.mechanics.FakeTileBlock;
+import cn.myrealm.customarcheology.mechanics.cores.ArcheologyBlock;
+import cn.myrealm.customarcheology.mechanics.cores.FakeTileBlock;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -45,6 +46,7 @@ public class BlockManager extends AbstractManager {
                     ArcheologyBlock block = new ArcheologyBlock(config, file.getName().replace(".yml", ""));
                     if (block.isValid()) {
                         blocksMap.put(block.getName(), block);
+                        Bukkit.getConsoleSender().sendMessage(Messages.BLOCK_LOADED.getMessageWithPrefix("block-id", block.getName()));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -86,7 +88,7 @@ public class BlockManager extends AbstractManager {
             String sql = SQLs.INSERT_WORLD_TABLE.getSql(uuid, blockId);
             DatabaseManager.getInstance().executeAsyncUpdate(sql);
         } else {
-            throw new Exception("Block not found");
+            throw new Exception(Messages.ERROR_BLOCK_NOT_FOUND.getMessage("block-id", blockId));
         }
     }
 
@@ -111,7 +113,7 @@ public class BlockManager extends AbstractManager {
             String sql = SQLs.DELETE_WORLD_TABLE.getSql(uuid, blockId);
             DatabaseManager.getInstance().executeAsyncUpdate(sql);
         } else {
-            throw new Exception("Block not found");
+            throw new Exception(Messages.ERROR_BLOCK_NOT_FOUND.getMessage("block-id", blockId));
         }
     }
 

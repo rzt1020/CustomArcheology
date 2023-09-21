@@ -16,6 +16,8 @@ public enum Messages {
     TEXTURE_PACK_CREATED("info.texture-pack-created"),
     WORLD_HEAD("info.world-head"),
     WORLD_DETAIL("info.world-detail"),
+    BLOCK_LOADED("info.block-loaded"),
+    LOOTTABLE_LOADED("info.loottable-loaded"),
     // errors
     ERROR_INCORRECT_COMMAND("error.incorrect-command"),
     ERROR_EXECUTING_COMMAND("error.executing-command"),

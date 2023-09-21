@@ -10,6 +10,10 @@ public enum SQLs {
             "CREATE TABLE IF NOT EXISTS ca_block (block_id VARCHAR(255) NOT NULL, custommodeldata INT NOT NULL, PRIMARY KEY (block_id), UNIQUE (custommodeldata));",
             "CREATE TABLE IF NOT EXISTS ca_block (block_id TEXT NOT NULL, custommodeldata INTEGER NOT NULL, PRIMARY KEY (block_id), UNIQUE (custommodeldata));"
     ),
+    CREATE_TOOL_TABLE(
+            "CREATE TABLE IF NOT EXISTS ca_tool (tool_id VARCHAR(255) NOT NULL, custommodeldata INT NOT NULL, PRIMARY KEY (tool_id), UNIQUE (custommodeldata));",
+            "CREATE TABLE IF NOT EXISTS ca_tool (tool_id TEXT NOT NULL, custommodeldata INTEGER NOT NULL, PRIMARY KEY (tool_id), UNIQUE (custommodeldata));"
+    ),
     CREATE_WORLD_TABLE(
             "CREATE TABLE IF NOT EXISTS ca_world (world_uuid CHAR(36) NOT NULL, block_id VARCHAR(255) NOT NULL);"
     ),
@@ -17,12 +21,18 @@ public enum SQLs {
     QUERY_BLOCK_TABLE(
             "SELECT * FROM ca_block;"
     ),
+    QUERY_TOOL_TABLE(
+            "SELECT * FROM ca_tool;"
+    ),
     QUERY_WORLD_TABLE(
             "SELECT * FROM ca_world;"
     ),
     // inserts
     INSERT_BLOCK_TABLE(
             "INSERT INTO ca_block (block_id, custommodeldata) VALUES ('{0}', {1});"
+    ),
+    INSERT_TOOL_TABLE(
+            "INSERT INTO ca_tool (tool_id, custommodeldata) VALUES ('{0}', {1});"
     ),
     INSERT_WORLD_TABLE(
             "INSERT INTO ca_world (world_uuid, block_id) VALUES ('{0}', '{1}');"

@@ -1,4 +1,4 @@
-package cn.myrealm.customarcheology.mechanics;
+package cn.myrealm.customarcheology.mechanics.cores;
 
 
 import cn.myrealm.customarcheology.CustomArcheology;
@@ -7,6 +7,7 @@ import cn.myrealm.customarcheology.enums.NamespacedKeys;
 import cn.myrealm.customarcheology.managers.managers.LootManager;
 import cn.myrealm.customarcheology.managers.managers.system.LanguageManager;
 import cn.myrealm.customarcheology.managers.managers.system.TextureManager;
+import cn.myrealm.customarcheology.mechanics.CustomLootTable;
 import cn.myrealm.customarcheology.utils.BasicUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -167,16 +168,16 @@ enum Keys {
     // state keys
     TEXTURE("texture", null),
     HARDNESS("hardness", 1.0d),
-    MATERIAL("material", "minecraft:stone"),
+    MATERIAL("material", "stone"),
     // block keys
-    DISPLAY_NAME("display_name", null),
-    REPLACE_BLOCK("replace_block", "stone"),
-    LOOT_TABLES("loot_tables", null),
-    BLUSH_TOOLS("blush_tools", null),
+    DISPLAY_NAME("general.display_name", null),
+    REPLACE_BLOCK("general.replace_block", "stone"),
+    LOOT_TABLES("general.loot_tables", null),
+    BRUSH_TOOLS("brush_tools", null),
     STATES("states", null),
-    GENERATE_BIOMES("generate_biomes", "all"),
-    DISTRIBUTION("distribution", null),
-    MAX_PER_CHUNK("max_per_chunk", 0);
+    GENERATE_BIOMES("general.generate_biomes", "all"),
+    DISTRIBUTION("general.distribution", null),
+    MAX_PER_CHUNK("general.max_per_chunk", 0);
 
     private final String key;
     private final Object def;
@@ -266,7 +267,7 @@ class State {
             throw  new IllegalStateException("Cannot get custom model data from finished state");
         }
         TextureManager textureManager = TextureManager.getInstance();
-        int customModelData = textureManager.getCustommodeldata(texture);
+        int customModelData = textureManager.getBlockCustommodeldata(texture);
         if (customModelData == -1) {
             throw new IllegalStateException("Cannot get custom model data from texture " + texture);
         }

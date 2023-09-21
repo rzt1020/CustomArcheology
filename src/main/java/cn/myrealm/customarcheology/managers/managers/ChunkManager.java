@@ -2,10 +2,10 @@ package cn.myrealm.customarcheology.managers.managers;
 
 
 import cn.myrealm.customarcheology.managers.AbstractManager;
-import cn.myrealm.customarcheology.mechanics.ArcheologyBlock;
+import cn.myrealm.customarcheology.mechanics.cores.ArcheologyBlock;
 import cn.myrealm.customarcheology.mechanics.ArcheologyChunkSpawner;
-import cn.myrealm.customarcheology.mechanics.FakeTileBlock;
-import cn.myrealm.customarcheology.mechanics.PersistentDataChunk;
+import cn.myrealm.customarcheology.mechanics.cores.FakeTileBlock;
+import cn.myrealm.customarcheology.mechanics.cores.PersistentDataChunk;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;

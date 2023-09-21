@@ -2,21 +2,19 @@ package cn.myrealm.customarcheology.managers.managers;
 
 
 import cn.myrealm.customarcheology.enums.Config;
+import cn.myrealm.customarcheology.enums.Messages;
 import cn.myrealm.customarcheology.managers.AbstractManager;
-import cn.myrealm.customarcheology.managers.managers.system.TextureManager;
 import cn.myrealm.customarcheology.mechanics.CustomLootTable;
-import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.loot.LootTables;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -49,7 +47,9 @@ public class LootManager extends AbstractManager {
                     for (Path entry : stream) {
                         YamlConfiguration config = YamlConfiguration.loadConfiguration(entry.toFile());
                         if (config.contains("rewards")) {
-                            lootTableMap.put(entry.getFileName().toString().replace(YML, ""), new CustomLootTable(Objects.requireNonNull(config.getConfigurationSection("rewards"))));
+                            String lootTableName = entry.getFileName().toString().replace(YML, "");
+                            lootTableMap.put(lootTableName, new CustomLootTable(Objects.requireNonNull(config.getConfigurationSection("rewards"))));
+                            Bukkit.getConsoleSender().sendMessage(Messages.LOOTTABLE_LOADED.getMessageWithPrefix("loottable-id", lootTableName));
                         }
                     }
                 } catch (IOException e) {

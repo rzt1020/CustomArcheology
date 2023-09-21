@@ -1,7 +1,7 @@
 package cn.myrealm.customarcheology.managers.managers;
 
 import cn.myrealm.customarcheology.managers.AbstractManager;
-import cn.myrealm.customarcheology.mechanics.FakeTileBlock;
+import cn.myrealm.customarcheology.mechanics.cores.FakeTileBlock;
 import cn.myrealm.customarcheology.mechanics.players.PlayerLookAt;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -10,13 +10,14 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author rzt10
  */
 public class PlayerManager extends AbstractManager {
     private static PlayerManager instance;
-    private Map<Player, PlayerLookAt> playerLookAtMap;
+    private Map<UUID, PlayerLookAt> playerLookAtMap;
     private Map<Player, FakeTileBlock> playerBlockMap;
 
     public PlayerManager(JavaPlugin plugin) {
@@ -29,7 +30,7 @@ public class PlayerManager extends AbstractManager {
         playerBlockMap = new HashMap<>(5);
         playerLookAtMap = new HashMap<>(5);
         for (Player player : plugin.getServer().getOnlinePlayers()) {
-            playerLookAtMap.put(player,new PlayerLookAt(player));
+            playerLookAtMap.put(player.getUniqueId(),new PlayerLookAt(player));
         }
     }
 
@@ -45,13 +46,14 @@ public class PlayerManager extends AbstractManager {
     }
 
     public void playerJoin(Player player) {
-        playerLookAtMap.put(player,new PlayerLookAt(player));
+        playerLookAtMap.put(player.getUniqueId(),new PlayerLookAt(player));
     }
 
     public void playerQuit(Player player) {
-        if(playerLookAtMap.containsKey(player)) {
-            playerLookAtMap.get(player).cancelTask();
-            playerLookAtMap.remove(player);
+        UUID uuid = player.getUniqueId();
+        if(playerLookAtMap.containsKey(uuid)) {
+            playerLookAtMap.get(uuid).cancelTask();
+            playerLookAtMap.remove(uuid);
         }
     }
 
@@ -61,7 +63,7 @@ public class PlayerManager extends AbstractManager {
             return;
         }
         playerBlockMap.put(player,  fakeTileBlock);
-        playerLookAtMap.get(player).setTask(new BukkitRunnable() {
+        playerLookAtMap.get(player.getUniqueId()).setTask(new BukkitRunnable() {
             @Override
             public void run() {
                 cancelBrush(player);

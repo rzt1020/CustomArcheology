@@ -55,6 +55,7 @@ public class DatabaseManager extends AbstractManager {
 
     private void createTables() {
         executeUpdate(SQLs.CREATE_BLOCK_TABLE.getSql());
+        executeUpdate(SQLs.CREATE_TOOL_TABLE.getSql());
         executeUpdate(SQLs.CREATE_WORLD_TABLE.getSql());
     }
 

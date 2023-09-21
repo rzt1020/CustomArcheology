@@ -4,7 +4,7 @@ package cn.myrealm.customarcheology.listeners.bukkit;
 import cn.myrealm.customarcheology.listeners.AbstractListener;
 import cn.myrealm.customarcheology.managers.managers.ChunkManager;
 import cn.myrealm.customarcheology.managers.managers.PlayerManager;
-import cn.myrealm.customarcheology.mechanics.FakeTileBlock;
+import cn.myrealm.customarcheology.mechanics.cores.FakeTileBlock;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
