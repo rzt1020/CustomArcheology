@@ -4,7 +4,7 @@ import cn.myrealm.customarcheology.CustomArcheology;
 import org.bukkit.configuration.file.FileConfiguration;
 
 /**
- * @author rzt10
+ * @author rzt1020
  */
 
 public enum Config {
@@ -22,7 +22,7 @@ public enum Config {
     ITEM_SCALE("settings.item-scale", 0.5),
     BLOCK_SCALE("settings.block-scale", 0.25),
     //symbols
-    VANILLA_SYMBOL("settings.symbols.vanilla", "minecraft:");
+    VANILLA_SYMBOL("settings.symbols.vanilla", "minecraft");
 
 
     private final String key;

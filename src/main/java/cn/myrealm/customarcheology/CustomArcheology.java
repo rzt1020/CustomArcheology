@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * @author rzt10
+ * @author rzt1020
  */
 public final class CustomArcheology extends JavaPlugin {
     public static CustomArcheology plugin;

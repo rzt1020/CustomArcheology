@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * @author rzt10
+ * @author rzt1020
  */
 public class PlayerManager extends AbstractManager {
     private static PlayerManager instance;
@@ -46,7 +46,9 @@ public class PlayerManager extends AbstractManager {
     }
 
     public void playerJoin(Player player) {
+        System.out.println(player.getUniqueId());
         playerLookAtMap.put(player.getUniqueId(),new PlayerLookAt(player));
+        System.out.println(playerLookAtMap);
     }
 
     public void playerQuit(Player player) {
@@ -58,11 +60,13 @@ public class PlayerManager extends AbstractManager {
     }
 
     public void setBrush(Player player, FakeTileBlock fakeTileBlock, BlockFace blockFace) {
+        System.out.println(player.getUniqueId());
         if (playerBlockMap.containsValue(fakeTileBlock)) {
             player.sendMessage("Other player is already archeology here");
             return;
         }
         playerBlockMap.put(player,  fakeTileBlock);
+        System.out.println(playerLookAtMap);
         playerLookAtMap.get(player.getUniqueId()).setTask(new BukkitRunnable() {
             @Override
             public void run() {

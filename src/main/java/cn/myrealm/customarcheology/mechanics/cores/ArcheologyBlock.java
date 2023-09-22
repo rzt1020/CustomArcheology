@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @author rzt10
+ * @author rzt1020
  */
 public class ArcheologyBlock {
     private final YamlConfiguration config;

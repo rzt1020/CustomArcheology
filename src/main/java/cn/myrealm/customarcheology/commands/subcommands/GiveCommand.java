@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * @author rzt10
+ * @author rzt1020
  */
 public class GiveCommand implements SubCommand {
     @Override

@@ -14,7 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.Objects;
 
 /**
- * @author rzt10
+ * @author rzt1020
  */
 public class PlayerBrushListener extends AbstractListener {
     public PlayerBrushListener(JavaPlugin plugin) {

@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @author rzt10
+ * @author rzt1020
  */
 public class DeArchifyCommand implements SubCommand {
     @Override

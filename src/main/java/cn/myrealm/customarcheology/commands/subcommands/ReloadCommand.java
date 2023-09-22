@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author rzt10
+ * @author rzt1020
  */
 public class ReloadCommand implements SubCommand {
     @Override

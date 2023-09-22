@@ -11,7 +11,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.Objects;
 
 /**
- * @author rzt10
+ * @author rzt1020
  */
 public class PlayerLookAt {
     private final Player player;

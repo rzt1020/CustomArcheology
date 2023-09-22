@@ -19,7 +19,7 @@ import java.util.*;
 import java.util.List;
 
 /**
- * @author rzt10
+ * @author rzt1020
  */
 public class ArcheologyChunkSpawner {
     private static final StringArrayTagType STRING_ARRAY_TYPE = new StringArrayTagType(StandardCharsets.UTF_8);

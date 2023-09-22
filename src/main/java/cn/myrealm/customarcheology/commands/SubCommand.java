@@ -5,7 +5,7 @@ import org.bukkit.command.CommandSender;
 import java.util.List;
 
 /**
- * @author rzt10
+ * @author rzt1020
  */
 public interface SubCommand {
     int FIRST_ARGUMENT = 1,

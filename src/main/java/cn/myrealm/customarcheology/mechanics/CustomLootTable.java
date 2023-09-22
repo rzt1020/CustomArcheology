@@ -1,9 +1,9 @@
 package cn.myrealm.customarcheology.mechanics;
 
-
 import cn.myrealm.customarcheology.CustomArcheology;
 import cn.myrealm.customarcheology.enums.Config;
 import cn.myrealm.customarcheology.utils.BasicUtil;
+import cn.myrealm.customarcheology.utils.ItemUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -13,48 +13,44 @@ import org.bukkit.loot.LootContext;
 import org.bukkit.loot.LootTable;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
- * @author rzt10
+ * @author rzt1020
  */
 public class CustomLootTable {
-    private final boolean isVanilla;
-    private final List<Reward> rewardsList =  new ArrayList<>();
-    private final ConfigurationSection config;
-    public CustomLootTable(LootTable lootTable) {
-        Location location = new Location(Bukkit.getWorld("world"), 0, 0, 0);
-        List<ItemStack> rewards = new ArrayList<> (lootTable.populateLoot(CustomArcheology.RANDOM, new LootContext.Builder(location).build()));
-        rewards.forEach(item -> {
-            rewardsList.add(new Reward(item));
-        });
-        config = null;
-        isVanilla = true;
-    }
 
     private static final String MATERIAL = "material";
     private static final String AMOUNT = "amount";
     private static final String CHANCE = "chance";
 
-    public CustomLootTable(ConfigurationSection config) {
-        this.config = config;
-        isVanilla = false;
-        config.getKeys(false).forEach(key -> {
-            ConfigurationSection section = config.getConfigurationSection(key);
-            if (Objects.nonNull(section)) {
-                loadReward(section);
-            }
-        });
+    private final List<Reward> rewardsList;
+
+    public CustomLootTable(LootTable lootTable) {
+        Location location = new Location(Bukkit.getWorld("world"), 0, 0, 0);
+        this.rewardsList = lootTable.populateLoot(CustomArcheology.RANDOM, new LootContext.Builder(location).build())
+                .stream().map(Reward::new).collect(Collectors.toList());
     }
 
-    public void loadReward(ConfigurationSection section) {
-        Material material = Material.getMaterial(section.getString(MATERIAL, "air").replace(Config.VANILLA_SYMBOL.asString(), "").toUpperCase());
+    public CustomLootTable(ConfigurationSection config) {
+        this.rewardsList = config.getKeys(false).stream()
+                .map(config::getConfigurationSection)
+                .filter(Objects::nonNull)
+                .map(this::loadReward)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
+    public Reward loadReward(ConfigurationSection section) {
+        String itemIdentifier = section.getString(MATERIAL, null);
         Point amount = BasicUtil.parseRange(section.getString(AMOUNT, "1"));
         int chance = section.getInt(CHANCE, 1);
-        if (Objects.nonNull(material)) {
-            rewardsList.add(new Reward(new ItemStack(material), amount, chance));
+        if (Objects.nonNull(itemIdentifier)) {
+            return new Reward(ItemUtil.getItemStack(itemIdentifier), amount, chance);
         }
+        return null;
     }
 
     public ItemStack generateItem() {
@@ -64,49 +60,47 @@ public class CustomLootTable {
         }
         return reward.generateItem();
     }
-}
 
-class Reward {
-    private final ItemStack itemStack;
-    private final Point amount;
-    private final int chance;
-    Reward(ItemStack itemStack, Point amount, int chance) {
-        this.itemStack = itemStack;
-        this.amount = amount;
-        this.chance = chance;
-    }
-    Reward(ItemStack itemStack) {
-        this.itemStack = itemStack;
-        this.amount = new Point(itemStack.getAmount(), itemStack.getAmount());
-        this.chance = 1;
-    }
+    public static class Reward {
+        private final ItemStack itemStack;
+        private final Point amount;
+        private final int chance;
 
-    public ItemStack generateItem() {
-        ItemStack itemStack1 = itemStack.clone();
-        int amount = BasicUtil.getRandomIntFromPoint(this.amount);
-        itemStack1.setAmount(amount);
-        return itemStack1;
-    }
-
-    public int getChance() {
-        return chance;
-    }
-
-    public static Reward randomReward(List<Reward> rewardsList) {
-        int totalChance = rewardsList.stream()
-                .mapToInt(Reward::getChance)
-                .sum();
-        int randomChance = CustomArcheology.RANDOM.nextInt(0, totalChance);
-        int accumulatedChance = 0;
-
-        for (Reward reward : rewardsList) {
-            accumulatedChance += reward.getChance();
-            if (randomChance < accumulatedChance) {
-                return reward;
-            }
+        Reward(ItemStack itemStack, Point amount, int chance) {
+            this.itemStack = itemStack;
+            this.amount = amount;
+            this.chance = chance;
         }
-        return null;
+
+        Reward(ItemStack itemStack) {
+            this(itemStack, new Point(itemStack.getAmount(), itemStack.getAmount()), 1);
+        }
+
+        public ItemStack generateItem() {
+            ItemStack clonedItemStack = itemStack.clone();
+            int amountValue = BasicUtil.getRandomIntFromPoint(this.amount);
+            clonedItemStack.setAmount(amountValue);
+            return clonedItemStack;
+        }
+
+        public int getChance() {
+            return chance;
+        }
+
+        public static Reward randomReward(List<Reward> rewardsList) {
+            int totalChance = rewardsList.stream()
+                    .mapToInt(Reward::getChance)
+                    .sum();
+            int randomChance = CustomArcheology.RANDOM.nextInt(totalChance);
+            int accumulatedChance = 0;
+
+            for (Reward reward : rewardsList) {
+                accumulatedChance += reward.getChance();
+                if (randomChance < accumulatedChance) {
+                    return reward;
+                }
+            }
+            return null;
+        }
     }
 }
-
-

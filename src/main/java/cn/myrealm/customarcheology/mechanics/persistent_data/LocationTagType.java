@@ -12,7 +12,7 @@ import java.util.Objects;
 
 
 /**
- * @author rzt10
+ * @author rzt1020
  */
 public class LocationTagType implements PersistentDataType<byte[], Location> {
 

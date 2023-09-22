@@ -13,7 +13,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 /**
- * @author rzt10
+ * @author rzt1020
  */
 public class TextureManager extends AbstractManager {
     private Map<String, Integer> blockCustommodeldataMap,
@@ -75,7 +75,7 @@ public class TextureManager extends AbstractManager {
             loadTextures();
             outputTextures();
             Bukkit.getScheduler().runTask(plugin, ()-> Bukkit.getConsoleSender().sendMessage(Messages.TEXTURE_PACK_CREATED.getMessageWithPrefix()));
-        }, 20);
+        }, 40);
     }
 
 
@@ -83,8 +83,16 @@ public class TextureManager extends AbstractManager {
         if (blockCustommodeldataMap.containsKey(blockId)) {
             return  blockCustommodeldataMap.get(blockId);
         }
-        return -1;
+        return 0;
     }
+
+    public int getToolCustommodeldata(String toolId) {
+        if (blockCustommodeldataMap.containsKey(toolId)) {
+            return  blockCustommodeldataMap.get(toolId);
+        }
+        return 0;
+    }
+
     private void loadTextures() {
         if (!new File(Path.BLOCK_TEXTURE_PATH.toString()).exists() && new File(Path.BLOCK_TEXTURE_PATH.toString()).mkdirs()) {
             return;
@@ -260,6 +268,8 @@ public class TextureManager extends AbstractManager {
         }
         return success;
     }
+
+
 }
 
 enum Path {

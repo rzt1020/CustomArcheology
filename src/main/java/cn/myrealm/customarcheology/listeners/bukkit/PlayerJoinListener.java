@@ -7,7 +7,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * @author rzt10
+ * @author rzt1020
  */
 public class PlayerJoinListener extends AbstractListener{
     public PlayerJoinListener(JavaPlugin plugin) {

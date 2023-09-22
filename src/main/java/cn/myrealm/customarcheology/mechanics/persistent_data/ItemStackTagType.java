@@ -13,7 +13,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 /**
- * @author rzt10
+ * @author rzt1020
  */
 public class ItemStackTagType implements PersistentDataType<byte[], ItemStack> {
 

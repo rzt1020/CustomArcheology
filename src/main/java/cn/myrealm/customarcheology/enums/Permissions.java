@@ -3,7 +3,7 @@ package cn.myrealm.customarcheology.enums;
 import org.bukkit.command.CommandSender;
 
 /**
- * @author rzt10
+ * @author rzt1020
  */
 
 public enum Permissions {

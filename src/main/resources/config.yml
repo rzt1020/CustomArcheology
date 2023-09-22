@@ -13,4 +13,4 @@ settings:
   item-scale: 0.5
   block-scale: 0.25
   symbols:
-    vanilla: "minecraft:"
+    vanilla: "minecraft"

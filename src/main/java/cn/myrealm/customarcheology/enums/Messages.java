@@ -4,7 +4,7 @@ import cn.myrealm.customarcheology.CustomArcheology;
 import cn.myrealm.customarcheology.managers.managers.system.LanguageManager;
 
 /**
- * @author rzt10
+ * @author rzt1020
  */
 
 public enum Messages {

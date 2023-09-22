@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * @author rzt10
+ * @author rzt1020
  */
 public class LootManager extends AbstractManager {
     private static LootManager instance;

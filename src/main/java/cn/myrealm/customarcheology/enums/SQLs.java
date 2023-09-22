@@ -1,7 +1,7 @@
 package cn.myrealm.customarcheology.enums;
 
 /**
- * @author rzt10
+ * @author rzt1020
  */
 
 public enum SQLs {

@@ -18,7 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @author rzt10
+ * @author rzt1020
  */
 public class BasicUtil {
     public static List<Player> getNearbyPlayers(Location location) {

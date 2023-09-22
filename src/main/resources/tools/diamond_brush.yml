@@ -1,1 +1,12 @@
 display_name: "Diamond Brush"
+lore:
+  - "A Diamond Brush"
+texture: diamond_brush
+recipe_1:
+  shape:
+    - "AAA"
+    - "ABA"
+    - "AAA"
+  ingredients:
+    A: minecraft:diamond
+    B: minecraft:brush

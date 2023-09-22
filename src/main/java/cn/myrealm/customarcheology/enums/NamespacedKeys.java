@@ -4,7 +4,7 @@ import cn.myrealm.customarcheology.CustomArcheology;
 import org.bukkit.NamespacedKey;
 
 /**
- * @author rzt10
+ * @author rzt1020
  */
 
 public enum NamespacedKeys {

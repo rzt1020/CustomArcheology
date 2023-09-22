@@ -8,7 +8,7 @@ import com.comphenix.protocol.events.PacketEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * @author rzt10
+ * @author rzt1020
  */
 public class PlayerDigListener extends AbstractListener {
 

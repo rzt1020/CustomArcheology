@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author rzt10
+ * @author rzt1020
  */
 public class DatabaseManager extends AbstractManager {
 

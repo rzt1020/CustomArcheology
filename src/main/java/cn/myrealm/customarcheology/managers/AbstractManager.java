@@ -3,7 +3,7 @@ package cn.myrealm.customarcheology.managers;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * @author rzt10
+ * @author rzt1020
  */
 public abstract class AbstractManager {
 

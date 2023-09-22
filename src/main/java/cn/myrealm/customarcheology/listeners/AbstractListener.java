@@ -10,7 +10,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * @author rzt10
+ * @author rzt1020
  */
 public abstract class AbstractListener extends PacketAdapter implements Listener {
 
