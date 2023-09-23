@@ -67,7 +67,7 @@ public class LootManager extends AbstractManager {
 
     public CustomLootTable getCustomLootTable(String name) {
         if (name.startsWith(Config.VANILLA_SYMBOL.asString())) {
-            LootTables tables = LootTables.valueOf(name.replace(Config.VANILLA_SYMBOL.asString(), "").toUpperCase());
+            LootTables tables = LootTables.valueOf(name.replace(Config.VANILLA_SYMBOL.asString() + ":", "").toUpperCase());
             return new CustomLootTable(tables.getLootTable());
         } else if (lootTableMap.containsKey(name)) {
             return lootTableMap.get(name);

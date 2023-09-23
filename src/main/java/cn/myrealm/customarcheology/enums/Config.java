@@ -22,7 +22,9 @@ public enum Config {
     ITEM_SCALE("settings.item-scale", 0.5),
     BLOCK_SCALE("settings.block-scale", 0.25),
     //symbols
-    VANILLA_SYMBOL("settings.symbols.vanilla", "minecraft");
+    VANILLA_SYMBOL("settings.symbols.vanilla", "minecraft"),
+    CUSTOM_TOOL_SYMBOL("settings.symbols.custom-tool", "ca_tool"),
+    CUSTOM_BLOCK_SYMBOL("settings.symbols.custom-block", "ca_block");
 
 
     private final String key;

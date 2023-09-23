@@ -34,7 +34,7 @@ public class HelpCommand implements SubCommand {
     }
 
     @Override
-    public List<String> onTabComplete(int argsNum) {
+    public List<String> onTabComplete(int argsNum, String[] args) {
         return new ArrayList<>();
     }
 

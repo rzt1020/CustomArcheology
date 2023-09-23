@@ -83,12 +83,12 @@ public class TextureManager extends AbstractManager {
         if (blockCustommodeldataMap.containsKey(blockId)) {
             return  blockCustommodeldataMap.get(blockId);
         }
-        return 0;
+        return -1;
     }
 
     public int getToolCustommodeldata(String toolId) {
-        if (blockCustommodeldataMap.containsKey(toolId)) {
-            return  blockCustommodeldataMap.get(toolId);
+        if (toolCustommodeldataMap.containsKey(toolId)) {
+            return  toolCustommodeldataMap.get(toolId);
         }
         return 0;
     }

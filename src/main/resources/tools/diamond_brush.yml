@@ -1,6 +1,6 @@
 display_name: "Diamond Brush"
 lore:
-  - "A Diamond Brush"
+  - "&7A Diamond Brush"
 texture: diamond_brush
 recipe_1:
   shape:
@@ -10,3 +10,11 @@ recipe_1:
   ingredients:
     A: minecraft:diamond
     B: minecraft:brush
+recipe_2:
+  shape:
+    - "AAA"
+    - "ABA"
+    - "AAA"
+  ingredients:
+    A: minecraft:diamond
+    B: ca_tool:diamond_brush

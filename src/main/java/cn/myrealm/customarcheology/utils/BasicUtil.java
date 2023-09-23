@@ -26,8 +26,7 @@ public class BasicUtil {
         Collection<Entity> entities = Objects.requireNonNull(location.getWorld()).getNearbyEntities(location, visibleDistance, visibleDistance, visibleDistance);
         List<Player> players = new ArrayList<>();
         for (Entity entity : entities) {
-            if (entity instanceof Player) {
-                Player player = (Player) entity;
+            if (entity instanceof Player player) {
                 players.add(player);
             }
         }

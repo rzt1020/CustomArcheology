@@ -69,7 +69,7 @@ public class MainCommand implements CommandExecutor, TabCompleter {
             }
         } else if (args.length > 1) {
             if (SUB_COMMANDS.containsKey(args[0].toLowerCase()) && sender.hasPermission(Permissions.COMMAND + args[0].toLowerCase())){
-                suggestions.addAll(SUB_COMMANDS.get(args[0].toLowerCase()).onTabComplete(args.length - 1));
+                suggestions.addAll(SUB_COMMANDS.get(args[0].toLowerCase()).onTabComplete(args.length - 1, args));
             }
         }
         return suggestions;

@@ -1,0 +1,12 @@
+display_name: "Archaeological Shovel"
+lore:
+  - "&7A Archaeological Shovel"
+texture: archaeological_shovel
+recipe_1:
+  shape:
+    - " AA"
+    - " BA"
+    - "B  "
+  ingredients:
+    A: minecraft:copper_ingot
+    B: minecraft:stick

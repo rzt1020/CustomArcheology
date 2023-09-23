@@ -9,10 +9,7 @@ import cn.myrealm.customarcheology.listeners.bukkit.PlayerJoinListener;
 import cn.myrealm.customarcheology.listeners.bukkit.PlayerPlaceBlockListener;
 import cn.myrealm.customarcheology.listeners.protocol.PlayerDigListener;
 import cn.myrealm.customarcheology.managers.AbstractManager;
-import cn.myrealm.customarcheology.managers.managers.BlockManager;
-import cn.myrealm.customarcheology.managers.managers.ChunkManager;
-import cn.myrealm.customarcheology.managers.managers.LootManager;
-import cn.myrealm.customarcheology.managers.managers.PlayerManager;
+import cn.myrealm.customarcheology.managers.managers.*;
 import cn.myrealm.customarcheology.managers.managers.system.DatabaseManager;
 import cn.myrealm.customarcheology.managers.managers.system.LanguageManager;
 import cn.myrealm.customarcheology.managers.managers.system.TextureManager;
@@ -68,6 +65,7 @@ public final class CustomArcheology extends JavaPlugin {
         managers.add(new LootManager(this));
         managers.add(new BlockManager(this));
         managers.add(new ChunkManager(this));
+        managers.add(new ToolManager(this));
     }
     public void disablePlugin() {
         for (AbstractManager manager : managers) {
@@ -115,12 +113,20 @@ public final class CustomArcheology extends JavaPlugin {
             "pack/assets/minecraft/models/item/brush_brushing_10.json",
             "pack/assets/minecraft/textures/item/nothing.png",
             "blocks/suspicious_stone.yml",
+            "tools/diamond_brush.yml",
+            "tools/netherite_brush.yml",
+            "tools/archaeological_shovel.yml",
+            "tools/diamond_archaeological_shovel.yml",
+            "tools/netherite_archaeological_shovel.yml",
             "textures/blocks/suspicious_stone.png",
             "textures/blocks/suspicious_stone_1.png",
             "textures/blocks/suspicious_stone_2.png",
             "textures/blocks/suspicious_stone_3.png",
-            "textures/tools/brush_exposed.png",
-            "textures/tools/brush_oxidized.png",
+            "textures/tools/archaeological_shovel.png",
+            "textures/tools/diamond_archaeological_shovel.png",
+            "textures/tools/netherite_archaeological_shovel.png",
+            "textures/tools/diamond_brush.png",
+            "textures/tools/netherite_brush.png",
             "languages/zh_CN.yml",
             "loottables/stone.yml");
     public void outputDefaultFiles() {

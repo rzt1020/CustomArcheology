@@ -42,7 +42,7 @@ public class ArchifyCommand implements SubCommand {
     }
 
     @Override
-    public List<String> onTabComplete(int argsNum) {
+    public List<String> onTabComplete(int argsNum, String[] args) {
         List<String> suggestions = new ArrayList<>();
         if (argsNum == FIRST_ARGUMENT) {
             BlockManager blockManager = BlockManager.getInstance();

@@ -1,6 +1,7 @@
 package cn.myrealm.customarcheology.listeners.bukkit;
 
 
+import cn.myrealm.customarcheology.enums.Permissions;
 import cn.myrealm.customarcheology.listeners.AbstractListener;
 import cn.myrealm.customarcheology.managers.managers.ChunkManager;
 import cn.myrealm.customarcheology.managers.managers.PlayerManager;
@@ -26,11 +27,18 @@ public class PlayerBrushListener extends AbstractListener {
         if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK) || Objects.isNull(event.getItem()) || !event.getItem().getType().equals(Material.BRUSH)) {
             return;
         }
+        if (!Permissions.PLAY_ARCHEOLOGY.hasPermission(event.getPlayer())) {
+            event.getPlayer().sendMessage("Don't have permission");
+            return;
+        }
         ChunkManager chunkManager = ChunkManager.getInstance();
         if (chunkManager.isArcheologyBlock(Objects.requireNonNull(event.getClickedBlock()).getLocation())) {
             FakeTileBlock fakeTileBlock = chunkManager.getFakeTileBlock(event.getClickedBlock().getLocation());
-            PlayerManager playerManager = PlayerManager.getInstance();
-            playerManager.setBrush(event.getPlayer(), fakeTileBlock, event.getBlockFace());
+            if (!fakeTileBlock.getArcheologyBlock().canBrush(event.getItem())) {
+                event.getPlayer().sendMessage("Can't brush this block");
+                return;
+            }
+            PlayerManager.getInstance().setBrush(event.getPlayer(), fakeTileBlock, event.getBlockFace(), event.getItem());
         }
     }
 }

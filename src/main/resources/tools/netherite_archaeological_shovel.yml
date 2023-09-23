@@ -1,0 +1,20 @@
+display_name: "Netherite Archaeological Shovel"
+lore:
+  - "&7A Netherite Archaeological Shovel"
+texture: netherite_archaeological_shovel
+recipe_1:
+  shape:
+    - "AAA"
+    - "ABA"
+    - "AAA"
+  ingredients:
+    A: minecraft:netherite_ingot
+    B: ca_tool:archaeological_shovel
+recipe_2:
+  shape:
+    - "AAA"
+    - "ABA"
+    - "AAA"
+  ingredients:
+    A: minecraft:netherite_ingot
+    B: ca_tool:archaeological_shovel

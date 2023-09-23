@@ -1,0 +1,20 @@
+display_name: "Diamond Archaeological Shovel"
+lore:
+  - "&7A Diamond Archaeological Shovel"
+texture: diamond_archaeological_shovel
+recipe_1:
+  shape:
+    - "AAA"
+    - "ABA"
+    - "AAA"
+  ingredients:
+    A: minecraft:diamond
+    B: ca_tool:archaeological_shovel
+recipe_2:
+  shape:
+    - "AAA"
+    - "ABA"
+    - "AAA"
+  ingredients:
+    A: minecraft:diamond
+    B: ca_tool:diamond_archaeological_shovel

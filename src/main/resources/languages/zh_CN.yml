@@ -7,6 +7,7 @@ info:
   world-detail: "{block-id} - {state}"
   block-loaded: "考古方块{block-id}加载成功"
   loottable-loaded: "奖励表{loottable-id}加载成功"
+  tool-loaded: "工具{tool-id}加载成功"
 error:
   incorrect-command: "指令错误"
   executing-command: "执行指令时遇到问题:{error}"

@@ -9,6 +9,7 @@ import cn.myrealm.customarcheology.managers.managers.system.LanguageManager;
 import cn.myrealm.customarcheology.managers.managers.system.TextureManager;
 import cn.myrealm.customarcheology.mechanics.CustomLootTable;
 import cn.myrealm.customarcheology.utils.BasicUtil;
+import cn.myrealm.customarcheology.utils.ItemUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -162,6 +163,17 @@ public class ArcheologyBlock {
     public Material getType() {
         return replaceBlock;
     }
+
+    public boolean canBrush(ItemStack tool) {
+        String toolId = ItemUtil.getToolId(tool);
+        return Objects.requireNonNull(Keys.BRUSH_TOOLS.asSection(config)).getKeys(false).contains(toolId);
+    }
+
+    public double getEfficiency(ItemStack tool) {
+        String toolId = ItemUtil.getToolId(tool);
+        ConfigurationSection section = Objects.requireNonNull(Keys.BRUSH_TOOLS.asSection(config)).getConfigurationSection(toolId);
+        return Keys.EFFICIENCY.asDouble(section);
+    }
 }
 
 enum Keys {
@@ -174,6 +186,7 @@ enum Keys {
     REPLACE_BLOCK("general.replace_block", "stone"),
     LOOT_TABLES("general.loot_tables", null),
     BRUSH_TOOLS("brush_tools", null),
+    EFFICIENCY("efficiency", 1.0d),
     STATES("states", null),
     GENERATE_BIOMES("general.generate_biomes", "all"),
     DISTRIBUTION("general.distribution", null),

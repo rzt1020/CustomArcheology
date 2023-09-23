@@ -1,0 +1,20 @@
+display_name: "Netherite Brush"
+lore:
+  - "&7A Netherite Brush"
+texture: netherite_brush
+recipe_1:
+  shape:
+    - "AAA"
+    - "ABA"
+    - "AAA"
+  ingredients:
+    A: minecraft:netherite_ingot
+    B: minecraft:brush
+recipe_2:
+  shape:
+    - "AAA"
+    - "ABA"
+    - "AAA"
+  ingredients:
+    A: minecraft:netherite_ingot
+    B: ca_tool:netherite_brush

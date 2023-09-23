@@ -14,3 +14,5 @@ settings:
   block-scale: 0.25
   symbols:
     vanilla: "minecraft"
+    custom-tool: "ca_tool"
+    custom-block: "ca_block"

@@ -40,7 +40,7 @@ public class DeArchifyCommand implements SubCommand {
     }
 
     @Override
-    public List<String> onTabComplete(int argsNum) {
+    public List<String> onTabComplete(int argsNum, String[] args) {
         List<String> suggestions = new ArrayList<>();
         if (argsNum == FIRST_ARGUMENT) {
             BlockManager blockManager = BlockManager.getInstance();
@@ -53,7 +53,7 @@ public class DeArchifyCommand implements SubCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) throws Exception {
-        if (!Permissions.ARCHIFY.hasPermission(sender)) {
+        if (!Permissions.DEARCHIFY.hasPermission(sender)) {
             return;
         }
         if (args.length != TWO_ARGUMENTS) {

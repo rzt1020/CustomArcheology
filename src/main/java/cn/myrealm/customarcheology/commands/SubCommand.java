@@ -10,11 +10,13 @@ import java.util.List;
 public interface SubCommand {
     int FIRST_ARGUMENT = 1,
         SECOND_ARGUMENT = 2,
-        THIRD_ARGUMENT = 3;
+        THIRD_ARGUMENT = 3,
+        FOURTH_ARGUMENT = 4;
 
     int NONE_ARGUMENT = 1,
         TWO_ARGUMENTS = 3,
-        THREE_ARGUMENTS = 4;
+        THREE_ARGUMENTS = 4,
+        FOUR_ARGUMENTS = 5;
     /**
      * get sub command name
      * @return String
@@ -42,10 +44,12 @@ public interface SubCommand {
 
     /**
      * get tab complete of sub command
+     *
      * @param argsNum size of args
+     * @param args
      * @return List<String>
      */
-    List<String> onTabComplete(int argsNum);
+    List<String> onTabComplete(int argsNum, String[] args);
 
     /**
      * execute sub command

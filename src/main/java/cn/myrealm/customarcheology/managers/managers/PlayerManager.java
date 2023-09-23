@@ -5,19 +5,19 @@ import cn.myrealm.customarcheology.mechanics.cores.FakeTileBlock;
 import cn.myrealm.customarcheology.mechanics.players.PlayerLookAt;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author rzt1020
  */
 public class PlayerManager extends AbstractManager {
     private static PlayerManager instance;
-    private Map<UUID, PlayerLookAt> playerLookAtMap;
+    private Map<Player, PlayerLookAt> playerLookAtMap;
     private Map<Player, FakeTileBlock> playerBlockMap;
 
     public PlayerManager(JavaPlugin plugin) {
@@ -30,7 +30,7 @@ public class PlayerManager extends AbstractManager {
         playerBlockMap = new HashMap<>(5);
         playerLookAtMap = new HashMap<>(5);
         for (Player player : plugin.getServer().getOnlinePlayers()) {
-            playerLookAtMap.put(player.getUniqueId(),new PlayerLookAt(player));
+            playerLookAtMap.put(player,new PlayerLookAt(player));
         }
     }
 
@@ -46,34 +46,29 @@ public class PlayerManager extends AbstractManager {
     }
 
     public void playerJoin(Player player) {
-        System.out.println(player.getUniqueId());
-        playerLookAtMap.put(player.getUniqueId(),new PlayerLookAt(player));
-        System.out.println(playerLookAtMap);
+        playerLookAtMap.put(player,new PlayerLookAt(player));
     }
 
     public void playerQuit(Player player) {
-        UUID uuid = player.getUniqueId();
-        if(playerLookAtMap.containsKey(uuid)) {
-            playerLookAtMap.get(uuid).cancelTask();
-            playerLookAtMap.remove(uuid);
+        if(playerLookAtMap.containsKey(player)) {
+            playerLookAtMap.get(player).cancelTask();
+            playerLookAtMap.remove(player);
         }
     }
 
-    public void setBrush(Player player, FakeTileBlock fakeTileBlock, BlockFace blockFace) {
-        System.out.println(player.getUniqueId());
+    public void setBrush(Player player, FakeTileBlock fakeTileBlock, BlockFace blockFace, ItemStack tool) {
         if (playerBlockMap.containsValue(fakeTileBlock)) {
             player.sendMessage("Other player is already archeology here");
             return;
         }
-        playerBlockMap.put(player,  fakeTileBlock);
-        System.out.println(playerLookAtMap);
-        playerLookAtMap.get(player.getUniqueId()).setTask(new BukkitRunnable() {
+        playerBlockMap.put(player, fakeTileBlock);
+        playerLookAtMap.get(player).setTask(new BukkitRunnable() {
             @Override
             public void run() {
                 cancelBrush(player);
             }
         });
-        fakeTileBlock.play(blockFace);
+        fakeTileBlock.play(blockFace, tool);
     }
 
     public void cancelBrush(Player player) {

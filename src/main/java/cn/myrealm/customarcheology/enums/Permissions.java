@@ -9,13 +9,17 @@ import org.bukkit.command.CommandSender;
 public enum Permissions {
     // root
     ROOT("customarcheology."),
-    //commands
+    // commands
     COMMAND(ROOT + "command."),
     HELP(COMMAND + "help"),
     RELOAD(COMMAND + "reload"),
     GIVE(COMMAND + "give"),
     ARCHIFY(COMMAND + "archify"),
-    DEARCHIFY(COMMAND + "dearchify");
+    DEARCHIFY(COMMAND + "dearchify"),
+    // plays
+    PLAY(ROOT + "play."),
+    PLAY_ARCHEOLOGY(PLAY + "archeology"),
+    PLAY_HIGHLIGHT(PLAY + "highlight");
 
 
     private final String permission;

@@ -1,12 +1,10 @@
 package cn.myrealm.customarcheology.mechanics;
 
 import cn.myrealm.customarcheology.CustomArcheology;
-import cn.myrealm.customarcheology.enums.Config;
 import cn.myrealm.customarcheology.utils.BasicUtil;
 import cn.myrealm.customarcheology.utils.ItemUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.loot.LootContext;
@@ -48,7 +46,7 @@ public class CustomLootTable {
         Point amount = BasicUtil.parseRange(section.getString(AMOUNT, "1"));
         int chance = section.getInt(CHANCE, 1);
         if (Objects.nonNull(itemIdentifier)) {
-            return new Reward(ItemUtil.getItemStack(itemIdentifier), amount, chance);
+            return new Reward(ItemUtil.getItemStackByItemIdentifier(itemIdentifier), amount, chance);
         }
         return null;
     }

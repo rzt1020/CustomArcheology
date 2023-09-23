@@ -6,6 +6,8 @@ import cn.myrealm.customarcheology.enums.Config;
 import cn.myrealm.customarcheology.managers.managers.BlockManager;
 import cn.myrealm.customarcheology.managers.managers.ChunkManager;
 import cn.myrealm.customarcheology.managers.managers.PlayerManager;
+import cn.myrealm.customarcheology.managers.managers.ToolManager;
+import cn.myrealm.customarcheology.utils.ItemUtil;
 import cn.myrealm.customarcheology.utils.PacketUtil;
 import cn.myrealm.customarcheology.utils.BasicUtil;
 import org.bukkit.Location;
@@ -39,6 +41,7 @@ public class FakeTileBlock {
     private final Map<Integer, EffectTask> taskMap = new HashMap<>();
     private EffectTask nextTask;
     private BukkitRunnable particleTask;
+    private double efficiency = 1.0;
 
 
     public FakeTileBlock(String blockName, Location location, ItemStack reward) {
@@ -92,11 +95,12 @@ public class FakeTileBlock {
         return block;
     }
 
-    public void play(BlockFace blockFace) {
+    public void play(BlockFace blockFace, ItemStack tool) {
         if (isPlaying) {
             return;
         }
         isPlaying = true;
+        efficiency = block.getEfficiency(tool);
         if (!isEffectInitialized) {
             effectInit(blockFace);
             spawnReward(blockFace);
@@ -109,7 +113,7 @@ public class FakeTileBlock {
             }
             int taskId = order.pop();
             nextTask = taskMap.get(taskId).cloneTask();
-            nextTask.runTaskLater(CustomArcheology.plugin, (long) (nextTask.getState().getHardness() * 20));
+            nextTask.runTaskLater(CustomArcheology.plugin, (long) (nextTask.getState().getHardness() * 20 / efficiency));
         }
         playParticleEffect(blockFace);
     }
@@ -211,7 +215,7 @@ public class FakeTileBlock {
             if (!order.isEmpty()) {
                 int taskId = order.pop();
                 nextTask = taskMap.get(taskId).cloneTask();
-                nextTask.runTaskLater(CustomArcheology.plugin, (long) (state.getHardness() * 20));
+                nextTask.runTaskLater(CustomArcheology.plugin, (long) (state.getHardness() * 20 / efficiency));
             } else {
                 nextTask = null;
             }

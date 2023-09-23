@@ -15,7 +15,9 @@ public enum NamespacedKeys {
     ARCHEOLOGY_BLOCK_ITEM("archeology_block_item.{0}"),
     // item
     IS_ARCHEOLOGY_ITEM("is_archeology_item"),
-    ARCHEOLOGY_BLOCK_ID("archeology_block_id");
+    ARCHEOLOGY_BLOCK_ID("archeology_block_id"),
+    IS_ARCHEOLOGY_TOOL("is_archeology_tool"),
+    ARCHEOLOGY_TOOL_ID("archeology_tool_id");
 
     private final String key;
     NamespacedKeys(String key) {

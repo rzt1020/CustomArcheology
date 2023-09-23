@@ -8,17 +8,11 @@ general:
     - "stone"
 
 brush_tools:
-  wooden_tiny_pickaxe:
+  archaeological_shovel:
     efficiency: 1.0
-  stone_tiny_pickaxe:
-    efficiency: 1.2
-  iron_tiny_pickaxe:
-    efficiency: 1.5
-  diamond_tiny_pickaxe:
+  diamond_archaeological_shovel:
     efficiency: 2.0
-  golden_tiny_pickaxe:
-    efficiency: 1.8
-  netherite_tiny_pickaxe:
+  netherite_archaeological_shovel:
     efficiency: 3.0
 
 states:
