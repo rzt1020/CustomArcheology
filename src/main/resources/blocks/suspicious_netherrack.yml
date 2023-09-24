@@ -1,0 +1,30 @@
+general:
+  display_name: "Suspicious Netherrack"
+  replace_block: netherrack
+  generate_biomes: all
+  distribution: 1 ~ 127
+  max_per_chunk: 16
+  loot_tables:
+    - "stone"
+
+brush_tools:
+  diamond_archaeological_shovel:
+    efficiency: 1.0
+  netherite_archaeological_shovel:
+    efficiency: 2.0
+
+states:
+  default:
+    texture: "suspicious_netherrack"
+    hardness: 2.0
+  state_1:
+    texture: "suspicious_netherrack_1"
+    hardness: 2.0
+  state_2:
+    texture: "suspicious_netherrack_2"
+    hardness: 2.0
+  state_3:
+    texture: "suspicious_netherrack_3"
+    hardness: 2.0
+  finished:
+    material: netherrack

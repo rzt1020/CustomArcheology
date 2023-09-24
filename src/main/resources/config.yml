@@ -16,3 +16,5 @@ settings:
     vanilla: "minecraft"
     custom-tool: "ca_tool"
     custom-block: "ca_block"
+    itemsadder: "itemsadder"
+    oraxen: "oraxen"

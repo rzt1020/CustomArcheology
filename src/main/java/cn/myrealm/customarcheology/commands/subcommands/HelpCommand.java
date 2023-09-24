@@ -40,7 +40,7 @@ public class HelpCommand implements SubCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if (!Permissions.HELP.hasPermission(sender)) {
+        if (!Permissions.COMMAND_HELP.hasPermission(sender)) {
             return;
         }
         if (args.length != NONE_ARGUMENT) {

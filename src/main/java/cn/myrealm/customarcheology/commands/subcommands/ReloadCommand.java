@@ -43,7 +43,7 @@ public class ReloadCommand implements SubCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if (!Permissions.RELOAD.hasPermission(sender)) {
+        if (!Permissions.COMMAND_RELOAD.hasPermission(sender)) {
             return;
         }
         if (args.length != NONE_ARGUMENT) {

@@ -66,7 +66,7 @@ public class GiveCommand implements SubCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) throws Exception {
-        if (!Permissions.GIVE.hasPermission(sender)) {
+        if (!Permissions.COMMAND_GIVE.hasPermission(sender)) {
             return;
         }
 

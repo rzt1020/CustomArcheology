@@ -2,8 +2,11 @@ general:
   display_name: "Suspicious Stone"
   replace_block: stone
   generate_biomes: all
-  distribution: 0 ~ 64
-  max_per_chunk: 3
+  distribution: 0 ~ 127
+  gaussian:
+    mean: 64
+    standard_deviation: 16
+  max_per_chunk: 16
   loot_tables:
     - "stone"
 

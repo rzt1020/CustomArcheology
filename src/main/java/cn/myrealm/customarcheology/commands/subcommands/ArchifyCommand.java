@@ -56,7 +56,7 @@ public class ArchifyCommand implements SubCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) throws Exception {
-        if (!Permissions.ARCHIFY.hasPermission(sender)) {
+        if (!Permissions.COMMAND_ARCHIFY.hasPermission(sender)) {
             return;
         }
         if (args.length != TWO_ARGUMENTS) {

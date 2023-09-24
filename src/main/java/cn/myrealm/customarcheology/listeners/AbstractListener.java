@@ -1,5 +1,6 @@
 package cn.myrealm.customarcheology.listeners;
 
+import cn.myrealm.customarcheology.CustomArcheology;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
@@ -27,13 +28,11 @@ public abstract class AbstractListener extends PacketAdapter implements Listener
     }
 
     public void registerBukkitListener() {
-        PluginManager pm = plugin.getServer().getPluginManager();
-        pm.registerEvents(this, plugin);
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     public void registerProtocolListener() {
-        ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-        protocolManager.addPacketListener(this);
+        CustomArcheology.protocolManager.addPacketListener(this);
     }
 
 }

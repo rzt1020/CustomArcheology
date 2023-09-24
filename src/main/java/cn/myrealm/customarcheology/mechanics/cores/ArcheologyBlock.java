@@ -174,6 +174,16 @@ public class ArcheologyBlock {
         ConfigurationSection section = Objects.requireNonNull(Keys.BRUSH_TOOLS.asSection(config)).getConfigurationSection(toolId);
         return Keys.EFFICIENCY.asDouble(section);
     }
+
+    public boolean isGaussian() {
+        return Objects.nonNull(Keys.GAUSSIAN.asSection(config));
+    }
+    public double getGaussianMean() {
+        return Keys.MEAN.asDouble(config);
+    }
+    public double getGaussianStdDev() {
+        return Keys.STANDARD_DEVIATION.asDouble(config);
+    }
 }
 
 enum Keys {
@@ -190,7 +200,10 @@ enum Keys {
     STATES("states", null),
     GENERATE_BIOMES("general.generate_biomes", "all"),
     DISTRIBUTION("general.distribution", null),
-    MAX_PER_CHUNK("general.max_per_chunk", 0);
+    MAX_PER_CHUNK("general.max_per_chunk", 0),
+    GAUSSIAN("general.gaussian", null),
+    MEAN("general.gaussian.mean", 0),
+    STANDARD_DEVIATION("general.gaussian.standard_deviation", 1);
 
     private final String key;
     private final Object def;

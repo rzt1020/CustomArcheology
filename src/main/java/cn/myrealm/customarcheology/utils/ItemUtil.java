@@ -5,6 +5,8 @@ import cn.myrealm.customarcheology.enums.NamespacedKeys;
 import cn.myrealm.customarcheology.managers.managers.BlockManager;
 import cn.myrealm.customarcheology.managers.managers.ToolManager;
 import cn.myrealm.customarcheology.managers.managers.system.LanguageManager;
+import cn.myrealm.customarcheology.utils.hooks.ItemsAdder;
+import cn.myrealm.customarcheology.utils.hooks.Oraxen;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -19,6 +21,8 @@ import java.util.stream.Collectors;
  * @author rzt10
  */
 public class ItemUtil {
+    private ItemUtil() {
+    }
     private final static int SPLIT_NUM = 2;
     public static ItemStack getItemStackByItemIdentifier(String itemIdentifier) {
         String[] split = itemIdentifier.split(":");
@@ -33,6 +37,12 @@ public class ItemUtil {
         }
         if (Objects.equals(Config.CUSTOM_TOOL_SYMBOL.asString(), split[0])) {
             return ToolManager.getInstance().getTool(split[1]).generateItem();
+        }
+        if (Objects.equals(Config.ITEMSADDER_SYMBOL.asString(), split[0])) {
+            return ItemsAdder.getItemStackByItemIdentifier(split[1]);
+        }
+        if (Objects.equals(Config.ORAXEN_SYMBOL.asString(), split[0])) {
+            return Oraxen.getItemStackByItemIdentifier(split[1]);
         }
         return null;
     }

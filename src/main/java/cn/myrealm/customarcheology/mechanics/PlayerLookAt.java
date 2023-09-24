@@ -1,6 +1,7 @@
-package cn.myrealm.customarcheology.mechanics.players;
+package cn.myrealm.customarcheology.mechanics;
 
 import cn.myrealm.customarcheology.CustomArcheology;
+import cn.myrealm.customarcheology.enums.Permissions;
 import cn.myrealm.customarcheology.managers.managers.ChunkManager;
 import org.bukkit.Color;
 import org.bukkit.Particle;
@@ -48,11 +49,6 @@ public class PlayerLookAt {
         }
     }
     public void lookAtBlockChange(Block before, Block after) {
-        ChunkManager chunkManager = ChunkManager.getInstance();
-        if (chunkManager.isArcheologyBlock(after.getLocation())) {
-            Particle.DustOptions dustOptions = new Particle.DustOptions(Color.RED, 1);
-            after.getWorld().spawnParticle(Particle.REDSTONE, after.getLocation().add(0.5, 0.5, 0.5), 10, 0.5, 0.5, 0.5, 0, dustOptions);
-        }
         if (Objects.nonNull(task)) {
             task.run();
             task = null;

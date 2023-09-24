@@ -24,7 +24,9 @@ public enum Config {
     //symbols
     VANILLA_SYMBOL("settings.symbols.vanilla", "minecraft"),
     CUSTOM_TOOL_SYMBOL("settings.symbols.custom-tool", "ca_tool"),
-    CUSTOM_BLOCK_SYMBOL("settings.symbols.custom-block", "ca_block");
+    CUSTOM_BLOCK_SYMBOL("settings.symbols.custom-block", "ca_block"),
+    ITEMSADDER_SYMBOL("settings.symbols.itemsadder", "itemsadder"),
+    ORAXEN_SYMBOL("settings.symbols.oraxen", "oraxen");
 
 
     private final String key;

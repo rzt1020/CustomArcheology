@@ -1,6 +1,7 @@
 package cn.myrealm.customarcheology.mechanics;
 
 
+import cn.myrealm.customarcheology.CustomArcheology;
 import cn.myrealm.customarcheology.enums.NamespacedKeys;
 import cn.myrealm.customarcheology.managers.managers.BlockManager;
 import cn.myrealm.customarcheology.mechanics.cores.ArcheologyBlock;
@@ -49,14 +50,26 @@ public class ArcheologyChunkSpawner {
             int maxPerChunk = block.getMaxPerChunk();
             Point distribution = block.getDistribution();
             List<Biome> biomes = block.getBiomes();
-            for (int i = 0; i < maxPerChunk; i++) {
-                Block newBlock = BasicUtil.getRandomBlock(chunk, distribution);
-                if (!usedBlocks.contains(newBlock) && Objects.equals(newBlock.getType(), block.getType())) {
-                    if (Objects.isNull(biomes) || biomes.contains(newBlock.getBiome())) {
-                        setBlock(newBlock.getLocation(), block);
+            if (block.isGaussian()) {
+                for (int i = 0; i < maxPerChunk; i++) {
+                    Block newBlock = BasicUtil.getGaussianRandomBlock(chunk, distribution, block.getGaussianMean(), block.getGaussianStdDev());
+                    if (!usedBlocks.contains(newBlock) && Objects.equals(newBlock.getType(), block.getType())) {
+                        if (Objects.isNull(biomes) || biomes.contains(newBlock.getBiome())) {
+                            setBlock(newBlock.getLocation(), block);
+                        }
                     }
+                    usedBlocks.add(newBlock);
                 }
-                usedBlocks.add(newBlock);
+            } else {
+                for (int i = 0; i < maxPerChunk; i++) {
+                    Block newBlock = BasicUtil.getRandomBlock(chunk, distribution);
+                    if (!usedBlocks.contains(newBlock) && Objects.equals(newBlock.getType(), block.getType())) {
+                        if (Objects.isNull(biomes) || biomes.contains(newBlock.getBiome())) {
+                            setBlock(newBlock.getLocation(), block);
+                        }
+                    }
+                    usedBlocks.add(newBlock);
+                }
             }
         });
         spawnedBlocks.addAll(blocks.stream().map(ArcheologyBlock::getName).toList());

@@ -260,6 +260,12 @@ public class FakeTileBlock {
     public ItemStack getReward() {
         return reward;
     }
+
+    public void highlight(Player player) {
+        if (sentPlayers.contains(player)) {
+            PacketUtil.highlightEntity(List.of(player), entityId);
+        }
+    }
 }
 
 class EffectTask extends BukkitRunnable{

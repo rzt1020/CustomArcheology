@@ -2,7 +2,10 @@ name: CustomArcheology
 authors: ['rzt1020', 'PQguanfang']
 version: '${project.version}'
 depend:
-- ProtocolLib
+  - ProtocolLib
+softdepend:
+  - ItemsAdder
+  - Oraxen
 main: cn.myrealm.customarcheology.CustomArcheology
 api-version: '1.20'
 commands:
@@ -39,8 +42,8 @@ permissions:
     default: true
     children:
       customarcheology.play.archeology: true
-      customarcheology.play.highlight: true
+      customarcheology.play.highlight: false
   customarcheology.play.archeology:
     default: true
   customarcheology.play.highlight:
-    default: true
+    default: op

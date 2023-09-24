@@ -2,8 +2,10 @@ package cn.myrealm.customarcheology.utils;
 
 
 import cn.myrealm.customarcheology.CustomArcheology;
+import cn.myrealm.customarcheology.enums.Permissions;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.*;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -21,6 +23,8 @@ import java.util.*;
  * @author rzt1020
  */
 public class PacketUtil {
+    private PacketUtil() {
+    }
     public static void swingItem(Player player) {
         PacketContainer animationPacket = CustomArcheology.protocolManager.createPacket(PacketType.Play.Server.ANIMATION);
 
@@ -60,7 +64,9 @@ public class PacketUtil {
     }
     public static void updateItemDisplay(List<Player> player, ItemStack displayItem, int entityId, @Nullable Vector3f scale, @Nullable Quaternionf rotation) {
         PacketContainer metaDataPacket = new PacketContainer(PacketType.Play.Server.ENTITY_METADATA);
+        PacketContainer glowMetaDataPacket = new PacketContainer(PacketType.Play.Server.ENTITY_METADATA);
         metaDataPacket.getIntegers().write(0, entityId);
+        glowMetaDataPacket.getIntegers().write(0, entityId);
 
         WrappedDataWatcher entityMetaData = new WrappedDataWatcher();
         if (Objects.nonNull(scale)) {
@@ -70,6 +76,7 @@ public class PacketUtil {
             entityMetaData.setObject(12, WrappedDataWatcher.Registry.get(Quaternionf.class), rotation);
         }
         entityMetaData.setObject(22, WrappedDataWatcher.Registry.getItemStackSerializer(false), displayItem);
+
         List<WrappedDataValue> wrappedDataValueList = new ArrayList<>();
         for (WrappedWatchableObject entry : entityMetaData.getWatchableObjects()) {
             if (entry != null) {
@@ -79,9 +86,27 @@ public class PacketUtil {
         }
         metaDataPacket.getDataValueCollectionModifier().write(0, wrappedDataValueList);
 
-        for (Player p : player) {
-            CustomArcheology.protocolManager.sendServerPacket(p, metaDataPacket);
+        byte initialMeta = 0x40;
+        entityMetaData.setObject(0, WrappedDataWatcher.Registry.get(Byte.class), initialMeta);
+
+        wrappedDataValueList = new ArrayList<>();
+        for (WrappedWatchableObject entry : entityMetaData.getWatchableObjects()) {
+            if (entry != null) {
+                WrappedDataWatcher.WrappedDataWatcherObject watcherObject = entry.getWatcherObject();
+                wrappedDataValueList.add(new WrappedDataValue(watcherObject.getIndex(), watcherObject.getSerializer(), entry.getRawValue()));
+            }
         }
+        glowMetaDataPacket.getDataValueCollectionModifier().write(0, wrappedDataValueList);
+
+        for (Player p : player) {
+            if (!Permissions.PLAY_HIGHLIGHT.hasPermission(p)) {
+                CustomArcheology.protocolManager.sendServerPacket(p, metaDataPacket);
+            } else {
+                CustomArcheology.protocolManager.sendServerPacket(p, glowMetaDataPacket);
+            }
+        }
+
+
     }
 
     public static void removeEntity(List<Player> player, int entityId) {
@@ -106,6 +131,23 @@ public class PacketUtil {
 
         for (Player player : players) {
             CustomArcheology.protocolManager.sendServerPacket(player, teleportPacket);
+        }
+    }
+
+    public static void highlightEntity(List<Player> players, int entityId) {
+
+        WrappedDataWatcher watcher = new WrappedDataWatcher();
+        WrappedDataWatcher.Serializer boolSerializer = WrappedDataWatcher.Registry.get(Boolean.class);
+
+        // Index might vary based on MC version. Assuming index 0 is for entity glowing.
+        watcher.setObject(0, boolSerializer, true);
+
+        PacketContainer entityMetadataPacket = new PacketContainer(PacketType.Play.Server.ENTITY_METADATA);
+        entityMetadataPacket.getIntegers().write(0, entityId);
+        entityMetadataPacket.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
+
+        for (Player player : players) {
+            CustomArcheology.protocolManager.sendServerPacket(player, entityMetadataPacket);
         }
     }
 }

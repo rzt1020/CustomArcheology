@@ -11,11 +11,11 @@ public enum Permissions {
     ROOT("customarcheology."),
     // commands
     COMMAND(ROOT + "command."),
-    HELP(COMMAND + "help"),
-    RELOAD(COMMAND + "reload"),
-    GIVE(COMMAND + "give"),
-    ARCHIFY(COMMAND + "archify"),
-    DEARCHIFY(COMMAND + "dearchify"),
+    COMMAND_HELP(COMMAND + "help"),
+    COMMAND_RELOAD(COMMAND + "reload"),
+    COMMAND_GIVE(COMMAND + "give"),
+    COMMAND_ARCHIFY(COMMAND + "archify"),
+    COMMAND_DEARCHIFY(COMMAND + "dearchify"),
     // plays
     PLAY(ROOT + "play."),
     PLAY_ARCHEOLOGY(PLAY + "archeology"),

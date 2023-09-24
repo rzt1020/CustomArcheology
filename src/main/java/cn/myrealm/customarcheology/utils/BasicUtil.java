@@ -21,6 +21,8 @@ import java.util.regex.Pattern;
  * @author rzt1020
  */
 public class BasicUtil {
+    private BasicUtil() {
+    }
     public static List<Player> getNearbyPlayers(Location location) {
         int visibleDistance = Config.VISIBLE_DISTANCE.asInt();
         Collection<Entity> entities = Objects.requireNonNull(location.getWorld()).getNearbyEntities(location, visibleDistance, visibleDistance, visibleDistance);
@@ -73,5 +75,14 @@ public class BasicUtil {
 
     public static int getRandomIntFromPoint(Point point) {
         return CustomArcheology.RANDOM.nextInt((point.y - point.x) + 1) + point.x;
+    }
+
+    public static Block getGaussianRandomBlock(Chunk chunk, Point range, double gaussianMean, double gaussianStdDev) {
+        int yValue = (int) Math.round(gaussianMean + CustomArcheology.RANDOM.nextGaussian() * gaussianStdDev);
+        if (yValue < chunk.getWorld().getMinHeight() || yValue > chunk.getWorld().getMaxHeight()  || yValue < range.x || yValue > range.y) {
+            return getGaussianRandomBlock(chunk, range, gaussianMean, gaussianStdDev);
+        }
+        Block newBlock = getRandomBlock(chunk, range);
+        return newBlock.getWorld().getBlockAt(newBlock.getX(), yValue, newBlock.getZ());
     }
 }
