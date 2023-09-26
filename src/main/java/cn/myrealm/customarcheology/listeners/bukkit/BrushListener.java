@@ -17,8 +17,8 @@ import java.util.Objects;
 /**
  * @author rzt1020
  */
-public class PlayerBrushListener extends AbstractListener {
-    public PlayerBrushListener(JavaPlugin plugin) {
+public class BrushListener extends AbstractListener {
+    public BrushListener(JavaPlugin plugin) {
         super(plugin);
     }
 

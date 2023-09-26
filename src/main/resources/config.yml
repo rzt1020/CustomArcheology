@@ -10,11 +10,15 @@ database:
     database: minecraft
 settings:
   visible-distance: 8
+  structure-distance: 16
   item-scale: 0.5
   block-scale: 0.25
   symbols:
     vanilla: "minecraft"
+    vanilla-entity: "minecraft_entity"
     custom-tool: "ca_tool"
     custom-block: "ca_block"
     itemsadder: "itemsadder"
     oraxen: "oraxen"
+    mythicmobs: "mythicmobs"
+    mythicmobs-mob: "mythicmobs_mob"

@@ -85,4 +85,11 @@ public class BasicUtil {
         Block newBlock = getRandomBlock(chunk, range);
         return newBlock.getWorld().getBlockAt(newBlock.getX(), yValue, newBlock.getZ());
     }
+
+    public static Block getGaussianRandomBlock(Location location, double structureStdDev) {
+        int xValue = (int) Math.round(location.getBlockX() + CustomArcheology.RANDOM.nextGaussian() * structureStdDev),
+            zValue = (int) Math.round(location.getBlockZ() + CustomArcheology.RANDOM.nextGaussian() * structureStdDev);
+        Block newBlock = getRandomBlock(location.getChunk(),  new Point(location.getBlockY() - 5, location.getBlockY() + 5));
+        return newBlock.getWorld().getBlockAt(xValue, newBlock.getY(), zValue);
+    }
 }

@@ -15,7 +15,7 @@ brush_tools:
 
 states:
   default:
-    texture: "suspicious_netherrack"
+    texture: "suspicious_netherrack_0"
     hardness: 2.0
   state_1:
     texture: "suspicious_netherrack_1"

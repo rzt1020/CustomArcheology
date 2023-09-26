@@ -9,6 +9,7 @@ import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -19,9 +20,9 @@ import java.util.Objects;
 /**
  * @author rzt1020
  */
-public class BlockBreakListener extends AbstractListener {
+public class BreakListener extends AbstractListener {
 
-    public BlockBreakListener(JavaPlugin plugin) {
+    public BreakListener(JavaPlugin plugin) {
         super(plugin);
     }
 
@@ -72,5 +73,15 @@ public class BlockBreakListener extends AbstractListener {
             chunkManager.removeBlock(loc);
             event.getPlayer().playSound(event.getPlayer(), Sound.BLOCK_SUSPICIOUS_SAND_BREAK, 1, 1);
         }
+    }
+
+    @EventHandler
+    public void  onPistonMove(BlockPistonExtendEvent event) {
+        ChunkManager chunkManager = ChunkManager.getInstance();
+        event.getBlocks().forEach(block -> {
+            if (chunkManager.isArcheologyBlock(block.getLocation())) {
+                chunkManager.removeBlock(block.getLocation());
+            }
+        });
     }
 }

@@ -23,9 +23,9 @@ import java.util.Objects;
 /**
  * @author rzt1020
  */
-public class PlayerPlaceBlockListener extends AbstractListener {
+public class PlaceListener extends AbstractListener {
 
-    public PlayerPlaceBlockListener(JavaPlugin plugin) {
+    public PlaceListener(JavaPlugin plugin) {
         super(plugin);
     }
 

@@ -7,3 +7,8 @@ rewards:
     material: minecraft:diamond
     amount: 1
     chance: 1
+  reward_3:
+    material: minecraft_entity:zombie
+    display: minecraft:emerald
+    amount: 1
+    chance: 1

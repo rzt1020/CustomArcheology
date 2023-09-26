@@ -3,11 +3,11 @@ package cn.myrealm.customarcheology;
 import cn.myrealm.customarcheology.commands.MainCommand;
 import cn.myrealm.customarcheology.commands.subcommands.*;
 import cn.myrealm.customarcheology.enums.Messages;
-import cn.myrealm.customarcheology.listeners.bukkit.BlockBreakListener;
-import cn.myrealm.customarcheology.listeners.bukkit.PlayerBrushListener;
-import cn.myrealm.customarcheology.listeners.bukkit.PlayerJoinListener;
-import cn.myrealm.customarcheology.listeners.bukkit.PlayerPlaceBlockListener;
-import cn.myrealm.customarcheology.listeners.protocol.PlayerDigListener;
+import cn.myrealm.customarcheology.listeners.bukkit.BreakListener;
+import cn.myrealm.customarcheology.listeners.bukkit.BrushListener;
+import cn.myrealm.customarcheology.listeners.bukkit.PlayerListener;
+import cn.myrealm.customarcheology.listeners.bukkit.PlaceListener;
+import cn.myrealm.customarcheology.listeners.protocol.DigListener;
 import cn.myrealm.customarcheology.managers.AbstractManager;
 import cn.myrealm.customarcheology.managers.managers.*;
 import cn.myrealm.customarcheology.managers.managers.system.DatabaseManager;
@@ -36,9 +36,7 @@ public final class CustomArcheology extends JavaPlugin {
     public void onEnable() {
         plugin = this;
         protocolManager = ProtocolLibrary.getProtocolManager();
-        if (!getDataFolder().exists()) {
-            outputDefaultFiles();
-        }
+        outputDefaultFiles();
 
         initPlugin();
         registerDefaultListeners();
@@ -75,12 +73,12 @@ public final class CustomArcheology extends JavaPlugin {
 
     public void registerDefaultListeners() {
         // Protocol Listener
-        new PlayerDigListener(this).registerProtocolListener();
+        new DigListener(this).registerProtocolListener();
         // Bukkit Listener
-        new PlayerJoinListener(this).registerBukkitListener();
-        new PlayerPlaceBlockListener(this).registerBukkitListener();
-        new BlockBreakListener(this).registerBukkitListener();
-        new PlayerBrushListener(this).registerBukkitListener();
+        new PlayerListener(this).registerBukkitListener();
+        new PlaceListener(this).registerBukkitListener();
+        new BreakListener(this).registerBukkitListener();
+        new BrushListener(this).registerBukkitListener();
     }
     public void registerDefaultCommands() {
         MainCommand command = new MainCommand();
@@ -99,7 +97,7 @@ public final class CustomArcheology extends JavaPlugin {
     static final List<String> FILES = Arrays.asList(
             "config.yml",
             "pack/pack.mcmeta",
-            "pack/assets/minecraft/models/block/barrier.json",
+            "pack/pack.png",
             "pack/assets/minecraft/models/item/brush_brushing_0.json",
             "pack/assets/minecraft/models/item/brush_brushing_1.json",
             "pack/assets/minecraft/models/item/brush_brushing_2.json",
@@ -111,22 +109,45 @@ public final class CustomArcheology extends JavaPlugin {
             "pack/assets/minecraft/models/item/brush_brushing_8.json",
             "pack/assets/minecraft/models/item/brush_brushing_9.json",
             "pack/assets/minecraft/models/item/brush_brushing_10.json",
-            "pack/assets/minecraft/textures/item/nothing.png",
             "blocks/suspicious_stone.yml",
             "blocks/suspicious_netherrack.yml",
+            "blocks/suspicious_end_stone.yml",
+            "blocks/suspicious_dirt.yml",
+            "blocks/suspicious_deepslate.yml",
+            "blocks/suspicious_sculk.yml",
             "tools/diamond_brush.yml",
             "tools/netherite_brush.yml",
             "tools/archaeological_shovel.yml",
             "tools/diamond_archaeological_shovel.yml",
             "tools/netherite_archaeological_shovel.yml",
-            "textures/blocks/suspicious_stone.png",
+            "textures/blocks/suspicious_stone_0.png",
             "textures/blocks/suspicious_stone_1.png",
             "textures/blocks/suspicious_stone_2.png",
             "textures/blocks/suspicious_stone_3.png",
-            "textures/blocks/suspicious_netherrack.png",
+            "textures/blocks/suspicious_netherrack_0.png",
             "textures/blocks/suspicious_netherrack_1.png",
             "textures/blocks/suspicious_netherrack_2.png",
             "textures/blocks/suspicious_netherrack_3.png",
+            "textures/blocks/suspicious_dirt_0.png",
+            "textures/blocks/suspicious_dirt_1.png",
+            "textures/blocks/suspicious_dirt_2.png",
+            "textures/blocks/suspicious_dirt_3.png",
+            "textures/blocks/suspicious_end_stone_0.png",
+            "textures/blocks/suspicious_end_stone_1.png",
+            "textures/blocks/suspicious_end_stone_2.png",
+            "textures/blocks/suspicious_end_stone_3.png",
+            "textures/blocks/suspicious_deepslate_0.png",
+            "textures/blocks/suspicious_deepslate_1.png",
+            "textures/blocks/suspicious_deepslate_2.png",
+            "textures/blocks/suspicious_deepslate_3.png",
+            "textures/blocks/suspicious_sculk_0.png",
+            "textures/blocks/suspicious_sculk_1.png",
+            "textures/blocks/suspicious_sculk_2.png",
+            "textures/blocks/suspicious_sculk_3.png",
+            "textures/blocks/suspicious_sculk_0.png.mcmeta",
+            "textures/blocks/suspicious_sculk_1.png.mcmeta",
+            "textures/blocks/suspicious_sculk_2.png.mcmeta",
+            "textures/blocks/suspicious_sculk_3.png.mcmeta",
             "textures/tools/archaeological_shovel.png",
             "textures/tools/diamond_archaeological_shovel.png",
             "textures/tools/netherite_archaeological_shovel.png",
@@ -134,14 +155,28 @@ public final class CustomArcheology extends JavaPlugin {
             "textures/tools/netherite_brush.png",
             "languages/zh_CN.yml",
             "loottables/stone.yml");
+    static final List<String> FILES_LOW_VERSION = Arrays.asList(
+            "pack/assets/minecraft/models/block/barrier.json",
+            "pack/assets/minecraft/textures/item/nothing.png");
+    static final String NEWEST_VERSION = "1.20.2";
     public void outputDefaultFiles() {
-        for (String file : FILES) {
+        FILES.forEach(file -> {
             try {
                 saveResource(file, false);
             } catch (Exception e) {
                 String[] names = file.split("/");
                 Bukkit.getConsoleSender().sendMessage(Messages.ERROR_MISSING_RESOURCE.getMessageWithPrefix("resource-name", names[names.length - 1]));
             }
+        });
+        if (!Bukkit.getVersion().contains(NEWEST_VERSION)) {
+            FILES_LOW_VERSION.forEach(file -> {
+                try {
+                    saveResource(file, false);
+                } catch (Exception e) {
+                    String[] names = file.split("/");
+                    Bukkit.getConsoleSender().sendMessage(Messages.ERROR_MISSING_RESOURCE.getMessageWithPrefix("resource-name", names[names.length - 1]));
+                }
+            });
         }
     }
 }

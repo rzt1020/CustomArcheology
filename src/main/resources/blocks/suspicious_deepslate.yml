@@ -1,6 +1,6 @@
 general:
-  display_name: "Suspicious Stone"
-  replace_block: stone
+  display_name: "Suspicious Deepslate"
+  replace_block: deepslate
   generate_biomes: all
   distribution: 0 ~ 127
   gaussian:
@@ -20,16 +20,16 @@ brush_tools:
 
 states:
   default:
-    texture: "suspicious_stone_0"
+    texture: "suspicious_deepslate_0"
     hardness: 1.0
   state_1:
-    texture: "suspicious_stone_1"
+    texture: "suspicious_deepslate_1"
     hardness: 1.0
   state_2:
-    texture: "suspicious_stone_2"
+    texture: "suspicious_deepslate_2"
     hardness: 1.0
   state_3:
-    texture: "suspicious_stone_3"
+    texture: "suspicious_deepslate_3"
     hardness: 1.0
   finished:
-    material: stone
+    material: deepslate

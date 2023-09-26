@@ -1,9 +1,10 @@
 package cn.myrealm.customarcheology.mechanics;
 
 
-import cn.myrealm.customarcheology.CustomArcheology;
+import cn.myrealm.customarcheology.enums.Config;
 import cn.myrealm.customarcheology.enums.NamespacedKeys;
 import cn.myrealm.customarcheology.managers.managers.BlockManager;
+import cn.myrealm.customarcheology.managers.managers.ChunkManager;
 import cn.myrealm.customarcheology.mechanics.cores.ArcheologyBlock;
 import cn.myrealm.customarcheology.mechanics.cores.PersistentDataChunk;
 import cn.myrealm.customarcheology.mechanics.persistent_data.StringArrayTagType;
@@ -13,11 +14,12 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
+import org.bukkit.util.StructureSearchResult;
 
 import java.awt.*;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author rzt1020
@@ -50,7 +52,23 @@ public class ArcheologyChunkSpawner {
             int maxPerChunk = block.getMaxPerChunk();
             Point distribution = block.getDistribution();
             List<Biome> biomes = block.getBiomes();
-            if (block.isGaussian()) {
+            if (block.isStructure()) {
+                StructureSearchResult result = chunk.getWorld().locateNearestStructure(getChunkBlock().getLocation(), block.getStructure(), Config.STRUCTURE_DISTANCE.asInt(), true);
+                if (Objects.nonNull(result)) {
+                    System.out.println(result.getLocation());
+                    if (result.getLocation().getChunk().equals(chunk)) {
+                        for (int i = 0; i < maxPerChunk; i++) {
+                            Block newBlock = BasicUtil.getGaussianRandomBlock(result.getLocation(), block.getStructureStdDev());
+                            if (!usedBlocks.contains(newBlock) && Objects.equals(newBlock.getType(), block.getType())) {
+                                if (Objects.isNull(biomes) || biomes.contains(newBlock.getBiome())) {
+                                    setStructureBlock(newBlock.getLocation(), block);
+                                }
+                            }
+                            usedBlocks.add(newBlock);
+                        }
+                    }
+                }
+            } else if (block.isGaussian()) {
                 for (int i = 0; i < maxPerChunk; i++) {
                     Block newBlock = BasicUtil.getGaussianRandomBlock(chunk, distribution, block.getGaussianMean(), block.getGaussianStdDev());
                     if (!usedBlocks.contains(newBlock) && Objects.equals(newBlock.getType(), block.getType())) {
@@ -80,5 +98,11 @@ public class ArcheologyChunkSpawner {
 
     private void setBlock(Location location, ArcheologyBlock block) {
         dataChunk.registerNewBlock(block, location);
+    }
+    private void setStructureBlock(Location location, ArcheologyBlock block) {
+        ChunkManager.getInstance().getPersistentDataChunk(location).registerNewBlock(block, location);
+    }
+    private Block getChunkBlock() {
+        return chunk.getWorld().getBlockAt(chunk.getX() * 16 + 8, 0, chunk.getZ() * 16 + 8);
     }
 }

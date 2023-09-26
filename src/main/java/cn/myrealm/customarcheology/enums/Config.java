@@ -19,10 +19,12 @@ public enum Config {
     MYSQL_DATABASE("database.mysql.database", "minecraft"),
     // settings
     VISIBLE_DISTANCE("settings.visible-distance", 8),
+    STRUCTURE_DISTANCE("settings.structure-distance", 16),
     ITEM_SCALE("settings.item-scale", 0.5),
     BLOCK_SCALE("settings.block-scale", 0.25),
     //symbols
     VANILLA_SYMBOL("settings.symbols.vanilla", "minecraft"),
+    VANILLA_ENTITY_SYMBOL("settings.symbols.vanilla-entity", "minecraft_entity"),
     CUSTOM_TOOL_SYMBOL("settings.symbols.custom-tool", "ca_tool"),
     CUSTOM_BLOCK_SYMBOL("settings.symbols.custom-block", "ca_block"),
     ITEMSADDER_SYMBOL("settings.symbols.itemsadder", "itemsadder"),

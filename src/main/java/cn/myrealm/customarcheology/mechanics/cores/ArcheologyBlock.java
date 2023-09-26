@@ -10,12 +10,12 @@ import cn.myrealm.customarcheology.managers.managers.system.TextureManager;
 import cn.myrealm.customarcheology.mechanics.CustomLootTable;
 import cn.myrealm.customarcheology.utils.BasicUtil;
 import cn.myrealm.customarcheology.utils.ItemUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.generator.structure.Structure;
+import org.bukkit.generator.structure.StructureType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -184,6 +184,20 @@ public class ArcheologyBlock {
     public double getGaussianStdDev() {
         return Keys.STANDARD_DEVIATION.asDouble(config);
     }
+
+    public boolean isStructure() {
+        return Objects.nonNull(Keys.STRUCTURE.asSection(config));
+    }
+    public Structure getStructure() {
+        String structureName = Keys.STRUCTURE_TYPE.asString(config);
+        if (Objects.nonNull(structureName)) {
+            return Registry.STRUCTURE.get(NamespacedKey.minecraft(structureName));
+        }
+        return null;
+    }
+    public double getStructureStdDev() {
+        return Keys.STRUCTURE_STD_DEV.asDouble(config);
+    }
 }
 
 enum Keys {
@@ -202,8 +216,11 @@ enum Keys {
     DISTRIBUTION("general.distribution", null),
     MAX_PER_CHUNK("general.max_per_chunk", 0),
     GAUSSIAN("general.gaussian", null),
-    MEAN("general.gaussian.mean", 0),
-    STANDARD_DEVIATION("general.gaussian.standard_deviation", 1);
+    MEAN("general.gaussian.mean", 0D),
+    STANDARD_DEVIATION("general.gaussian.standard_deviation", 1D),
+    STRUCTURE("general.structure", null),
+    STRUCTURE_TYPE("general.structure.type", null),
+    STRUCTURE_STD_DEV("general.structure.standard_deviation", 1D);
 
     private final String key;
     private final Object def;

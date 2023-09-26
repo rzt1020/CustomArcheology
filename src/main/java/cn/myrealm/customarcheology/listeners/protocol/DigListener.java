@@ -10,9 +10,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 /**
  * @author rzt1020
  */
-public class PlayerDigListener extends AbstractListener {
+public class DigListener extends AbstractListener {
 
-    public PlayerDigListener(JavaPlugin plugin) {
+    public DigListener(JavaPlugin plugin) {
         super(plugin, PacketType.Play.Client.BLOCK_DIG);
     }
 

@@ -169,6 +169,14 @@ public class TextureManager extends AbstractManager {
                     }
                     overrides.put(blockCustommodeldataMap.get(blockId), Template.OVERRIDE_TEMPLATE.toString().replace("%blockId%", blockId).replace("%custommodeldata%", String.valueOf(blockCustommodeldataMap.get(blockId))));
                 }
+                File mcmeta = new File(Path.BLOCK_TEXTURE_PATH.toString() , blockId + ".png.mcmeta");
+                if (mcmeta.exists()) {
+                    try {
+                        Files.copy(mcmeta.toPath(), new File(Path.PACK_BLOCK_TEXTURE_PATH.toString(), blockId + ".png.mcmeta").toPath(),  StandardCopyOption.REPLACE_EXISTING);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
             }
             StringBuilder override = new StringBuilder();
             int i = 10000;
@@ -228,6 +236,14 @@ public class TextureManager extends AbstractManager {
                         e.printStackTrace();
                     }
                     overrides.put(toolCustommodeldataMap.get(toolId), Template.OVERRIDE_BRUSH_TEMPLATE.toString().replace("%toolId%", toolId).replace("%custommodeldata%", String.valueOf(toolCustommodeldataMap.get(toolId))));
+                }
+                File mcmeta = new File(Path.BLOCK_TEXTURE_PATH.toString() , toolId + ".png.mcmeta");
+                if (mcmeta.exists()) {
+                    try {
+                        Files.copy(mcmeta.toPath(), new File(Path.PACK_BLOCK_TEXTURE_PATH.toString(), toolId + ".png.mcmeta").toPath(),  StandardCopyOption.REPLACE_EXISTING);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
             override = new StringBuilder();
