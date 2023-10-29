@@ -55,7 +55,6 @@ public class ArcheologyChunkSpawner {
             if (block.isStructure()) {
                 StructureSearchResult result = chunk.getWorld().locateNearestStructure(getChunkBlock().getLocation(), block.getStructure(), Config.STRUCTURE_DISTANCE.asInt(), true);
                 if (Objects.nonNull(result)) {
-                    System.out.println(result.getLocation());
                     if (result.getLocation().getChunk().equals(chunk)) {
                         for (int i = 0; i < maxPerChunk; i++) {
                             Block newBlock = BasicUtil.getGaussianRandomBlock(result.getLocation(), block.getStructureStdDev());

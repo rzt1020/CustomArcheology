@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityPickupItemEvent;
@@ -29,23 +30,29 @@ public class ItemListener extends AbstractListener {
 
     @EventHandler
     public void onItemSpawnEntity(ItemSpawnEvent event) {
-        ItemMeta meta = event.getEntity().getItemStack().getItemMeta();
-        if (Objects.isNull(meta)) {
-            return;
-        }
-
-        String entityTypeStr = meta.getPersistentDataContainer().get(NamespacedKeys.ARCHEOLOGY_SPAWN_ENTITY.getNamespacedKey(), PersistentDataType.STRING);
-        if (Objects.nonNull(entityTypeStr)) {
-            Location loc = event.getEntity().getLocation();
-            World world = loc.getWorld();
-
-            Objects.requireNonNull(world, "World of location is null!");
-
-            for (int i = 0; i < event.getEntity().getItemStack().getAmount(); i++) {
-                world.spawnEntity(loc, EntityType.valueOf(entityTypeStr));
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            Item item = (Item) Bukkit.getEntity(event.getEntity().getUniqueId());
+            ItemMeta meta = null;
+            if (item != null) {
+                meta = item.getItemStack().getItemMeta();
             }
-            event.getEntity().remove();
-        }
+            if (Objects.isNull(meta)) {
+                return;
+            }
+            String entityTypeStr = null;
+            if (meta.getPersistentDataContainer().has(NamespacedKeys.ARCHEOLOGY_SPAWN_ENTITY.getNamespacedKey(), PersistentDataType.STRING)) {
+                entityTypeStr = meta.getPersistentDataContainer().get(NamespacedKeys.ARCHEOLOGY_SPAWN_ENTITY.getNamespacedKey(), PersistentDataType.STRING);
+            }
+            if (Objects.nonNull(entityTypeStr)) {
+                Location loc = event.getEntity().getLocation();
+                World world = loc.getWorld();
+                Objects.requireNonNull(world, "World of location is null!");
+                for (int i = 0; i < event.getEntity().getItemStack().getAmount(); i++) {
+                    world.spawnEntity(loc, EntityType.valueOf(entityTypeStr.toUpperCase()));
+                }
+                event.getEntity().remove();
+            }
+        }, 0L);
     }
 
     @EventHandler

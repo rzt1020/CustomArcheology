@@ -8,6 +8,8 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
@@ -52,7 +54,6 @@ public class BasicUtil {
             } else {
                 end = start;
             }
-
             return new Point(start, end);
         }
 
@@ -91,5 +92,16 @@ public class BasicUtil {
             zValue = (int) Math.round(location.getBlockZ() + CustomArcheology.RANDOM.nextGaussian() * structureStdDev);
         Block newBlock = getRandomBlock(location.getChunk(),  new Point(location.getBlockY() - 5, location.getBlockY() + 5));
         return newBlock.getWorld().getBlockAt(xValue, newBlock.getY(), zValue);
+    }
+
+    public static YamlConfiguration stringToYaml(String yamlString) {
+        YamlConfiguration yamlConfig = new YamlConfiguration();
+        try {
+            yamlConfig.loadFromString(yamlString);
+        } catch (InvalidConfigurationException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return yamlConfig;
     }
 }

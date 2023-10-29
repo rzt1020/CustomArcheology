@@ -21,7 +21,7 @@ public class Oraxen {
     }
     public static ItemStack getItemStackByItemIdentifier(String itemIdentifier) {
         if (!isLoaded()) {
-            throw new IllegalStateException("Oraxen is not loaded");
+            throw new IllegalStateException(PLUGIN_NAME + " is not loaded");
         }
 
         ItemBuilder builder = OraxenItems.getItemById(itemIdentifier);

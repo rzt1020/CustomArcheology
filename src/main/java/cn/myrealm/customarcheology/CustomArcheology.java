@@ -3,10 +3,7 @@ package cn.myrealm.customarcheology;
 import cn.myrealm.customarcheology.commands.MainCommand;
 import cn.myrealm.customarcheology.commands.subcommands.*;
 import cn.myrealm.customarcheology.enums.Messages;
-import cn.myrealm.customarcheology.listeners.bukkit.BreakListener;
-import cn.myrealm.customarcheology.listeners.bukkit.BrushListener;
-import cn.myrealm.customarcheology.listeners.bukkit.PlayerListener;
-import cn.myrealm.customarcheology.listeners.bukkit.PlaceListener;
+import cn.myrealm.customarcheology.listeners.bukkit.*;
 import cn.myrealm.customarcheology.listeners.protocol.DigListener;
 import cn.myrealm.customarcheology.managers.AbstractManager;
 import cn.myrealm.customarcheology.managers.managers.*;
@@ -18,6 +15,8 @@ import com.comphenix.protocol.ProtocolManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -79,6 +78,7 @@ public final class CustomArcheology extends JavaPlugin {
         new PlaceListener(this).registerBukkitListener();
         new BreakListener(this).registerBukkitListener();
         new BrushListener(this).registerBukkitListener();
+        new ItemListener(this).registerBukkitListener();
     }
     public void registerDefaultCommands() {
         MainCommand command = new MainCommand();
@@ -162,7 +162,9 @@ public final class CustomArcheology extends JavaPlugin {
     public void outputDefaultFiles() {
         FILES.forEach(file -> {
             try {
-                saveResource(file, false);
+                if (!Files.exists(Paths.get(file))) {
+                    saveResource(file, false);
+                }
             } catch (Exception e) {
                 String[] names = file.split("/");
                 Bukkit.getConsoleSender().sendMessage(Messages.ERROR_MISSING_RESOURCE.getMessageWithPrefix("resource-name", names[names.length - 1]));
@@ -171,7 +173,9 @@ public final class CustomArcheology extends JavaPlugin {
         if (!Bukkit.getVersion().contains(NEWEST_VERSION)) {
             FILES_LOW_VERSION.forEach(file -> {
                 try {
-                    saveResource(file, false);
+                    if (!Files.exists(Paths.get(file))) {
+                        saveResource(file, false);
+                    }
                 } catch (Exception e) {
                     String[] names = file.split("/");
                     Bukkit.getConsoleSender().sendMessage(Messages.ERROR_MISSING_RESOURCE.getMessageWithPrefix("resource-name", names[names.length - 1]));

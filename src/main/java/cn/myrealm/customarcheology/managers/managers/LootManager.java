@@ -40,7 +40,6 @@ public class LootManager extends AbstractManager {
     protected void onInit() {
         lootTableMap = new HashMap<>(5);
         Path lootTableDirPath = Paths.get(LOOT_TABLE_PATH);
-
         if (Files.exists(lootTableDirPath)) {
             if (Files.isDirectory(lootTableDirPath)) {
                 try (DirectoryStream<Path> stream = Files.newDirectoryStream(lootTableDirPath, "*" + YML)) {

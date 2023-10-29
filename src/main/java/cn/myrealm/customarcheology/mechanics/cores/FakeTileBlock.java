@@ -3,13 +3,13 @@ package cn.myrealm.customarcheology.mechanics.cores;
 
 import cn.myrealm.customarcheology.CustomArcheology;
 import cn.myrealm.customarcheology.enums.Config;
+import cn.myrealm.customarcheology.enums.NamespacedKeys;
 import cn.myrealm.customarcheology.managers.managers.BlockManager;
 import cn.myrealm.customarcheology.managers.managers.ChunkManager;
 import cn.myrealm.customarcheology.managers.managers.PlayerManager;
-import cn.myrealm.customarcheology.managers.managers.ToolManager;
-import cn.myrealm.customarcheology.utils.ItemUtil;
-import cn.myrealm.customarcheology.utils.PacketUtil;
+import cn.myrealm.customarcheology.mechanics.persistent_data.ItemStackTagType;
 import cn.myrealm.customarcheology.utils.BasicUtil;
+import cn.myrealm.customarcheology.utils.PacketUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -198,7 +198,12 @@ public class FakeTileBlock {
             PacketUtil.removeEntity(players, entityId);
             PacketUtil.changeBlock(players, this.location, state.getMaterial());
             Item item = (Item) Objects.requireNonNull(location.getWorld()).spawnEntity(location, EntityType.DROPPED_ITEM);
-            item.setItemStack(reward);
+            if (Objects.nonNull(reward.getItemMeta()) && reward.getItemMeta().getPersistentDataContainer().has(NamespacedKeys.ARCHEOLOGY_REAL_ITEM.getNamespacedKey(), new ItemStackTagType())) {
+                ItemStack realItem = Objects.requireNonNull(reward.getItemMeta().getPersistentDataContainer().get(NamespacedKeys.ARCHEOLOGY_REAL_ITEM.getNamespacedKey(), new ItemStackTagType()));
+                item.setItemStack(realItem);
+            } else {
+                item.setItemStack(reward);
+            }
             PlayerManager playerManager = PlayerManager.getInstance();
             playerManager.cancelBlock(this);
             ChunkManager chunkManager = ChunkManager.getInstance();

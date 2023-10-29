@@ -8,7 +8,17 @@ rewards:
     amount: 1
     chance: 1
   reward_3:
+    commands:
+      - 'say hello,{player}'
+    display: minecraft:iron_ingot
+    amount: 1~2
+    chance: 10
+  reward_4:
     material: minecraft_entity:zombie
-    display: minecraft:emerald
-    amount: 1
-    chance: 1
+    display: minecraft:dirt
+    amount: 1~3
+    chance: 20
+  reward_5:
+    material: ca_block:suspicious_stone
+    amount: 10~32
+    chance: 10

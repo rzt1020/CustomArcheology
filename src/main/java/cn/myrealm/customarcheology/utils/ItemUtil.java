@@ -32,6 +32,9 @@ public class ItemUtil {
         if (Objects.equals(Config.VANILLA_SYMBOL.asString(), split[0])) {
             return new ItemStack(Objects.requireNonNull(Material.getMaterial(split[1].toUpperCase())));
         }
+        if (Objects.equals(Config.VANILLA_ENTITY_SYMBOL.asString(), split[0])) {
+            return generateVanillaEntityItemStack(split[1]);
+        }
         if (Objects.equals(Config.CUSTOM_BLOCK_SYMBOL.asString(), split[0])) {
             return BlockManager.getInstance().generateItemStack(split[1], 1);
         }
@@ -46,6 +49,16 @@ public class ItemUtil {
         }
         return null;
     }
+
+    public static ItemStack generateVanillaEntityItemStack(String itemIdentifier) {
+        ItemStack itemStack = new ItemStack(Material.PIG_SPAWN_EGG);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        assert itemMeta != null;
+        itemMeta.getPersistentDataContainer().set(NamespacedKeys.ARCHEOLOGY_SPAWN_ENTITY.getNamespacedKey(), PersistentDataType.STRING,  itemIdentifier);
+        itemStack.setItemMeta(itemMeta);
+        return itemStack;
+    }
+
     public static ItemStack generateItemStack(Material material, int cmd, @Nullable String displayName, @Nullable List<String> lore) {
         ItemStack itemStack = new ItemStack(material);
         ItemMeta itemMeta = itemStack.getItemMeta();

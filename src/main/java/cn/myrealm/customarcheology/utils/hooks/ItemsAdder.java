@@ -19,7 +19,7 @@ public class ItemsAdder {
     }
     public static ItemStack getItemStackByItemIdentifier(String itemIdentifier) {
         if (!isLoaded()) {
-            throw new IllegalStateException("ItemsAdder is not loaded");
+            throw new IllegalStateException(PLUGIN_NAME + " is not loaded");
         }
 
         CustomStack customStack = CustomStack.getInstance(itemIdentifier);
