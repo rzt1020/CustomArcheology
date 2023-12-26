@@ -50,7 +50,7 @@ public class ArcheologyBlock {
 
     public ItemStack generateItemStack(int amount) {
         if (!isValid()) {
-            throw  new IllegalStateException("This block is not valid");
+            throw new IllegalStateException("This block is not valid");
         }
         ItemStack itemStack = new ItemStack(Material.BLUE_DYE);
         ItemMeta itemMeta = itemStack.getItemMeta();
@@ -147,6 +147,9 @@ public class ArcheologyBlock {
 
     public ItemStack roll() {
         CustomLootTable customLootTable = customLootTables.get(CustomArcheology.RANDOM.nextInt(customLootTables.size()));
+        if (customLootTable.generateItem() == null) {
+            return new ItemStack(Material.STONE);
+        }
         return customLootTable.generateItem();
     }
 
@@ -198,6 +201,15 @@ public class ArcheologyBlock {
     public double getStructureStdDev() {
         return Keys.STRUCTURE_STD_DEV.asDouble(config);
     }
+    public Sound getPlaceSound() {
+        return Sound.valueOf(Keys.PLACE_SOUND.asString(config).toUpperCase());
+    }
+    public Sound getBrushSound() {
+        return Sound.valueOf(Keys.BRUSH_SOUND.asString(config).toUpperCase());
+    }
+    public int getConsumeDurability() {
+        return Keys.CONSUME_DURABILITY.asInt(config);
+    }
 }
 
 enum Keys {
@@ -220,7 +232,10 @@ enum Keys {
     STANDARD_DEVIATION("general.gaussian.standard_deviation", 1D),
     STRUCTURE("general.structure", null),
     STRUCTURE_TYPE("general.structure.type", null),
-    STRUCTURE_STD_DEV("general.structure.standard_deviation", 1D);
+    STRUCTURE_STD_DEV("general.structure.standard_deviation", 1D),
+    PLACE_SOUND("general.sound.place", "BLOCK_STONE_PLACE"),
+    BRUSH_SOUND("general.sound.brush", "BLOCK_SUSPICIOUS_SAND_BREAK"),
+    CONSUME_DURABILITY("general.consume_durability", 1);
 
     private final String key;
     private final Object def;
@@ -307,7 +322,7 @@ class State {
 
     public int getCustomModelData() {
         if (isFinished) {
-            throw  new IllegalStateException("Cannot get custom model data from finished state");
+            throw new IllegalStateException("Cannot get custom model data from finished state");
         }
         TextureManager textureManager = TextureManager.getInstance();
         int customModelData = textureManager.getBlockCustommodeldata(texture);

@@ -28,7 +28,7 @@ public class MainCommand implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public boolean onCommand(@NonNull CommandSender sender,@NonNull Command command,@NonNull String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command, @NonNull String label, String[] args) {
         if (args.length == 0 && Permissions.COMMAND_HELP.hasPermission(sender)) {
             try {
                 SUB_COMMANDS.get("help").execute(sender, args);
@@ -51,8 +51,6 @@ public class MainCommand implements CommandExecutor, TabCompleter {
 
         if (Permissions.COMMAND_HELP.hasPermission(sender)) {
             sender.sendMessage(Messages.ERROR_INCORRECT_COMMAND.getMessageWithPrefix());
-        } else {
-            sender.sendMessage(Messages.ERROR_NO_PERMISSION.getMessageWithPrefix());
         }
 
         return true;

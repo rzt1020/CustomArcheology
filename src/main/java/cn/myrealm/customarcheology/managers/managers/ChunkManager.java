@@ -117,6 +117,11 @@ public class ChunkManager extends AbstractManager {
         return dataChunk.isArcheologyBlock(location);
     }
 
+    public ArcheologyBlock getArcheologyBlock(Location location) {
+        PersistentDataChunk dataChunk = getPersistentDataChunk(location);
+        return dataChunk.getArcheologyBlock(location);
+    }
+
     public PersistentDataChunk getPersistentDataChunk(Location location) {
         location = location.getBlock().getLocation();
         Chunk chunk = location.getChunk();

@@ -22,12 +22,12 @@ public enum Messages {
     // errors
     ERROR_INCORRECT_COMMAND("error.incorrect-command"),
     ERROR_EXECUTING_COMMAND("error.executing-command"),
-    ERROR_NO_PERMISSION("error.no-permission"),
     ERROR_FAILED_TO_CREATE_TEXTURE_PACK("error.failed-to-create-texture-pack"),
     ERROR_WORLD_NOT_FOUND("error.world-not-found"),
     ERROR_BLOCK_NOT_FOUND("error.block-not-found"),
-    ERROR_MISSING_RESOURCE("error.missing-resource"),
     ERROR_BIOMES_NOT_FOUND("error.biomes-not-found"),
+    ERROR_TOOL_NOT_FOUND("error.tool-not-found"),
+    ERROR_PLAYER_NOT_ONLINE("error.player-not-online"),
     // command descriptions
     COMMAND_HELP("command.help"),
     COMMAND_RELOAD("command.reload"),
@@ -36,7 +36,11 @@ public enum Messages {
     COMMAND_HELP_HEAD("command.help-head"),
     COMMAND_HELP_DETAIL("command.help-detail"),
     COMMAND_ARCHIFY("command.archify"),
-    COMMAND_DEARCHIFY("command.dearchify");
+    COMMAND_DEARCHIFY("command.dearchify"),
+    GAME_BRUSH_NO_PERMISSION("game.brush-no-permission"),
+    GAME_CAN_NOT_BRUSH("game.can-not-brush"),
+    GAME_ALREADY_BRUSHING("game.already-brushing"),
+    GAME_GIVE("game.give");
 
     private final String key;
     Messages(String key) {

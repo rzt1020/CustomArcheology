@@ -5,8 +5,7 @@ import cn.myrealm.customarcheology.enums.NamespacedKeys;
 import cn.myrealm.customarcheology.managers.managers.BlockManager;
 import cn.myrealm.customarcheology.managers.managers.ToolManager;
 import cn.myrealm.customarcheology.managers.managers.system.LanguageManager;
-import cn.myrealm.customarcheology.utils.hooks.ItemsAdder;
-import cn.myrealm.customarcheology.utils.hooks.Oraxen;
+import cn.myrealm.customarcheology.utils.hooks.*;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -23,17 +22,16 @@ import java.util.stream.Collectors;
 public class ItemUtil {
     private ItemUtil() {
     }
-    private final static int SPLIT_NUM = 2;
     public static ItemStack getItemStackByItemIdentifier(String itemIdentifier) {
+        if (itemIdentifier == null) {
+            return null;
+        }
         String[] split = itemIdentifier.split(":");
-        if (split.length != SPLIT_NUM) {
+        if (split.length == 1) {
             return null;
         }
         if (Objects.equals(Config.VANILLA_SYMBOL.asString(), split[0])) {
             return new ItemStack(Objects.requireNonNull(Material.getMaterial(split[1].toUpperCase())));
-        }
-        if (Objects.equals(Config.VANILLA_ENTITY_SYMBOL.asString(), split[0])) {
-            return generateVanillaEntityItemStack(split[1]);
         }
         if (Objects.equals(Config.CUSTOM_BLOCK_SYMBOL.asString(), split[0])) {
             return BlockManager.getInstance().generateItemStack(split[1], 1);
@@ -47,16 +45,16 @@ public class ItemUtil {
         if (Objects.equals(Config.ORAXEN_SYMBOL.asString(), split[0])) {
             return Oraxen.getItemStackByItemIdentifier(split[1]);
         }
+        if (Objects.equals(Config.MYTHICMOBS_SYMBOL.asString(), split[0])) {
+            return MythicMobs.getItemStackByItemIdentifier(split[1]);
+        }
+        if (Objects.equals(Config.MMOITEMS_SYMBOL.asString(), split[0]) && split.length > 2) {
+            return MMOItems.getItemStackByItemIdentifier(split[1], itemIdentifier.replace(split[1] + ":", ""));
+        }
+        if (Objects.equals(Config.ECO_SYMBOL.asString(), split[0])) {
+            return Eco.getItemStackByItemIdentifier(itemIdentifier.replace(split[0] + ":", ""));
+        }
         return null;
-    }
-
-    public static ItemStack generateVanillaEntityItemStack(String itemIdentifier) {
-        ItemStack itemStack = new ItemStack(Material.PIG_SPAWN_EGG);
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        assert itemMeta != null;
-        itemMeta.getPersistentDataContainer().set(NamespacedKeys.ARCHEOLOGY_SPAWN_ENTITY.getNamespacedKey(), PersistentDataType.STRING,  itemIdentifier);
-        itemStack.setItemMeta(itemMeta);
-        return itemStack;
     }
 
     public static ItemStack generateItemStack(Material material, int cmd, @Nullable String displayName, @Nullable List<String> lore) {

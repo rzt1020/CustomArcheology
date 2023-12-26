@@ -71,7 +71,7 @@ public class GiveCommand implements SubCommand {
         }
 
         if (args.length != THREE_ARGUMENTS && args.length != FOUR_ARGUMENTS) {
-            sender.sendMessage(this.getUsage());
+            sender.sendMessage(Messages.ERROR_INCORRECT_COMMAND.getMessageWithPrefix());
             return;
         }
 
@@ -79,14 +79,14 @@ public class GiveCommand implements SubCommand {
         Player player = Bukkit.getPlayer(args[SECOND_ARGUMENT]);
 
         if (Objects.isNull(player)) {
-            sender.sendMessage(ChatColor.RED + "Player " + args[SECOND_ARGUMENT] + " is not online!");
+            sender.sendMessage(Messages.ERROR_PLAYER_NOT_ONLINE.getMessageWithPrefix("player", args[SECOND_ARGUMENT]));
             return;
         }
 
         switch (args[FIRST_ARGUMENT]) {
             case BLOCK -> handleBlockCommand(sender, args, num, player);
             case TOOL -> handleToolCommand(sender, args, num, player);
-            default -> sender.sendMessage("Invalid argument!");
+            default -> sender.sendMessage(Messages.ERROR_INCORRECT_COMMAND.getMessageWithPrefix());
         }
     }
 
@@ -94,19 +94,20 @@ public class GiveCommand implements SubCommand {
         BlockManager blockManager = BlockManager.getInstance();
 
         if (!blockManager.isBlockExists(args[THIRD_ARGUMENT])) {
-            sender.sendMessage(ChatColor.RED + "This block does not exist!");
+            sender.sendMessage(Messages.ERROR_BLOCK_NOT_FOUND.getMessageWithPrefix("block-id", args[THIRD_ARGUMENT]));
             return;
         }
 
         player.getInventory().addItem(blockManager.generateItemStack(args[THIRD_ARGUMENT], num));
-        sender.sendMessage(ChatColor.GREEN + "Successfully give " + args[THIRD_ARGUMENT] + " to " + args[SECOND_ARGUMENT]);
+        sender.sendMessage(Messages.GAME_GIVE.getMessageWithPrefix("player", args[SECOND_ARGUMENT]
+               , "item-id", args[THIRD_ARGUMENT], "amount", String.valueOf(num)));
     }
 
     private void handleToolCommand(CommandSender sender, String[] args, int num, Player player) {
         ToolManager toolManager = ToolManager.getInstance();
 
         if (!toolManager.isToolExists(args[THIRD_ARGUMENT])) {
-            sender.sendMessage(ChatColor.RED + "This tool does not exist!");
+            sender.sendMessage(Messages.ERROR_TOOL_NOT_FOUND.getMessageWithPrefix("tool-id", args[THIRD_ARGUMENT]));
             return;
         }
 
@@ -114,7 +115,8 @@ public class GiveCommand implements SubCommand {
             player.getInventory().addItem(toolManager.getTool(args[THIRD_ARGUMENT]).generateItem());
         }
 
-        sender.sendMessage(ChatColor.GREEN + "Successfully give " + args[THIRD_ARGUMENT] + " to " + args[SECOND_ARGUMENT]);
+        sender.sendMessage(Messages.GAME_GIVE.getMessageWithPrefix("player", args[SECOND_ARGUMENT]
+                , "item-id", args[THIRD_ARGUMENT], "amount", String.valueOf(num)));
     }
 
 }

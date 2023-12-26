@@ -1,5 +1,7 @@
 package cn.myrealm.customarcheology.managers.managers.system;
 
+import cn.myrealm.customarcheology.CustomArcheology;
+import cn.myrealm.customarcheology.enums.Config;
 import cn.myrealm.customarcheology.enums.Messages;
 import cn.myrealm.customarcheology.enums.SQLs;
 import cn.myrealm.customarcheology.managers.AbstractManager;
@@ -74,6 +76,9 @@ public class TextureManager extends AbstractManager {
         Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, ()-> {
             loadTextures();
             outputTextures();
+            if (Config.AUTO_COPY_RESOURCEPACK_ENABLED.asBoolean()) {
+                copyResourcePack();
+            }
             Bukkit.getScheduler().runTask(plugin, ()-> Bukkit.getConsoleSender().sendMessage(Messages.TEXTURE_PACK_CREATED.getMessageWithPrefix()));
         }, 40);
     }
@@ -104,8 +109,8 @@ public class TextureManager extends AbstractManager {
         for (File blockTextureFile : blockTextureFiles) {
             if (blockTextureFile.getName().endsWith(".png")) {
                 String blockId = blockTextureFile.getName().replace(".png", "");
-                if (! blockCustommodeldataMap.containsKey(blockId)) {
-                    int custommodeldata = 10000;
+                if (!blockCustommodeldataMap.containsKey(blockId)) {
+                    int custommodeldata = Config.BLOCK_START_CUSTOM_MODEL_DATA.asInt();
                     while (blockCustommodeldataList.contains(custommodeldata)) {
                         custommodeldata ++;
                     }
@@ -128,7 +133,7 @@ public class TextureManager extends AbstractManager {
             if (toolTextureFile.getName().endsWith(".png")) {
                 String toolId = toolTextureFile.getName().replace(".png", "");
                 if (! toolCustommodeldataMap.containsKey(toolId)) {
-                    int custommodeldata = 10000;
+                    int custommodeldata = Config.TOOL_START_CUSTOM_MODEL_DATA.asInt();
                     while (toolCustommodeldataList.contains(custommodeldata)) {
                         custommodeldata ++;
                     }
@@ -150,7 +155,7 @@ public class TextureManager extends AbstractManager {
         created = created && (new File(Path.PACK_TOOL_MODEL_PATH.toString()).exists() || mkdirs(Path.PACK_TOOL_MODEL_PATH.toString()));
         created = created && (new File(Path.PACK_TOOL_TEXTURE_PATH.toString()).exists() || mkdirs(Path.PACK_TOOL_TEXTURE_PATH.toString()));
 
-        if(created) {
+        if (created) {
             Map<Integer, String> overrides = new HashMap<>(5);
             for (String blockId : blockCustommodeldataMap.keySet()) {
                 File pic = new File(Path.BLOCK_TEXTURE_PATH.toString() , blockId + ".png");
@@ -179,7 +184,7 @@ public class TextureManager extends AbstractManager {
                 }
             }
             StringBuilder override = new StringBuilder();
-            int i = 10000;
+            int i = Config.BLOCK_START_CUSTOM_MODEL_DATA.asInt();
             while (!overrides.isEmpty()) {
                 while (!overrides.containsKey(i)) {
                     i++;
@@ -247,7 +252,7 @@ public class TextureManager extends AbstractManager {
                 }
             }
             override = new StringBuilder();
-            i = 10000;
+            i = Config.TOOL_START_CUSTOM_MODEL_DATA.asInt();
             while (!overrides.isEmpty()) {
                 while (!overrides.containsKey(i)) {
                     i++;
@@ -264,6 +269,29 @@ public class TextureManager extends AbstractManager {
 
         } else {
             Bukkit.getConsoleSender().sendMessage(Messages.ERROR_FAILED_TO_CREATE_TEXTURE_PACK.getMessageWithPrefix());
+        }
+    }
+
+    private void copyResourcePack() {
+        try {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fCopying your resource pack to "
+                    + Config.AUTO_COPY_RESOURCEPACK_PATH.asString() + "!");
+            if (!Bukkit.getPluginManager().isPluginEnabled(Config.AUTO_COPY_RESOURCEPACK_PLUGIN.asString())) {
+                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §cError: " + Config.AUTO_COPY_RESOURCEPACK_PLUGIN.asString() +
+                        " is not installed in your server! Maybe its have errors when loading or you just typo!");
+                return;
+            }
+            mkdirs(Bukkit.getPluginManager().getPlugin(Config.AUTO_COPY_RESOURCEPACK_PLUGIN.asString()).getDataFolder().getPath()
+                    + Config.AUTO_COPY_RESOURCEPACK_PATH.asString());
+            copyFolder(CustomArcheology.plugin.getDataFolder().getPath() + "/pack/assets/",
+                    Bukkit.getPluginManager().getPlugin(Config.AUTO_COPY_RESOURCEPACK_PLUGIN.asString()).getDataFolder().getPath()
+                            + Config.AUTO_COPY_RESOURCEPACK_PATH.asString());
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fCopy finished, don't forgot reload " +
+                    "your ItemsAdder or Oraxen or other resource pack plugin!");
+        } catch (IOException e) {
+            e.printStackTrace();
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §cError: Can not copy resource pack to " +
+                    Config.AUTO_COPY_RESOURCEPACK_PLUGIN.asString() + Config.AUTO_COPY_RESOURCEPACK_PATH.asString() + "!");
         }
     }
 
@@ -285,6 +313,30 @@ public class TextureManager extends AbstractManager {
         return success;
     }
 
+    public static void copyFolder(String sourcePath, String destinationPath) throws IOException {
+        File source = new File(sourcePath);
+        File destination = new File(destinationPath);
+        if (!destination.exists()) {
+            destination.mkdirs();
+        }
+        if (source.exists() && source.isDirectory()) {
+            File[] files = source.listFiles();
+
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isDirectory()) {
+                        String sourceSubDir = sourcePath + "/" + file.getName();
+                        String destinationSubDir = destinationPath + "/" + file.getName();
+                        copyFolder(sourceSubDir, destinationSubDir);
+                    } else {
+                        java.nio.file.Path sourceFilePath = file.toPath();
+                        java.nio.file.Path destinationFilePath = new File(destinationPath + "/" + file.getName()).toPath();
+                        Files.copy(sourceFilePath, destinationFilePath, StandardCopyOption.REPLACE_EXISTING);
+                    }
+                }
+            }
+        }
+    }
 
 }
 

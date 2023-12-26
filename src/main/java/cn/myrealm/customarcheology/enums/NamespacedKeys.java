@@ -19,8 +19,8 @@ public enum NamespacedKeys {
     IS_ARCHEOLOGY_TOOL("is_archeology_tool"),
     ARCHEOLOGY_TOOL_ID("archeology_tool_id"),
     // other
-    ARCHEOLOGY_SPAWN_ENTITY("archeology_spawn_entity"),
-    ARCHEOLOGY_EXECUTE_COMMAND("archeology_execute_command"),
+    ARCHEOLOGY_EXECUTE_ACTIONS_SPAWN("archeology_execute_action_spawn"),
+    ARCHEOLOGY_EXECUTE_ACTIONS_PICK("archeology_execute_action_pick"),
     ARCHEOLOGY_REAL_ITEM("archeology_real_item");
 
     private final String key;

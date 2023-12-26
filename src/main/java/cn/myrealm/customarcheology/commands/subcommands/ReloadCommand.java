@@ -47,7 +47,7 @@ public class ReloadCommand implements SubCommand {
             return;
         }
         if (args.length != NONE_ARGUMENT) {
-            sender.sendMessage(getUsage());
+            sender.sendMessage(Messages.ERROR_INCORRECT_COMMAND.getMessageWithPrefix());
         }
         CustomArcheology.plugin.reloadPlugin();
         if (sender instanceof Player) {

@@ -2,6 +2,7 @@ package cn.myrealm.customarcheology;
 
 import cn.myrealm.customarcheology.commands.MainCommand;
 import cn.myrealm.customarcheology.commands.subcommands.*;
+import cn.myrealm.customarcheology.enums.Config;
 import cn.myrealm.customarcheology.enums.Messages;
 import cn.myrealm.customarcheology.listeners.bukkit.*;
 import cn.myrealm.customarcheology.listeners.protocol.DigListener;
@@ -26,6 +27,7 @@ import java.util.Random;
  * @author rzt1020
  */
 public final class CustomArcheology extends JavaPlugin {
+
     public static CustomArcheology plugin;
     private final List<AbstractManager> managers = new ArrayList<>();
     public static ProtocolManager protocolManager;
@@ -41,6 +43,7 @@ public final class CustomArcheology extends JavaPlugin {
         registerDefaultListeners();
         registerDefaultCommands();
 
+        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fYour server version: " + Bukkit.getVersion());
         Bukkit.getConsoleSender().sendMessage(Messages.ENABLE_MESSAGE.getMessageWithPrefix());
     }
 
@@ -95,7 +98,6 @@ public final class CustomArcheology extends JavaPlugin {
     }
 
     static final List<String> FILES = Arrays.asList(
-            "config.yml",
             "pack/pack.mcmeta",
             "pack/pack.png",
             "pack/assets/minecraft/models/item/brush_brushing_0.json",
@@ -153,32 +155,38 @@ public final class CustomArcheology extends JavaPlugin {
             "textures/tools/netherite_archaeological_shovel.png",
             "textures/tools/diamond_brush.png",
             "textures/tools/netherite_brush.png",
+            "languages/en_US.yml",
             "languages/zh_CN.yml",
-            "loottables/stone.yml");
+            "loottables/stone.yml",
+            "config.yml");
     static final List<String> FILES_LOW_VERSION = Arrays.asList(
             "pack/assets/minecraft/models/block/barrier.json",
             "pack/assets/minecraft/textures/item/nothing.png");
-    static final String NEWEST_VERSION = "1.20.2";
     public void outputDefaultFiles() {
         FILES.forEach(file -> {
             try {
-                if (!Files.exists(Paths.get(file))) {
+                if (!Files.exists(Paths.get(getDataFolder().getPath() + "/" + file))) {
+                    if (!Config.CONFIG_FILES_GENERATE_DEFAULT_FILES.asBoolean()) {
+                        if (file.startsWith("textures") || file.startsWith("blocks") || file.startsWith("tools")) {
+                            return;
+                        }
+                    }
                     saveResource(file, false);
                 }
             } catch (Exception e) {
                 String[] names = file.split("/");
-                Bukkit.getConsoleSender().sendMessage(Messages.ERROR_MISSING_RESOURCE.getMessageWithPrefix("resource-name", names[names.length - 1]));
+                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fCan not output default config file: " + names[names.length - 1]);
             }
         });
-        if (!Bukkit.getVersion().contains(NEWEST_VERSION)) {
+        if (Bukkit.getVersion().contains("1.20.1")) {
             FILES_LOW_VERSION.forEach(file -> {
                 try {
-                    if (!Files.exists(Paths.get(file))) {
+                    if (!Files.exists(Paths.get(getDataFolder().getPath() + "/" + file))) {
                         saveResource(file, false);
                     }
                 } catch (Exception e) {
                     String[] names = file.split("/");
-                    Bukkit.getConsoleSender().sendMessage(Messages.ERROR_MISSING_RESOURCE.getMessageWithPrefix("resource-name", names[names.length - 1]));
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fCan not output default config file: " + names[names.length - 1]);
                 }
             });
         }

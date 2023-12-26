@@ -60,7 +60,8 @@ public class ArchifyCommand implements SubCommand {
             return;
         }
         if (args.length != TWO_ARGUMENTS) {
-            sender.sendMessage(this.getUsage());
+            sender.sendMessage(Messages.ERROR_INCORRECT_COMMAND.getMessageWithPrefix());
+            return;
         }
         BlockManager blockManager = BlockManager.getInstance();
         if (blockManager.isBlockExists(args[FIRST_ARGUMENT])) {

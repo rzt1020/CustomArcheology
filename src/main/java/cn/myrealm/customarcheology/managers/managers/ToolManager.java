@@ -2,9 +2,13 @@ package cn.myrealm.customarcheology.managers.managers;
 
 
 import cn.myrealm.customarcheology.enums.Messages;
+import cn.myrealm.customarcheology.enums.NamespacedKeys;
 import cn.myrealm.customarcheology.managers.AbstractManager;
 import cn.myrealm.customarcheology.mechanics.ArcheologyTool;
 import org.bukkit.Bukkit;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;

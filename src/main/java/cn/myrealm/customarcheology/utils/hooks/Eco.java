@@ -1,20 +1,17 @@
 package cn.myrealm.customarcheology.utils.hooks;
 
-import io.lumine.mythic.api.items.ItemManager;
-import io.lumine.mythic.api.mobs.MythicMob;
-import io.lumine.mythic.bukkit.BukkitAdapter;
-import io.lumine.mythic.bukkit.MythicBukkit;
+import com.willfp.eco.core.items.Items;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Objects;
 
 /**
  * @author rzt1020
  */
-public class MythicMobs {
-    private static final String PLUGIN_NAME = "MythicMobs";
-    private MythicMobs() {
+public class Eco {
+    private static final String PLUGIN_NAME = "eco";
+    private Eco() {
     }
     public static boolean isLoaded() {
         return Bukkit.getPluginManager().isPluginEnabled(PLUGIN_NAME);
@@ -23,6 +20,11 @@ public class MythicMobs {
         if (!isLoaded()) {
             throw new IllegalStateException(PLUGIN_NAME + " is not loaded");
         }
-       return MythicBukkit.inst().getItemManager().getItemStack(itemIdentifier);
+
+        if (Objects.nonNull(Items.lookup(itemIdentifier).getItem())) {
+            return Items.lookup(itemIdentifier).getItem();
+        } else {
+            throw new IllegalStateException("Item not found");
+        }
     }
 }

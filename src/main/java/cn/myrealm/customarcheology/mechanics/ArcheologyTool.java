@@ -124,8 +124,6 @@ public class ArcheologyTool {
         }
     }
 
-
-
     public static ArcheologyTool loadFromFile(File file, String toolId) {
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         return new ArcheologyTool(config, toolId);

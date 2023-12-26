@@ -14,6 +14,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.loot.LootContext;
 import org.bukkit.loot.LootTable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.nio.charset.StandardCharsets;
@@ -30,7 +32,9 @@ public class CustomLootTable {
     private static final String DISPLAY = "display";
     private static final String AMOUNT = "amount";
     private static final String CHANCE = "chance";
-    private static final String COMMANDS = "commands";
+    private static final String ACTIONS = "actions";
+
+    private static final String SPAWN_ACTIONS = "spawn-actions";
 
     private final List<Reward> rewardsList;
 
@@ -53,19 +57,25 @@ public class CustomLootTable {
         String itemIdentifier = section.getString(MATERIAL, null);
         String displayIdentifier = section.getString(DISPLAY, null);
         Point amount = BasicUtil.parseRange(section.getString(AMOUNT, "1"));
-        List<String> commands = section.getStringList(COMMANDS);
-        int chance = section.getInt(CHANCE, 1);
-        if (Objects.nonNull(itemIdentifier)) {
-            if (Objects.nonNull(displayIdentifier)) {
-                return new Reward(itemIdentifier, displayIdentifier, amount, chance);
-            } else {
-                return new Reward(itemIdentifier, amount, chance);
-            }
-        } else if (Objects.nonNull(displayIdentifier)) {
-            return new Reward(displayIdentifier, commands, amount, chance);
+        List<String> actions = section.getStringList(ACTIONS);
+        if (actions.isEmpty()) {
+            actions = null;
         }
-
-        return null;
+        List<String> spawnActions = section.getStringList(SPAWN_ACTIONS);
+        if (spawnActions.isEmpty()) {
+            spawnActions = null;
+        }
+        int chance = section.getInt(CHANCE, 1);
+        if (Objects.isNull(itemIdentifier)) {
+            if (Objects.isNull(displayIdentifier)) {
+                return null;
+            } else {
+                return new Reward(displayIdentifier, null, actions, spawnActions, amount, chance);
+            }
+        }
+        else {
+            return new Reward(itemIdentifier, displayIdentifier, actions, spawnActions, amount, chance);
+        }
     }
 
     public ItemStack generateItem() {
@@ -81,34 +91,25 @@ public class CustomLootTable {
         private final String displayItem;
         private final Point amount;
         private final int chance;
-        private final List<String> commands;
+        private final List<String> actions;
+        private final List<String> spawnActions;
 
-        Reward(String realItem, Point amount, int chance) {
-            this.realItem = realItem;
-            this.displayItem = null;
-            this.amount = amount;
-            this.chance = chance;
-            this.commands = null;
-        }
-
-        Reward(String realItem, String displayItem, Point amount, int chance) {
+        public Reward(@NotNull String realItem,
+                      @Nullable String displayItem,
+                      @Nullable List<String> actions,
+                      @Nullable List<String> spawnActions,
+                      @NotNull Point amount,
+                      int chance) {
             this.realItem = realItem;
             this.displayItem = displayItem;
             this.amount = amount;
             this.chance = chance;
-            this.commands = null;
-        }
-
-        Reward(String realItem, List<String> commands, Point amount, int chance) {
-            this.realItem = realItem;
-            this.displayItem = null;
-            this.amount = amount;
-            this.chance = chance;
-            this.commands = commands;
+            this.actions = actions;
+            this.spawnActions = spawnActions;
         }
 
         public Reward(ItemStack itemStack) {
-            this(Config.VANILLA_SYMBOL.asString() + ":" + itemStack.getType(), new Point(itemStack.getAmount(), itemStack.getAmount()), 1);
+            this(Config.VANILLA_SYMBOL.asString() + ":" + itemStack.getType(), null, null, null, new Point(itemStack.getAmount(), itemStack.getAmount()), 1);
         }
 
 
@@ -120,17 +121,31 @@ public class CustomLootTable {
             int amountValue = BasicUtil.getRandomIntFromPoint(this.amount);
             realItemStack.setAmount(amountValue);
             if (Objects.nonNull(displayItem)) {
-                ItemStack displayItemStack = ItemUtil.generateVanillaEntityItemStack(displayItem);
+                ItemStack displayItemStack = ItemUtil.getItemStackByItemIdentifier(displayItem);
                 Objects.requireNonNull(displayItemStack.getItemMeta());
                 ItemMeta itemMeta = displayItemStack.getItemMeta();
                 itemMeta.getPersistentDataContainer().set(NamespacedKeys.ARCHEOLOGY_REAL_ITEM.getNamespacedKey(), new ItemStackTagType(), realItemStack);
                 displayItemStack.setItemMeta(itemMeta);
+                if (Objects.nonNull(actions)) {
+                    itemMeta.getPersistentDataContainer().set(NamespacedKeys.ARCHEOLOGY_EXECUTE_ACTIONS_PICK.getNamespacedKey(), new StringArrayTagType(StandardCharsets.UTF_8), actions.toArray(new String[0]));
+                    realItemStack.setItemMeta(itemMeta);
+                }
+                if (Objects.nonNull(spawnActions)) {
+                    itemMeta.getPersistentDataContainer().set(NamespacedKeys.ARCHEOLOGY_EXECUTE_ACTIONS_SPAWN.getNamespacedKey(), new StringArrayTagType(StandardCharsets.UTF_8), spawnActions.toArray(new String[0]));
+                    realItemStack.setItemMeta(itemMeta);
+                }
                 return displayItemStack;
             }
-            if (Objects.nonNull(commands)) {
+            if (Objects.nonNull(actions)) {
                 Objects.requireNonNull(realItemStack.getItemMeta());
                 ItemMeta itemMeta = realItemStack.getItemMeta();
-                itemMeta.getPersistentDataContainer().set(NamespacedKeys.ARCHEOLOGY_EXECUTE_COMMAND.getNamespacedKey(), new StringArrayTagType(StandardCharsets.UTF_8), commands.toArray(new String[0]));
+                itemMeta.getPersistentDataContainer().set(NamespacedKeys.ARCHEOLOGY_EXECUTE_ACTIONS_PICK.getNamespacedKey(), new StringArrayTagType(StandardCharsets.UTF_8), actions.toArray(new String[0]));
+                realItemStack.setItemMeta(itemMeta);
+            }
+            if (Objects.nonNull(spawnActions)) {
+                Objects.requireNonNull(realItemStack.getItemMeta());
+                ItemMeta itemMeta = realItemStack.getItemMeta();
+                itemMeta.getPersistentDataContainer().set(NamespacedKeys.ARCHEOLOGY_EXECUTE_ACTIONS_SPAWN.getNamespacedKey(), new StringArrayTagType(StandardCharsets.UTF_8), spawnActions.toArray(new String[0]));
                 realItemStack.setItemMeta(itemMeta);
             }
             return realItemStack;

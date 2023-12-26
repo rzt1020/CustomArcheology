@@ -61,10 +61,13 @@ public class PlaceListener extends AbstractListener {
                 return;
             }
             PacketUtil.swingItem(event.getPlayer());
-            blockManager.placeBlock(blockId, location);
-            event.getPlayer().playSound(event.getPlayer(), Sound.BLOCK_STONE_PLACE, 1, 1);
-        },1);
-        if (event.getPlayer().getGameMode().equals(GameMode.SURVIVAL)) {
+            if (blockManager.getBlock(blockId) != null) {
+                blockManager.placeBlock(blockId, location);
+                event.getPlayer().playSound(event.getPlayer(), blockManager.getBlock(blockId).getPlaceSound(), 1, 1);
+            }
+        }, 1);
+        if (event.getPlayer().getGameMode().equals(GameMode.SURVIVAL) ||
+                event.getPlayer().getGameMode().equals(GameMode.ADVENTURE)) {
             itemStack.setAmount(itemStack.getAmount() - 1);
             event.getPlayer().getInventory().setItemInMainHand(itemStack);
         }

@@ -7,9 +7,12 @@ import cn.myrealm.customarcheology.enums.NamespacedKeys;
 import cn.myrealm.customarcheology.managers.managers.BlockManager;
 import cn.myrealm.customarcheology.managers.managers.ChunkManager;
 import cn.myrealm.customarcheology.managers.managers.PlayerManager;
+import cn.myrealm.customarcheology.managers.managers.ToolManager;
+import cn.myrealm.customarcheology.mechanics.ArcheologyTool;
 import cn.myrealm.customarcheology.mechanics.persistent_data.ItemStackTagType;
 import cn.myrealm.customarcheology.utils.BasicUtil;
 import cn.myrealm.customarcheology.utils.PacketUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -17,6 +20,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
@@ -42,7 +46,6 @@ public class FakeTileBlock {
     private EffectTask nextTask;
     private BukkitRunnable particleTask;
     private double efficiency = 1.0;
-
 
     public FakeTileBlock(String blockName, Location location, ItemStack reward) {
         this.blockName = blockName;
@@ -95,7 +98,7 @@ public class FakeTileBlock {
         return block;
     }
 
-    public void play(BlockFace blockFace, ItemStack tool) {
+    public void play(Player player, BlockFace blockFace, ItemStack tool) {
         if (isPlaying) {
             return;
         }
@@ -113,6 +116,11 @@ public class FakeTileBlock {
             }
             int taskId = order.pop();
             nextTask = taskMap.get(taskId).cloneTask();
+            if (nextTask.getState().isFinished) {
+                Bukkit.getScheduler().runTaskLater(CustomArcheology.plugin, () -> {
+                    new PlayerItemDamageEvent(player, tool, getArcheologyBlock().getConsumeDurability());
+                }, (long) (nextTask.getState().getHardness() * 20 / efficiency));
+            }
             nextTask.runTaskLater(CustomArcheology.plugin, (long) (nextTask.getState().getHardness() * 20 / efficiency));
         }
         playParticleEffect(blockFace);
@@ -153,9 +161,9 @@ public class FakeTileBlock {
         Location loc = location.clone();
         taskMap.put(0, new EffectTask(this, block.getDefaultState(), loc.clone(), 0));
         for (int i = 1; i <= block.getStates().size(); i++) {
-            taskMap.put(i, new EffectTask(this, block.getStates().get(i-1), loc.add(vector).clone(), i));
+            taskMap.put(i, new EffectTask(this, block.getStates().get(i - 1), loc.add(vector).clone(), i));
         }
-        taskMap.put(block.getStates().size()+1, new EffectTask(this, block.getFinishedState(), loc.clone(), block.getStates().size()+1));
+        taskMap.put(block.getStates().size() + 1, new EffectTask(this, block.getFinishedState(), loc.clone(), block.getStates().size()+1));
         for (int i = taskMap.size() - 1; i >= 0 ; i--) {
             order.push(i);
         }
@@ -180,7 +188,7 @@ public class FakeTileBlock {
         if (blockFace.equals(BlockFace.NORTH) || blockFace.equals(BlockFace.SOUTH)) {
             rotation = new Quaternionf(0, -1, 0, -1).normalize();
         }
-        PacketUtil.spawnItemDisplay(players, location, reward, entityId+1, scale, rotation);
+        PacketUtil.spawnItemDisplay(players, location, reward, entityId + 1, scale, rotation);
     }
 
     public void effect(EffectTask task, State state, Location location) {
@@ -194,7 +202,7 @@ public class FakeTileBlock {
             if (Objects.nonNull(particleTask) && !particleTask.isCancelled()) {
                 particleTask.cancel();
             }
-            PacketUtil.removeEntity(players, entityId+1);
+            PacketUtil.removeEntity(players, entityId + 1);
             PacketUtil.removeEntity(players, entityId);
             PacketUtil.changeBlock(players, this.location, state.getMaterial());
             Item item = (Item) Objects.requireNonNull(location.getWorld()).spawnEntity(location, EntityType.DROPPED_ITEM);
@@ -211,7 +219,7 @@ public class FakeTileBlock {
             this.location.getBlock().setType(state.getMaterial());
             Objects.requireNonNull(this.location.getWorld()).spawnParticle(Particle.BLOCK_DUST, this.location.clone().add(0.5,0.5,0.5), 100, 0.3, 0.3, 0.3, block.getType().createBlockData());
         } else {
-            PacketUtil.teleportEntity(players, entityId+1, location);
+            PacketUtil.teleportEntity(players, entityId + 1, location);
             PacketUtil.updateItemDisplay(players, block.generateItemStack(1, state), entityId,  null, null);
         }
 

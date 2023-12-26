@@ -1,5 +1,6 @@
 package cn.myrealm.customarcheology.managers.managers;
 
+import cn.myrealm.customarcheology.enums.Messages;
 import cn.myrealm.customarcheology.managers.AbstractManager;
 import cn.myrealm.customarcheology.mechanics.cores.FakeTileBlock;
 import cn.myrealm.customarcheology.mechanics.PlayerLookAt;
@@ -58,7 +59,7 @@ public class PlayerManager extends AbstractManager {
 
     public void setBrush(Player player, FakeTileBlock fakeTileBlock, BlockFace blockFace, ItemStack tool) {
         if (playerBlockMap.containsValue(fakeTileBlock)) {
-            player.sendMessage("Other player is already archeology here");
+            player.sendMessage(Messages.GAME_ALREADY_BRUSHING.getMessageWithPrefix());
             return;
         }
         playerBlockMap.put(player, fakeTileBlock);

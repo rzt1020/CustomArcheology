@@ -46,7 +46,6 @@ public class BreakListener extends AbstractListener {
         }
     }
 
-
     @EventHandler
     public void onRightClick(PlayerInteractEvent event) {
         if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
@@ -69,14 +68,14 @@ public class BreakListener extends AbstractListener {
         Location loc = Objects.requireNonNull(event.getClickedBlock()).getLocation();
         ChunkManager chunkManager = ChunkManager.getInstance();
         if (chunkManager.isArcheologyBlock(loc)) {
+            event.getPlayer().playSound(event.getPlayer(), chunkManager.getArcheologyBlock(loc).getBrushSound(), 1, 1);
             loc.getBlock().setType(Material.AIR);
             chunkManager.removeBlock(loc);
-            event.getPlayer().playSound(event.getPlayer(), Sound.BLOCK_SUSPICIOUS_SAND_BREAK, 1, 1);
         }
     }
 
     @EventHandler
-    public void  onPistonMove(BlockPistonExtendEvent event) {
+    public void onPistonMove(BlockPistonExtendEvent event) {
         ChunkManager chunkManager = ChunkManager.getInstance();
         event.getBlocks().forEach(block -> {
             if (chunkManager.isArcheologyBlock(block.getLocation())) {

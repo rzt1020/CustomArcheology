@@ -21,7 +21,7 @@ public class PotListener extends AbstractListener {
         if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             return;
         }
-        assert  event.getClickedBlock() != null;
+        assert event.getClickedBlock() != null;
         if (event.getClickedBlock().getType().equals(Material.DECORATED_POT)) {
 
         }
