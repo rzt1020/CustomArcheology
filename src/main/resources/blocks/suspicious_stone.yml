@@ -1,5 +1,5 @@
 general:
-  display_name: "Suspicious Stone"
+  display_name: "&fSuspicious Stone"
   replace_block: stone
   generate_biomes: all
   distribution: 0 ~ 127

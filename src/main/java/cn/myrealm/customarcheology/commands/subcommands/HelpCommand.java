@@ -47,7 +47,7 @@ public class HelpCommand implements SubCommand {
             sender.sendMessage(getUsage());
         }
         sender.sendMessage(Messages.COMMAND_HELP_HEAD.getMessage());
-        for (SubCommand subCommand : MainCommand.SUB_COMMANDS.values()) {
+        for (SubCommand subCommand : MainCommand.HELP_SUB_COMMANDS.values()) {
             sender.sendMessage(Messages.COMMAND_HELP_DETAIL.getMessage("command-usage", subCommand.getUsage(), "command-description", subCommand.getDescription()));
         }
     }

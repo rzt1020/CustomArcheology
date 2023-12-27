@@ -1,5 +1,5 @@
 general:
-  display_name: "Suspicious Netherrack"
+  display_name: "&fSuspicious Netherrack"
   replace_block: netherrack
   generate_biomes: all
   distribution: 1 ~ 127

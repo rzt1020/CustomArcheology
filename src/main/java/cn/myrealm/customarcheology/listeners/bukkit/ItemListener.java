@@ -35,23 +35,16 @@ public class ItemListener extends AbstractListener {
             }
             StringArrayTagType strArray = new StringArrayTagType(StandardCharsets.UTF_8);
             if (Objects.nonNull(meta) && meta.getPersistentDataContainer().has(NamespacedKeys.ARCHEOLOGY_EXECUTE_ACTIONS_SPAWN.getNamespacedKey(), strArray)) {
-                boolean cancel = true;
                 String[] actions = meta.getPersistentDataContainer().get(NamespacedKeys.ARCHEOLOGY_EXECUTE_ACTIONS_SPAWN.getNamespacedKey(), strArray);
                 if (Objects.nonNull(actions)) {
                     for (int i = 0; i < event.getEntity().getItemStack().getAmount(); i++) {
                         for (String action : actions) {
-                            if (action.equals("give-item")) {
-                                cancel = false;
-                                continue;
-                            }
                             BasicUtil.runAction(null, event.getLocation(), action);
                         }
                     }
                 }
-                if (cancel) {
-                    event.getEntity().remove();
-                    event.setCancelled(true);
-                }
+                event.getEntity().remove();
+                event.setCancelled(true);
             }
         }, 0L);
     }
@@ -64,23 +57,16 @@ public class ItemListener extends AbstractListener {
         ItemMeta meta = event.getItem().getItemStack().getItemMeta();
         StringArrayTagType strArray = new StringArrayTagType(StandardCharsets.UTF_8);
         if (Objects.nonNull(meta) && meta.getPersistentDataContainer().has(NamespacedKeys.ARCHEOLOGY_EXECUTE_ACTIONS_PICK.getNamespacedKey(), strArray)) {
-            boolean cancel = true;
             String[] actions = meta.getPersistentDataContainer().get(NamespacedKeys.ARCHEOLOGY_EXECUTE_ACTIONS_PICK.getNamespacedKey(), strArray);
             if (Objects.nonNull(actions)) {
                 for (int i = 0; i < event.getItem().getItemStack().getAmount(); i++) {
                     for (String action : actions) {
-                        if (action.equals("give-item")) {
-                            cancel = false;
-                            continue;
-                        }
                         BasicUtil.runAction(player, event.getItem().getLocation(), action);
                     }
                 }
             }
-            if (cancel) {
-                event.getItem().remove();
-                event.setCancelled(true);
-            }
+            event.getItem().remove();
+            event.setCancelled(true);
         }
     }
 }

@@ -7,8 +7,6 @@ import cn.myrealm.customarcheology.enums.NamespacedKeys;
 import cn.myrealm.customarcheology.managers.managers.BlockManager;
 import cn.myrealm.customarcheology.managers.managers.ChunkManager;
 import cn.myrealm.customarcheology.managers.managers.PlayerManager;
-import cn.myrealm.customarcheology.managers.managers.ToolManager;
-import cn.myrealm.customarcheology.mechanics.ArcheologyTool;
 import cn.myrealm.customarcheology.mechanics.persistent_data.ItemStackTagType;
 import cn.myrealm.customarcheology.utils.BasicUtil;
 import cn.myrealm.customarcheology.utils.PacketUtil;
@@ -20,8 +18,8 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.joml.Quaternionf;
@@ -46,6 +44,8 @@ public class FakeTileBlock {
     private EffectTask nextTask;
     private BukkitRunnable particleTask;
     private double efficiency = 1.0;
+    private Player player;
+    private ItemStack tool;
 
     public FakeTileBlock(String blockName, Location location, ItemStack reward) {
         this.blockName = blockName;
@@ -99,6 +99,8 @@ public class FakeTileBlock {
     }
 
     public void play(Player player, BlockFace blockFace, ItemStack tool) {
+        this.player = player;
+        this.tool = tool;
         if (isPlaying) {
             return;
         }
@@ -116,11 +118,6 @@ public class FakeTileBlock {
             }
             int taskId = order.pop();
             nextTask = taskMap.get(taskId).cloneTask();
-            if (nextTask.getState().isFinished) {
-                Bukkit.getScheduler().runTaskLater(CustomArcheology.plugin, () -> {
-                    new PlayerItemDamageEvent(player, tool, getArcheologyBlock().getConsumeDurability());
-                }, (long) (nextTask.getState().getHardness() * 20 / efficiency));
-            }
             nextTask.runTaskLater(CustomArcheology.plugin, (long) (nextTask.getState().getHardness() * 20 / efficiency));
         }
         playParticleEffect(blockFace);
@@ -231,18 +228,35 @@ public class FakeTileBlock {
                 nextTask.runTaskLater(CustomArcheology.plugin, (long) (state.getHardness() * 20 / efficiency));
             } else {
                 nextTask = null;
+                player = null;
+                tool = null;
             }
         } else {
             order.push(task.getTaskId());
             if (complete.isEmpty()) {
-                PacketUtil.removeEntity(players, entityId+1);
+                PacketUtil.removeEntity(players, entityId + 1);
                 PacketUtil.updateItemDisplay(players, block.generateItemStack(1), entityId, null, null);
                 isEffectInitialized = false;
                 nextTask = null;
+                player = null;
+                tool = null;
             } else {
                 int taskId = complete.pop();
                 nextTask = taskMap.get(taskId).cloneTask();
                 nextTask.runTaskLater(CustomArcheology.plugin, 5L);
+            }
+        }
+        if (nextTask != null && nextTask.getState().isFinished) {
+            if (tool != null) {
+                if (tool.hasItemMeta() && tool.getItemMeta() instanceof Damageable) {
+                    Damageable damageItemMeta = (Damageable)tool.getItemMeta();
+                    if (tool.getType().getMaxDurability() - damageItemMeta.getDamage() <= getArcheologyBlock().getConsumeDurability()) {
+                        tool.setAmount(tool.getAmount() - 1);
+                    } else {
+                        damageItemMeta.setDamage(damageItemMeta.getDamage() + getArcheologyBlock().getConsumeDurability());
+                        tool.setItemMeta(damageItemMeta);
+                    }
+                }
             }
         }
     }

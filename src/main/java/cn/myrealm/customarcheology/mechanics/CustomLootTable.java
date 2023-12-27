@@ -33,7 +33,6 @@ public class CustomLootTable {
     private static final String AMOUNT = "amount";
     private static final String CHANCE = "chance";
     private static final String ACTIONS = "actions";
-
     private static final String SPAWN_ACTIONS = "spawn-actions";
 
     private final List<Reward> rewardsList;
@@ -126,12 +125,14 @@ public class CustomLootTable {
                 ItemMeta itemMeta = displayItemStack.getItemMeta();
                 itemMeta.getPersistentDataContainer().set(NamespacedKeys.ARCHEOLOGY_REAL_ITEM.getNamespacedKey(), new ItemStackTagType(), realItemStack);
                 displayItemStack.setItemMeta(itemMeta);
-                if (Objects.nonNull(actions)) {
-                    itemMeta.getPersistentDataContainer().set(NamespacedKeys.ARCHEOLOGY_EXECUTE_ACTIONS_PICK.getNamespacedKey(), new StringArrayTagType(StandardCharsets.UTF_8), actions.toArray(new String[0]));
+                if (Objects.nonNull(spawnActions)) {
+                    itemMeta.getPersistentDataContainer().set(NamespacedKeys.ARCHEOLOGY_EXECUTE_ACTIONS_SPAWN.getNamespacedKey(), new StringArrayTagType(StandardCharsets.UTF_8), actions.toArray(new String[0]));
                     realItemStack.setItemMeta(itemMeta);
                 }
-                if (Objects.nonNull(spawnActions)) {
-                    itemMeta.getPersistentDataContainer().set(NamespacedKeys.ARCHEOLOGY_EXECUTE_ACTIONS_SPAWN.getNamespacedKey(), new StringArrayTagType(StandardCharsets.UTF_8), spawnActions.toArray(new String[0]));
+                if (Objects.nonNull(actions)) {
+                    Objects.requireNonNull(realItemStack.getItemMeta());
+                    ItemMeta realItemMeta = realItemStack.getItemMeta();
+                    realItemMeta.getPersistentDataContainer().set(NamespacedKeys.ARCHEOLOGY_EXECUTE_ACTIONS_PICK.getNamespacedKey(), new StringArrayTagType(StandardCharsets.UTF_8), spawnActions.toArray(new String[0]));
                     realItemStack.setItemMeta(itemMeta);
                 }
                 return displayItemStack;

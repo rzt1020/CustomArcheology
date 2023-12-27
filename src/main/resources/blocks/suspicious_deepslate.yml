@@ -1,5 +1,5 @@
 general:
-  display_name: "Suspicious Deepslate"
+  display_name: "&fSuspicious Deepslate"
   replace_block: deepslate
   generate_biomes: all
   distribution: 0 ~ 127

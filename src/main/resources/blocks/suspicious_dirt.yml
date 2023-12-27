@@ -1,5 +1,5 @@
 general:
-  display_name: "Suspicious Dirt"
+  display_name: "&fSuspicious Dirt"
   replace_block: dirt
   generate_biomes: all
   distribution: 0 ~ 127

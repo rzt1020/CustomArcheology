@@ -1,5 +1,5 @@
 general:
-  display_name: "Suspicious Sculk"
+  display_name: "&fSuspicious Sculk"
   replace_block: sculk
   generate_biomes: all
   distribution: 0 ~ 127

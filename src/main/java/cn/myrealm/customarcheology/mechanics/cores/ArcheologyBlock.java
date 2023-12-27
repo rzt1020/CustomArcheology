@@ -341,4 +341,8 @@ class State {
         return null;
     }
 
+    public ConfigurationSection getSection() {
+        return section;
+    }
+
 }

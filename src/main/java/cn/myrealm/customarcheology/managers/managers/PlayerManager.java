@@ -69,7 +69,7 @@ public class PlayerManager extends AbstractManager {
                 cancelBrush(player);
             }
         });
-        fakeTileBlock.play(blockFace, tool);
+        fakeTileBlock.play(player, blockFace, tool);
     }
 
     public void cancelBrush(Player player) {

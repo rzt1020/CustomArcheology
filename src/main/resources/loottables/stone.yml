@@ -8,18 +8,17 @@ rewards:
     amount: 1
     chance: 1
   reward_3:
-    actions:
-      - 'give-item'
-      - 'console_command: say hello, {player}'
     display: minecraft:iron_ingot
     amount: 1~2
     chance: 10
+    actions:
+      - 'console_command: say hello, {player}'
   reward_4:
-    spawn-actions:
-      - 'entity_spawn: ZOMBIE'
     display: minecraft:dirt
     amount: 1~3
     chance: 20
+    spawn-actions:
+      - 'entity_spawn: ZOMBIE'
   reward_5:
     material: ca_block:suspicious_stone
     amount: 10~32

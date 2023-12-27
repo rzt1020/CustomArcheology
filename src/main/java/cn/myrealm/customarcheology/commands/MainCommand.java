@@ -20,8 +20,11 @@ public class MainCommand implements CommandExecutor, TabCompleter {
 
     public static final Map<String, SubCommand> SUB_COMMANDS = new HashMap<>();
 
+    public static final Map<String, SubCommand> HELP_SUB_COMMANDS = new HashMap<>();
+
     public void registerSubCommand(SubCommand subCommand) {
         SUB_COMMANDS.put(subCommand.getName().toLowerCase(), subCommand);
+        HELP_SUB_COMMANDS.put(subCommand.getName().toLowerCase(), subCommand);
         for (String alias : subCommand.getSubCommandAliases()) {
             SUB_COMMANDS.put(alias.toLowerCase(), subCommand);
         }
