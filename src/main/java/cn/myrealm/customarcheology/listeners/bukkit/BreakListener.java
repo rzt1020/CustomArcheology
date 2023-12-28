@@ -1,7 +1,7 @@
 package cn.myrealm.customarcheology.listeners.bukkit;
 
 
-import cn.myrealm.customarcheology.listeners.AbstractListener;
+import cn.myrealm.customarcheology.listeners.BaseListener;
 import cn.myrealm.customarcheology.managers.managers.ChunkManager;
 import cn.myrealm.customarcheology.utils.PacketUtil;
 import org.bukkit.*;
@@ -20,7 +20,7 @@ import java.util.Objects;
 /**
  * @author rzt1020
  */
-public class BreakListener extends AbstractListener {
+public class BreakListener extends BaseListener {
 
     public BreakListener(JavaPlugin plugin) {
         super(plugin);

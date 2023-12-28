@@ -7,6 +7,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.*;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -56,7 +57,6 @@ public class PacketUtil {
         spawnPacket.getUUIDs().write(0, entityUuid);
         spawnPacket.getEntityTypeModifier().write(0, EntityType.ITEM_DISPLAY);
 
-
         for (Player p : player) {
             CustomArcheology.protocolManager.sendServerPacket(p, spawnPacket);
         }
@@ -69,13 +69,26 @@ public class PacketUtil {
         glowMetaDataPacket.getIntegers().write(0, entityId);
 
         WrappedDataWatcher entityMetaData = new WrappedDataWatcher();
-        if (Objects.nonNull(scale)) {
-            entityMetaData.setObject(11, WrappedDataWatcher.Registry.get(Vector3f.class), scale);
+        if (Bukkit.getVersion().contains("1.20.1") || (Bukkit.getVersion().contains("1.20")
+                && (Bukkit.getVersion().split("1.20").length == 1 ||
+                !Bukkit.getVersion().split("1.20")[1].startsWith(".")))) {
+            if (Objects.nonNull(scale)) {
+                entityMetaData.setObject(11, WrappedDataWatcher.Registry.get(Vector3f.class), scale);
+            }
+            if (Objects.nonNull(rotation)) {
+                entityMetaData.setObject(12, WrappedDataWatcher.Registry.get(Quaternionf.class), rotation);
+            }
+            entityMetaData.setObject(22, WrappedDataWatcher.Registry.getItemStackSerializer(false), displayItem);
+
+        } else {
+            if (Objects.nonNull(scale)) {
+                entityMetaData.setObject(12, WrappedDataWatcher.Registry.get(Vector3f.class), scale);
+            }
+            if (Objects.nonNull(rotation)) {
+                entityMetaData.setObject(13, WrappedDataWatcher.Registry.get(Quaternionf.class), rotation);
+            }
+            entityMetaData.setObject(23, WrappedDataWatcher.Registry.getItemStackSerializer(false), displayItem);
         }
-        if (Objects.nonNull(rotation)) {
-            entityMetaData.setObject(12, WrappedDataWatcher.Registry.get(Quaternionf.class), rotation);
-        }
-        entityMetaData.setObject(22, WrappedDataWatcher.Registry.getItemStackSerializer(false), displayItem);
 
         List<WrappedDataValue> wrappedDataValueList = new ArrayList<>();
         for (WrappedWatchableObject entry : entityMetaData.getWatchableObjects()) {

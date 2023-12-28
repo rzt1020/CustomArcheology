@@ -4,7 +4,7 @@ import cn.myrealm.customarcheology.CustomArcheology;
 import cn.myrealm.customarcheology.enums.Config;
 import cn.myrealm.customarcheology.enums.Messages;
 import cn.myrealm.customarcheology.enums.SQLs;
-import cn.myrealm.customarcheology.managers.AbstractManager;
+import cn.myrealm.customarcheology.managers.BaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -17,7 +17,7 @@ import java.util.*;
 /**
  * @author rzt1020
  */
-public class TextureManager extends AbstractManager {
+public class TextureManager extends BaseManager {
     private Map<String, Integer> blockCustommodeldataMap,
                                  toolCustommodeldataMap;
     private List<Integer> blockCustommodeldataList,

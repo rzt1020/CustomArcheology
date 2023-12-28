@@ -2,7 +2,7 @@ package cn.myrealm.customarcheology.managers.managers.system;
 
 
 import cn.myrealm.customarcheology.enums.Config;
-import cn.myrealm.customarcheology.managers.AbstractManager;
+import cn.myrealm.customarcheology.managers.BaseManager;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 /**
  * @author rzt1020
  */
-public class LanguageManager extends AbstractManager {
+public class LanguageManager extends BaseManager {
 
     private static LanguageManager instance;
     private String language;

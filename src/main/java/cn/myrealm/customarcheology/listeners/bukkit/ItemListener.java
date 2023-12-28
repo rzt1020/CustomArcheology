@@ -2,7 +2,7 @@ package cn.myrealm.customarcheology.listeners.bukkit;
 
 
 import cn.myrealm.customarcheology.enums.NamespacedKeys;
-import cn.myrealm.customarcheology.listeners.AbstractListener;
+import cn.myrealm.customarcheology.listeners.BaseListener;
 import cn.myrealm.customarcheology.mechanics.persistent_data.StringArrayTagType;
 import cn.myrealm.customarcheology.utils.BasicUtil;
 import org.bukkit.Bukkit;
@@ -20,7 +20,7 @@ import java.util.Objects;
 /**
  * @author rzt1020
  */
-public class ItemListener extends AbstractListener {
+public class ItemListener extends BaseListener {
     public ItemListener(JavaPlugin plugin) {
         super(plugin);
     }

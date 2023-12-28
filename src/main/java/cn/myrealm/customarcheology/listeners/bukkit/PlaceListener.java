@@ -3,7 +3,7 @@ package cn.myrealm.customarcheology.listeners.bukkit;
 
 import cn.myrealm.customarcheology.CustomArcheology;
 import cn.myrealm.customarcheology.enums.NamespacedKeys;
-import cn.myrealm.customarcheology.listeners.AbstractListener;
+import cn.myrealm.customarcheology.listeners.BaseListener;
 import cn.myrealm.customarcheology.managers.managers.BlockManager;
 import cn.myrealm.customarcheology.utils.PacketUtil;
 import org.bukkit.Bukkit;
@@ -22,7 +22,7 @@ import java.util.Objects;
 /**
  * @author rzt1020
  */
-public class PlaceListener extends AbstractListener {
+public class PlaceListener extends BaseListener {
 
     public PlaceListener(JavaPlugin plugin) {
         super(plugin);

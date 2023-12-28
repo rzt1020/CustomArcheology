@@ -1,7 +1,7 @@
 package cn.myrealm.customarcheology.listeners.bukkit;
 
 
-import cn.myrealm.customarcheology.listeners.AbstractListener;
+import cn.myrealm.customarcheology.listeners.BaseListener;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
@@ -11,7 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 /**
  * @author rzt1020
  */
-public class PotListener extends AbstractListener {
+public class PotListener extends BaseListener {
     public PotListener(JavaPlugin plugin) {
         super(plugin);
     }

@@ -3,7 +3,7 @@ package cn.myrealm.customarcheology.managers.managers;
 
 import cn.myrealm.customarcheology.enums.Config;
 import cn.myrealm.customarcheology.enums.Messages;
-import cn.myrealm.customarcheology.managers.AbstractManager;
+import cn.myrealm.customarcheology.managers.BaseManager;
 import cn.myrealm.customarcheology.mechanics.CustomLootTable;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -22,7 +22,7 @@ import java.util.Objects;
 /**
  * @author rzt1020
  */
-public class LootManager extends AbstractManager {
+public class LootManager extends BaseManager {
     private static LootManager instance;
     private Map<String, CustomLootTable> lootTableMap;
     public LootManager(JavaPlugin plugin) {

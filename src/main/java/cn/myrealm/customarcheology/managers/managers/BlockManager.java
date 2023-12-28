@@ -3,7 +3,7 @@ package cn.myrealm.customarcheology.managers.managers;
 import cn.myrealm.customarcheology.CustomArcheology;
 import cn.myrealm.customarcheology.enums.Messages;
 import cn.myrealm.customarcheology.enums.SQLs;
-import cn.myrealm.customarcheology.managers.AbstractManager;
+import cn.myrealm.customarcheology.managers.BaseManager;
 import cn.myrealm.customarcheology.managers.managers.system.DatabaseManager;
 import cn.myrealm.customarcheology.mechanics.cores.ArcheologyBlock;
 import cn.myrealm.customarcheology.mechanics.cores.FakeTileBlock;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 /**
  * @author rzt1020
  */
-public class BlockManager extends AbstractManager {
+public class BlockManager extends BaseManager {
     private static BlockManager instance;
     private Map<String, ArcheologyBlock> blocksMap;
     private Map<UUID, Set<String>> worldBlocksMap;

@@ -6,7 +6,7 @@ import cn.myrealm.customarcheology.enums.Config;
 import cn.myrealm.customarcheology.enums.Messages;
 import cn.myrealm.customarcheology.listeners.bukkit.*;
 import cn.myrealm.customarcheology.listeners.protocol.DigListener;
-import cn.myrealm.customarcheology.managers.AbstractManager;
+import cn.myrealm.customarcheology.managers.BaseManager;
 import cn.myrealm.customarcheology.managers.managers.*;
 import cn.myrealm.customarcheology.managers.managers.system.DatabaseManager;
 import cn.myrealm.customarcheology.managers.managers.system.LanguageManager;
@@ -29,7 +29,7 @@ import java.util.Random;
 public final class CustomArcheology extends JavaPlugin {
 
     public static CustomArcheology plugin;
-    private final List<AbstractManager> managers = new ArrayList<>();
+    private final List<BaseManager> managers = new ArrayList<>();
     public static ProtocolManager protocolManager;
     public static final Random RANDOM = new Random();
 
@@ -68,7 +68,7 @@ public final class CustomArcheology extends JavaPlugin {
         managers.add(new ToolManager(this));
     }
     public void disablePlugin() {
-        for (AbstractManager manager : managers) {
+        for (BaseManager manager : managers) {
             manager.disable();
         }
     }
@@ -178,7 +178,9 @@ public final class CustomArcheology extends JavaPlugin {
                 Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fCan not output default config file: " + names[names.length - 1]);
             }
         });
-        if (Bukkit.getVersion().contains("1.20.1")) {
+        if (Bukkit.getVersion().contains("1.20.1") || (Bukkit.getVersion().contains("1.20")
+                && (Bukkit.getVersion().split("1.20").length == 1 ||
+                !Bukkit.getVersion().split("1.20")[1].startsWith(".")))) {
             FILES_LOW_VERSION.forEach(file -> {
                 try {
                     if (!Files.exists(Paths.get(getDataFolder().getPath() + "/" + file))) {

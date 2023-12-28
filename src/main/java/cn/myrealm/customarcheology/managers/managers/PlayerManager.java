@@ -1,7 +1,7 @@
 package cn.myrealm.customarcheology.managers.managers;
 
 import cn.myrealm.customarcheology.enums.Messages;
-import cn.myrealm.customarcheology.managers.AbstractManager;
+import cn.myrealm.customarcheology.managers.BaseManager;
 import cn.myrealm.customarcheology.mechanics.cores.FakeTileBlock;
 import cn.myrealm.customarcheology.mechanics.PlayerLookAt;
 import org.bukkit.block.BlockFace;
@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * @author rzt1020
  */
-public class PlayerManager extends AbstractManager {
+public class PlayerManager extends BaseManager {
     private static PlayerManager instance;
     private Map<Player, PlayerLookAt> playerLookAtMap;
     private Map<Player, FakeTileBlock> playerBlockMap;

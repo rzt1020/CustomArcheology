@@ -1,7 +1,7 @@
 package cn.myrealm.customarcheology.managers.managers;
 
 
-import cn.myrealm.customarcheology.managers.AbstractManager;
+import cn.myrealm.customarcheology.managers.BaseManager;
 import cn.myrealm.customarcheology.mechanics.cores.ArcheologyBlock;
 import cn.myrealm.customarcheology.mechanics.ArcheologyChunkSpawner;
 import cn.myrealm.customarcheology.mechanics.cores.FakeTileBlock;
@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 /**
  * @author rzt1020
  */
-public class ChunkManager extends AbstractManager {
+public class ChunkManager extends BaseManager {
     private static ChunkManager instance;
     private Map<Chunk, PersistentDataChunk> loadedChunks;
     private BukkitRunnable loadUnloadTask;

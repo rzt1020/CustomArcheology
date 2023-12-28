@@ -3,7 +3,7 @@ package cn.myrealm.customarcheology.listeners.bukkit;
 
 import cn.myrealm.customarcheology.enums.Messages;
 import cn.myrealm.customarcheology.enums.Permissions;
-import cn.myrealm.customarcheology.listeners.AbstractListener;
+import cn.myrealm.customarcheology.listeners.BaseListener;
 import cn.myrealm.customarcheology.managers.managers.ChunkManager;
 import cn.myrealm.customarcheology.managers.managers.PlayerManager;
 import cn.myrealm.customarcheology.mechanics.cores.FakeTileBlock;
@@ -18,7 +18,7 @@ import java.util.Objects;
 /**
  * @author rzt1020
  */
-public class BrushListener extends AbstractListener {
+public class BrushListener extends BaseListener {
     public BrushListener(JavaPlugin plugin) {
         super(plugin);
     }

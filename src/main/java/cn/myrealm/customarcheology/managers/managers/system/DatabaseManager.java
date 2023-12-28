@@ -2,7 +2,7 @@ package cn.myrealm.customarcheology.managers.managers.system;
 
 import cn.myrealm.customarcheology.enums.Config;
 import cn.myrealm.customarcheology.enums.SQLs;
-import cn.myrealm.customarcheology.managers.AbstractManager;
+import cn.myrealm.customarcheology.managers.BaseManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * @author rzt1020
  */
-public class DatabaseManager extends AbstractManager {
+public class DatabaseManager extends BaseManager {
 
     private static DatabaseManager instance;
     private Connection connection;

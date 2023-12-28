@@ -1,6 +1,6 @@
 package cn.myrealm.customarcheology.listeners.bukkit;
 
-import cn.myrealm.customarcheology.listeners.AbstractListener;
+import cn.myrealm.customarcheology.listeners.BaseListener;
 import cn.myrealm.customarcheology.managers.managers.PlayerManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -10,7 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 /**
  * @author rzt1020
  */
-public class PlayerListener extends AbstractListener{
+public class PlayerListener extends BaseListener {
     public PlayerListener(JavaPlugin plugin) {
         super(plugin);
     }

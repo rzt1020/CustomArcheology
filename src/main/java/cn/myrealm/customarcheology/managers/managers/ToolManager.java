@@ -2,13 +2,9 @@ package cn.myrealm.customarcheology.managers.managers;
 
 
 import cn.myrealm.customarcheology.enums.Messages;
-import cn.myrealm.customarcheology.enums.NamespacedKeys;
-import cn.myrealm.customarcheology.managers.AbstractManager;
+import cn.myrealm.customarcheology.managers.BaseManager;
 import cn.myrealm.customarcheology.mechanics.ArcheologyTool;
 import org.bukkit.Bukkit;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
@@ -16,7 +12,6 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -24,7 +19,7 @@ import java.util.Set;
 /**
  * @author rzt1020
  */
-public class ToolManager extends AbstractManager {
+public class ToolManager extends BaseManager {
 
     private static final String TOOL_PATH = "plugins/CustomArcheology/tools/";
     private static ToolManager instance;
