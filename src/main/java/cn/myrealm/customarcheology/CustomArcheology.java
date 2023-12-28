@@ -165,6 +165,9 @@ public final class CustomArcheology extends JavaPlugin {
     public void outputDefaultFiles() {
         FILES.forEach(file -> {
             try {
+                if (!Files.exists(Paths.get(file))) {
+                    return;
+                }
                 if (!Files.exists(Paths.get(getDataFolder().getPath() + "/" + file))) {
                     if (!Config.CONFIG_FILES_GENERATE_DEFAULT_FILES.asBoolean()) {
                         if (file.startsWith("textures") || file.startsWith("blocks") || file.startsWith("tools")) {
