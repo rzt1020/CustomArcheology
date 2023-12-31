@@ -1,6 +1,7 @@
 package cn.myrealm.customarcheology.managers.managers;
 
 
+import cn.myrealm.customarcheology.CustomArcheology;
 import cn.myrealm.customarcheology.enums.Messages;
 import cn.myrealm.customarcheology.managers.BaseManager;
 import cn.myrealm.customarcheology.mechanics.ArcheologyTool;
@@ -21,7 +22,7 @@ import java.util.Set;
  */
 public class ToolManager extends BaseManager {
 
-    private static final String TOOL_PATH = "plugins/CustomArcheology/tools/";
+    private static final String TOOL_PATH = CustomArcheology.plugin.getDataFolder().getPath() + "/tools/";
     private static ToolManager instance;
     private Map<String, ArcheologyTool> toolMap;
     public ToolManager(JavaPlugin plugin) {

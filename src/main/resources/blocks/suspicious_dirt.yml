@@ -17,6 +17,7 @@ brush_tools:
     efficiency: 2.0
   netherite_archaeological_shovel:
     efficiency: 3.0
+    loot_table: netherite_tool
 
 states:
   default:

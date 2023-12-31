@@ -15,14 +15,13 @@ import org.bukkit.block.Biome;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.generator.structure.Structure;
-import org.bukkit.generator.structure.StructureType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -145,12 +144,20 @@ public class ArcheologyBlock {
         return valid;
     }
 
-    public ItemStack roll() {
-        CustomLootTable customLootTable = customLootTables.get(CustomArcheology.RANDOM.nextInt(customLootTables.size()));
-        if (customLootTable.generateItem() == null) {
-            return new ItemStack(Material.STONE);
+    public ItemStack roll(ItemStack tool) {
+        String toolId = ItemUtil.getToolId(tool);
+        Bukkit.getConsoleSender().sendMessage(toolId);
+        ConfigurationSection section = Objects.requireNonNull(Keys.BRUSH_TOOLS.asSection(config)).getConfigurationSection(toolId);
+        String lootTableName = Keys.TOOL_LOOT_TABLES.asString(section);
+        if (lootTableName == null || LootManager.getInstance().getCustomLootTable(lootTableName) == null) {
+            CustomLootTable customLootTable = customLootTables.get(CustomArcheology.RANDOM.nextInt(customLootTables.size()));
+            if (customLootTable.generateItem() == null) {
+                return new ItemStack(Material.STONE);
+            }
+            return customLootTable.generateItem();
         }
-        return customLootTable.generateItem();
+        Bukkit.getConsoleSender().sendMessage(lootTableName);
+        return LootManager.getInstance().getCustomLootTable(lootTableName).generateItem();
     }
 
     public State getDefaultState() {
@@ -223,6 +230,7 @@ enum Keys {
     LOOT_TABLES("general.loot_tables", null),
     BRUSH_TOOLS("brush_tools", null),
     EFFICIENCY("efficiency", 1.0d),
+    TOOL_LOOT_TABLES("loot_table", null),
     STATES("states", null),
     GENERATE_BIOMES("general.generate_biomes", "all"),
     DISTRIBUTION("general.distribution", null),

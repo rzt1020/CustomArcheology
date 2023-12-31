@@ -158,6 +158,7 @@ public final class CustomArcheology extends JavaPlugin {
             "languages/en_US.yml",
             "languages/zh_CN.yml",
             "loottables/stone.yml",
+            "loottables/netherite_tool.yml",
             "config.yml");
     static final List<String> FILES_LOW_VERSION = Arrays.asList(
             "pack/assets/minecraft/models/block/barrier.json",
@@ -165,9 +166,6 @@ public final class CustomArcheology extends JavaPlugin {
     public void outputDefaultFiles() {
         FILES.forEach(file -> {
             try {
-                if (!Files.exists(Paths.get(file))) {
-                    return;
-                }
                 if (!Files.exists(Paths.get(getDataFolder().getPath() + "/" + file))) {
                     if (!Config.CONFIG_FILES_GENERATE_DEFAULT_FILES.asBoolean()) {
                         if (file.startsWith("textures") || file.startsWith("blocks") || file.startsWith("tools")) {

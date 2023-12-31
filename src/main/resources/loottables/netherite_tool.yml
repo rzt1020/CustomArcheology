@@ -1,0 +1,13 @@
+rewards:
+  reward_1:
+    material: minecraft:emerald
+    amount: 1
+    chance: 40
+  reward_2:
+    material: minecraft:diamond
+    amount: 1
+    chance: 40
+  reward_3:
+    display: minecraft:iron_ingot
+    amount: 1~2
+    chance: 40

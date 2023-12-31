@@ -10,7 +10,6 @@ import cn.myrealm.customarcheology.managers.managers.PlayerManager;
 import cn.myrealm.customarcheology.mechanics.persistent_data.ItemStackTagType;
 import cn.myrealm.customarcheology.utils.BasicUtil;
 import cn.myrealm.customarcheology.utils.PacketUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -44,7 +43,6 @@ public class FakeTileBlock {
     private EffectTask nextTask;
     private BukkitRunnable particleTask;
     private double efficiency = 1.0;
-    private Player player;
     private ItemStack tool;
 
     public FakeTileBlock(String blockName, Location location, ItemStack reward) {
@@ -98,8 +96,7 @@ public class FakeTileBlock {
         return block;
     }
 
-    public void play(Player player, BlockFace blockFace, ItemStack tool) {
-        this.player = player;
+    public void play(BlockFace blockFace, ItemStack tool) {
         this.tool = tool;
         if (isPlaying) {
             return;
@@ -170,7 +167,7 @@ public class FakeTileBlock {
     public void spawnReward(BlockFace blockFace) {
         List<Player> players = BasicUtil.getNearbyPlayers(location);
         if (Objects.isNull(reward)) {
-            reward = block.roll();
+            reward = block.roll(tool);
         }
         Vector3f scale;
         if (reward.getType().isBlock()) {
@@ -228,7 +225,6 @@ public class FakeTileBlock {
                 nextTask.runTaskLater(CustomArcheology.plugin, (long) (state.getHardness() * 20 / efficiency));
             } else {
                 nextTask = null;
-                player = null;
                 tool = null;
             }
         } else {
@@ -238,7 +234,6 @@ public class FakeTileBlock {
                 PacketUtil.updateItemDisplay(players, block.generateItemStack(1), entityId, null, null);
                 isEffectInitialized = false;
                 nextTask = null;
-                player = null;
                 tool = null;
             } else {
                 int taskId = complete.pop();

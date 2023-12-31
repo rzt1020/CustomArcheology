@@ -1,6 +1,7 @@
 package cn.myrealm.customarcheology.managers.managers;
 
 
+import cn.myrealm.customarcheology.CustomArcheology;
 import cn.myrealm.customarcheology.enums.Config;
 import cn.myrealm.customarcheology.enums.Messages;
 import cn.myrealm.customarcheology.managers.BaseManager;
@@ -34,7 +35,7 @@ public class LootManager extends BaseManager {
         return instance;
     }
 
-    private static final String LOOT_TABLE_PATH = "plugins/CustomArcheology/loottables/";
+    private static final String LOOT_TABLE_PATH = CustomArcheology.plugin.getDataFolder().getPath() + "/loottables/";
     private static final String YML = ".yml";
     @Override
     protected void onInit() {

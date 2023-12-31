@@ -342,15 +342,15 @@ public class TextureManager extends BaseManager {
 
 enum Path {
     // packs
-    PACK_PATH("plugins/CustomArcheology/pack/"),
+    PACK_PATH(CustomArcheology.plugin.getDataFolder().getPath() + "/pack/"),
     PACK_MAIN_MODEL_PATH(PACK_PATH + "assets/minecraft/models/item/"),
     PACK_BLOCK_MODEL_PATH(PACK_PATH + "assets/customarcheology/models/block/"),
     PACK_BLOCK_TEXTURE_PATH(PACK_PATH + "assets/customarcheology/textures/block/"),
     PACK_TOOL_MODEL_PATH(PACK_PATH + "assets/customarcheology/models/item/"),
     PACK_TOOL_TEXTURE_PATH(PACK_PATH + "assets/customarcheology/textures/item/"),
     // texture
-    BLOCK_TEXTURE_PATH("plugins/CustomArcheology/textures/blocks/"),
-    TOOL_TEXTURE_PATH("plugins/CustomArcheology/textures/tools/");
+    BLOCK_TEXTURE_PATH(CustomArcheology.plugin.getDataFolder().getPath() + "/textures/blocks/"),
+    TOOL_TEXTURE_PATH(CustomArcheology.plugin.getDataFolder().getPath() + "/textures/tools/");
 
     private final String path;
     Path(String path) {
