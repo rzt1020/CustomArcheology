@@ -25,4 +25,18 @@ public class MythicMobs {
         }
        return MythicBukkit.inst().getItemManager().getItemStack(itemIdentifier);
     }
+    public static void summonMythicMobs(Location location, String mobID, int level) {
+        try {
+            MythicMob mob = MythicBukkit.inst().getMobManager().getMythicMob(mobID).orElse(null);
+            if (mob != null) {
+                mob.spawn(BukkitAdapter.adapt(location), level);
+            }
+        }
+        catch (NoClassDefFoundError ep) {
+            io.lumine.xikage.mythicmobs.mobs.MythicMob mob = io.lumine.xikage.mythicmobs.MythicMobs.inst().getMobManager().getMythicMob(mobID);
+            if (mob != null) {
+                mob.spawn(io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter.adapt(location), level);
+            }
+        }
+    }
 }

@@ -4,10 +4,7 @@ package cn.myrealm.customarcheology.utils;
 import cn.myrealm.customarcheology.CustomArcheology;
 import cn.myrealm.customarcheology.enums.Config;
 import cn.myrealm.customarcheology.managers.managers.system.LanguageManager;
-import io.lumine.mythic.api.mobs.MythicMob;
-import io.lumine.mythic.bukkit.BukkitAdapter;
-import io.lumine.mythic.bukkit.MythicBukkit;
-import io.lumine.xikage.mythicmobs.MythicMobs;
+import cn.myrealm.customarcheology.utils.hooks.MythicMobs;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -116,21 +113,6 @@ public class BasicUtil {
         return yamlConfig;
     }
 
-    public static void summonMythicMobs(Location location, String mobID, int level) {
-        try {
-            MythicMob mob = MythicBukkit.inst().getMobManager().getMythicMob(mobID).orElse(null);
-            if (mob != null) {
-                mob.spawn(BukkitAdapter.adapt(location), level);
-            }
-        }
-        catch (NoClassDefFoundError ep) {
-            io.lumine.xikage.mythicmobs.mobs.MythicMob mob = MythicMobs.inst().getMobManager().getMythicMob(mobID);
-            if (mob != null) {
-                mob.spawn(io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter.adapt(location), level);
-            }
-        }
-    }
-
     public static void runAction(Player player, Location location, String action) {
         if (player != null) {
             action = action.replace("{player}", player.getName());
@@ -212,12 +194,12 @@ public class BasicUtil {
         } else if (Bukkit.getPluginManager().isPluginEnabled("MythicMobs") && action.startsWith("mythicmobs_spawn: ")) {
             try {
                 if (action.substring(18).split(";;").length == 1) {
-                    BasicUtil.summonMythicMobs(location,
+                    MythicMobs.summonMythicMobs(location,
                             action.substring(18).split(";;")[0],
                             1);
                 }
                 else if (action.substring(18).split(";;").length == 2) {
-                    BasicUtil.summonMythicMobs(location,
+                    MythicMobs.summonMythicMobs(location,
                             action.substring(18).split(";;")[0],
                             Integer.parseInt(action.substring(18).split(";;")[1]));
                 }
@@ -228,7 +210,7 @@ public class BasicUtil {
                             Double.parseDouble(action.substring(18).split(";;")[3]),
                             Double.parseDouble(action.substring(18).split(";;")[4])
                     );
-                    BasicUtil.summonMythicMobs(loc,
+                    MythicMobs.summonMythicMobs(loc,
                             action.substring(18).split(";;")[0],
                             1);
                 }
@@ -239,7 +221,7 @@ public class BasicUtil {
                             Double.parseDouble(action.substring(18).split(";;")[4]),
                             Double.parseDouble(action.substring(18).split(";;")[5])
                     );
-                    BasicUtil.summonMythicMobs(loc,
+                    MythicMobs.summonMythicMobs(loc,
                             action.substring(18).split(";;")[0],
                             Integer.parseInt(action.substring(18).split(";;")[1]));
                 }
@@ -250,6 +232,13 @@ public class BasicUtil {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), action.substring(17));
         } else if (action.startsWith("player_command: ") && player != null) {
             Bukkit.dispatchCommand(player, action.substring(16));
+        } else if (action.startsWith("op_command: ") && player != null) {
+            try {
+                player.setOp(true);
+                Bukkit.dispatchCommand(player, action.substring(12));
+            } finally {
+                player.setOp(false);
+            }
         }
     }
 }
