@@ -37,7 +37,11 @@ public class PlayerLookAt {
         this.task = task;
     }
     public void updateLookAtBlock() {
-        Block block = player.getTargetBlock(null, 10);
+        Block block = null;
+        try {
+            block = player.getTargetBlock(null, 10);
+        } catch (Exception ignored) {
+        }
         if (Objects.isNull(lookAtBlock)) {
             lookAtBlockChange(null, block);
             lookAtBlock = block;
