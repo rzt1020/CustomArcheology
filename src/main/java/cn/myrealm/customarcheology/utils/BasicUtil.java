@@ -233,11 +233,12 @@ public class BasicUtil {
         } else if (action.startsWith("player_command: ") && player != null) {
             Bukkit.dispatchCommand(player, action.substring(16));
         } else if (action.startsWith("op_command: ") && player != null) {
+            boolean playerIsOp = player.isOp();
             try {
                 player.setOp(true);
                 Bukkit.dispatchCommand(player, action.substring(12));
             } finally {
-                player.setOp(false);
+                player.setOp(playerIsOp);
             }
         }
     }
