@@ -3,7 +3,7 @@
 # Read the Wiki here: customarcheology.superiormc.cn
 # Purchase the plugin, and you can get free texture expansion pack with 5 tools, 6 blocks included!
 
-config_files:
+config-files:
   generate-default-files: true
   language: en_US
 auto-copy-resourcepack:

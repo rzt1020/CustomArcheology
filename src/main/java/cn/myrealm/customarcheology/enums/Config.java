@@ -9,10 +9,10 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 public enum Config {
     // config_files
-    CONFIG_FILES_GENERATE_DEFAULT_FILES("config_files.generate-default-files", true),
-    CONFIG_FILES_LANGUAGE("config_files.language", "en_US"),
+    CONFIG_FILES_GENERATE_DEFAULT_FILES("config-files.generate-default-files", true),
+    CONFIG_FILES_LANGUAGE("config-files.language", "en_US"),
     // database
-    USE_MYSQL("database.use_mysql", false),
+    USE_MYSQL("database.use-mysql", false),
     MYSQL_HOST("database.mysql.host", "localhost"),
     MYSQL_PORT("database.mysql.port", 3306),
     MYSQL_USER("database.mysql.user", "root"),
