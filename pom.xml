@@ -6,7 +6,7 @@
 
     <groupId>cn.myrealm</groupId>
     <artifactId>CustomArcheology</artifactId>
-    <version>1.0.7</version>
+    <version>1.0.8</version>
     <packaging>jar</packaging>
 
     <name>CustomArcheology</name>
@@ -180,6 +180,12 @@
             <groupId>io.lumine.xikage</groupId>
             <artifactId>MythicMobs</artifactId>
             <version>4.11.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.ankhorg</groupId>
+            <artifactId>NeigeItems-Kotlin</artifactId>
+            <version>1.16.8</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

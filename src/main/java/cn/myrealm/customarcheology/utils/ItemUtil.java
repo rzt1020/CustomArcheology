@@ -54,6 +54,9 @@ public class ItemUtil {
         if (Objects.equals(Config.ECO_SYMBOL.asString(), split[0])) {
             return Eco.getItemStackByItemIdentifier(itemIdentifier.replace(split[0] + ":", ""));
         }
+        if (Objects.equals(Config.NEIGEITEMS_SYMBOL.asString(), split[0])) {
+            return NeigeItems.getItemStackByItemIdentifier(split[1]);
+        }
         return null;
     }
 

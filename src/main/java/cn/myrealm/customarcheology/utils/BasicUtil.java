@@ -16,8 +16,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import pers.neige.neigeitems.utils.ItemUtils;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -113,9 +115,33 @@ public class BasicUtil {
         return yamlConfig;
     }
 
-    public static void runAction(Player player, Location location, String action) {
+    public static String getItemName(ItemStack displayItem) {
+        if (displayItem == null || displayItem.getItemMeta() == null) {
+            return "";
+        }
+        if (Bukkit.getPluginManager().isPluginEnabled("NeigeItems")) {
+            return ItemUtils.getItemName(displayItem);
+        }
+        if (displayItem.getItemMeta().hasDisplayName()) {
+            return displayItem.getItemMeta().getDisplayName();
+        }
+        StringBuilder result = new StringBuilder();
+        for (String word : displayItem.getType().name().toLowerCase().split("_")) {
+            if (!word.isEmpty()) {
+                char firstChar = Character.toUpperCase(word.charAt(0));
+                String restOfWord = word.substring(1);
+                result.append(firstChar).append(restOfWord).append(" ");
+            }
+        }
+        return result.toString();
+    }
+
+    public static void runAction(Player player, Location location, ItemStack reward, String action) {
         if (player != null) {
             action = action.replace("{player}", player.getName());
+        }
+        if (reward != null) {
+            action = action.replace("{reward}", getItemName(reward));
         }
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             action = PlaceholderAPI.setPlaceholders(player, action);

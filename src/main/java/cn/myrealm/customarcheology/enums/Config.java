@@ -34,6 +34,7 @@ public enum Config {
     ORAXEN_SYMBOL("settings.symbols.oraxen", "oraxen"),
     MMOITEMS_SYMBOL("settings.symbols.mmoitems", "mmoitems"),
     ECO_SYMBOL("settings.symbols.eco", "eco"),
+    NEIGEITEMS_SYMBOL("settings.symbols.neigeitems", "neigeitems"),
     // auto copy resource pack
     AUTO_COPY_RESOURCEPACK_ENABLED("auto-copy-resourcepack.enabled", true),
     AUTO_COPY_RESOURCEPACK_PLUGIN("auto-copy-resourcepack.plugin", "ItemsAdder"),

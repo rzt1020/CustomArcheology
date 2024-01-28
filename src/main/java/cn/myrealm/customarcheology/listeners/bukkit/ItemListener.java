@@ -39,7 +39,7 @@ public class ItemListener extends BaseListener {
                 if (Objects.nonNull(actions)) {
                     for (int i = 0; i < event.getEntity().getItemStack().getAmount(); i++) {
                         for (String action : actions) {
-                            BasicUtil.runAction(null, event.getLocation(), action);
+                            BasicUtil.runAction(null, event.getLocation(), event.getEntity().getItemStack(), action);
                         }
                     }
                 }
@@ -61,7 +61,7 @@ public class ItemListener extends BaseListener {
             if (Objects.nonNull(actions)) {
                 for (int i = 0; i < event.getItem().getItemStack().getAmount(); i++) {
                     for (String action : actions) {
-                        BasicUtil.runAction(player, event.getItem().getLocation(), action);
+                        BasicUtil.runAction(player, event.getItem().getLocation(), event.getItem().getItemStack(), action);
                     }
                 }
             }
