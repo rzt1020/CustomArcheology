@@ -11,12 +11,14 @@ public interface SubCommand {
     int FIRST_ARGUMENT = 1,
         SECOND_ARGUMENT = 2,
         THIRD_ARGUMENT = 3,
-        FOURTH_ARGUMENT = 4;
+        FOURTH_ARGUMENT = 4,
+        FIRTH_ARGUMENT = 5;
 
     int NONE_ARGUMENT = 1,
         TWO_ARGUMENTS = 3,
         THREE_ARGUMENTS = 4,
-        FOUR_ARGUMENTS = 5;
+        FOUR_ARGUMENTS = 5,
+        FIVE_ARGUMENTS = 6;
     /**
      * get sub command name
      * @return String

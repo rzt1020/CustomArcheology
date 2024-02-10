@@ -32,6 +32,7 @@ public enum Messages {
     COMMAND_HELP("command.help"),
     COMMAND_RELOAD("command.reload"),
     COMMAND_GIVE("command.give"),
+    COMMAND_PLACE("command.place"),
     // command help messages
     COMMAND_HELP_HEAD("command.help-head"),
     COMMAND_HELP_DETAIL("command.help-detail"),
@@ -40,7 +41,8 @@ public enum Messages {
     GAME_BRUSH_NO_PERMISSION("game.brush-no-permission"),
     GAME_CAN_NOT_BRUSH("game.can-not-brush"),
     GAME_ALREADY_BRUSHING("game.already-brushing"),
-    GAME_GIVE("game.give");
+    GAME_GIVE("game.give"),
+    GAME_PLACE("game.place");
 
     private final String key;
     Messages(String key) {

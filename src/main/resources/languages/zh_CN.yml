@@ -22,8 +22,9 @@ command:
   help: "获取帮助列表"
   reload: "重新加载插件"
   give: "给玩家由CustomArcheology创建的物品"
-  archify: "使世界生成某Archeology方块"
-  dearchify: "使世界不再生成某Archeology方块"
+  archify: "使世界生成某考古方块"
+  dearchify: "使世界不再生成某考古方块"
+  place: "在指定位置直接放置考古方块"
   help-head: "<#98FB98>&lCustomArcheology &7帮助列表"
   help-detail: "{command-usage} - {command-description}"
 game:
@@ -31,3 +32,4 @@ game:
   can-not-brush: "你不能使用该物品发掘该方块!"
   already-burshing: "其他玩家正在发掘该考古方块!"
   give: "成功给予{item-id}x{amount}给{player}!"
+  place: "成功放置{block-id}在{world} {pos}!"

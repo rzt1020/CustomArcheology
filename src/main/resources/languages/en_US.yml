@@ -24,6 +24,7 @@ command:
   give: "Give player items that registered by CustomArcheology."
   archify: "Make specified world start generate Archeology Block."
   dearchify: "Make specified world no longer generate Archeology Block."
+  place: "Directly place the archeology block in specified location."
   help-head: "<#98FB98>&lCustomArcheology &7Made by @rzt1020 / @PQguanfang"
   help-detail: "&f{command-usage} &7- {command-description}"
 game:
@@ -31,3 +32,4 @@ game:
   can-not-brush: "You can not brush this block by this item!"
   already-burshing: "Other player is already archeology here!"
   give: "Successfully give {item-id}x{amount} to {player}!"
+  place: "Successfully place {block-id} at {world} {pos}!"

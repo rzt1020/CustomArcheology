@@ -30,7 +30,7 @@ public class GiveCommand implements SubCommand {
 
     @Override
     public String getUsage() {
-        return "/customarcheology give <Player> <BlockID>";
+        return "/customarcheology give block/tool <Player> <BlockID>";
     }
 
     @Override
