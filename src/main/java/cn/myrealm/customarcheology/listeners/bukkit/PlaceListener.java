@@ -5,6 +5,7 @@ import cn.myrealm.customarcheology.CustomArcheology;
 import cn.myrealm.customarcheology.enums.NamespacedKeys;
 import cn.myrealm.customarcheology.listeners.BaseListener;
 import cn.myrealm.customarcheology.managers.managers.BlockManager;
+import cn.myrealm.customarcheology.mechanics.cores.ArcheologyBlock;
 import cn.myrealm.customarcheology.utils.PacketUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -60,16 +61,17 @@ public class PlaceListener extends BaseListener {
                 return;
             }
             PacketUtil.swingItem(event.getPlayer());
-            if (blockManager.getBlock(blockId) != null) {
-                blockManager.placeBlock(blockId, location);
+            ArcheologyBlock block = blockManager.getBlock(blockId);
+            if (block != null) {
+                blockManager.placeBlock(block, location);
+                if (event.getPlayer().getGameMode().equals(GameMode.SURVIVAL) ||
+                        event.getPlayer().getGameMode().equals(GameMode.ADVENTURE)) {
+                    itemStack.setAmount(itemStack.getAmount() - 1);
+                    event.getPlayer().getInventory().setItemInMainHand(itemStack);
+                }
                 event.getPlayer().playSound(event.getPlayer(), blockManager.getBlock(blockId).getPlaceSound(), 1, 1);
             }
         }, 1);
-        if (event.getPlayer().getGameMode().equals(GameMode.SURVIVAL) ||
-                event.getPlayer().getGameMode().equals(GameMode.ADVENTURE)) {
-            itemStack.setAmount(itemStack.getAmount() - 1);
-            event.getPlayer().getInventory().setItemInMainHand(itemStack);
-        }
     }
 
 

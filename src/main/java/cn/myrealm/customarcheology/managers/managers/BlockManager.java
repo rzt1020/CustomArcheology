@@ -134,19 +134,11 @@ public class BlockManager extends BaseManager {
     public ItemStack generateItemStack(String name, int amount) {
         return blocksMap.get(name).generateItemStack(amount);
     }
-    public void placeBlock(String blockId, Location location) {
-        if (!blocksMap.containsKey(blockId)) {
-            return;
-        }
-        ArcheologyBlock block = blocksMap.get(blockId);
+    public void placeBlock(ArcheologyBlock block, Location location) {
         block.placeBlock(location);
-        Bukkit.getScheduler().runTaskLater(CustomArcheology.plugin, () -> registerNewBlock(blockId, location), 1);
+        Bukkit.getScheduler().runTaskLater(CustomArcheology.plugin, () -> registerNewBlock(block, location), 1);
     }
-    public void registerNewBlock(String blockId, Location location) {
-        if (!blocksMap.containsKey(blockId)) {
-            return;
-        }
-        ArcheologyBlock block = blocksMap.get(blockId);
+    public void registerNewBlock(ArcheologyBlock block, Location location) {
         location = location.getBlock().getLocation();
         ChunkManager chunkManager = ChunkManager.getInstance();
         Chunk chunk = location.getChunk();

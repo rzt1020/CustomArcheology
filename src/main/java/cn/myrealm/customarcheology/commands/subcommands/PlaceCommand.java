@@ -86,7 +86,7 @@ public class PlaceCommand implements SubCommand {
                 Integer.parseInt(args[FIRTH_ARGUMENT]));
 
         Bukkit.getScheduler().runTaskLater(CustomArcheology.plugin, () -> {
-            blockManager.placeBlock(args[FIRST_ARGUMENT], placeLocation);
+            blockManager.placeBlock(blockManager.getBlock(args[FIRST_ARGUMENT]), placeLocation);
         }, 1);
 
         sender.sendMessage(Messages.GAME_PLACE.getMessageWithPrefix("block-id", args[FIRST_ARGUMENT]

@@ -156,7 +156,6 @@ public class ArcheologyBlock {
             }
             return customLootTable.generateItem();
         }
-        Bukkit.getConsoleSender().sendMessage(lootTableName);
         return LootManager.getInstance().getCustomLootTable(lootTableName).generateItem();
     }
 
