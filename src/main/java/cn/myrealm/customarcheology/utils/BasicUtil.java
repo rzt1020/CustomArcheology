@@ -115,24 +115,6 @@ public class BasicUtil {
         return newBlock.getWorld().getBlockAt(newBlock.getX(), yValue, newBlock.getZ());
     }
 
-    public static Block getGaussianRandomBlock(Chunk chunk, BoundingBox box) {
-        int xValue = (int) Math.round(box.getCenterX() + CustomArcheology.RANDOM.nextGaussian() * box.getWidthX()),
-            zValue = (int) Math.round(box.getCenterZ() + CustomArcheology.RANDOM.nextGaussian() * box.getWidthZ());
-        Block newBlock = getRandomBlock(chunk,  new Point((int) box.getMinY(), (int) box.getMaxY()));
-        return newBlock.getWorld().getBlockAt(xValue, newBlock.getY(), zValue);
-    }
-
-    public static YamlConfiguration stringToYaml(String yamlString) {
-        YamlConfiguration yamlConfig = new YamlConfiguration();
-        try {
-            yamlConfig.loadFromString(yamlString);
-        } catch (InvalidConfigurationException e) {
-            e.printStackTrace();
-            return null;
-        }
-        return yamlConfig;
-    }
-
     public static String getItemName(ItemStack displayItem) {
         if (displayItem == null || displayItem.getItemMeta() == null) {
             return "";

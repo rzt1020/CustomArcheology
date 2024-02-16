@@ -54,12 +54,7 @@ public class ArcheologyChunkSpawner {
             if (block.isStructure() && CustomArcheology.canUseStructure) {
                 for (GeneratedStructure gs : chunk.getStructures(block.getStructure())) {
                     for (int i = 0; i < maxPerChunk; i++) {
-                        Block newBlock;
-                        if (block.getStructureStdDev()) {
-                            newBlock = BasicUtil.getGaussianRandomBlock(chunk, gs.getBoundingBox());
-                        } else {
-                            newBlock = BasicUtil.getRandomBlock(chunk, distribution);
-                        }
+                        Block newBlock = BasicUtil.getRandomBlock(chunk, distribution);
                         if (!usedBlocks.contains(newBlock) && Objects.equals(newBlock.getType(), block.getType())) {
                             if (Objects.isNull(biomes) || biomes.contains(newBlock.getBiome())) {
                                 if (!gs.getBoundingBox().contains(newBlock.getBoundingBox())) {
