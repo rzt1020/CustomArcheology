@@ -156,7 +156,6 @@ public class ArcheologyBlock {
             }
             return customLootTable.generateItem();
         }
-        Bukkit.getConsoleSender().sendMessage(lootTableName);
         return LootManager.getInstance().getCustomLootTable(lootTableName).generateItem();
     }
 
@@ -205,9 +204,6 @@ public class ArcheologyBlock {
         }
         return null;
     }
-    public boolean getStructureStdDev() {
-        return Keys.STRUCTURE_STD_DEV.asBoolean(config);
-    }
     public Sound getPlaceSound() {
         return Sound.valueOf(Keys.PLACE_SOUND.asString(config).toUpperCase());
     }
@@ -240,7 +236,6 @@ enum Keys {
     STANDARD_DEVIATION("general.gaussian.standard_deviation", 1D),
     STRUCTURE("general.structure", null),
     STRUCTURE_TYPE("general.structure.type", null),
-    STRUCTURE_STD_DEV("general.structure.use_gaussian", false),
     PLACE_SOUND("general.sound.place", "BLOCK_STONE_PLACE"),
     BRUSH_SOUND("general.sound.brush", "BLOCK_SUSPICIOUS_SAND_BREAK"),
     CONSUME_DURABILITY("general.consume_durability", 1);
@@ -262,12 +257,6 @@ enum Keys {
             return (String) def;
         }
         return section.getString(key, (String) def);
-    }
-    public boolean asBoolean(ConfigurationSection section) {
-        if (Objects.isNull(section)) {
-            return (boolean) def;
-        }
-        return section.getBoolean(key, (boolean) def);
     }
 
     public ConfigurationSection asSection(ConfigurationSection section) {
