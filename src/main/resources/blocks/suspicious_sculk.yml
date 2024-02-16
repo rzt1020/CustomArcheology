@@ -2,10 +2,10 @@ general:
   display_name: "&fSuspicious Sculk"
   replace_block: sculk
   generate_biomes: all
-  distribution: 0 ~ 127
+  distribution: ~64 ~ 0
   structure:
     type: ancient_city
-    standard_deviation: 64.0
+    use_gaussian: false
   max_per_chunk: 16
   loot_tables:
     - stone

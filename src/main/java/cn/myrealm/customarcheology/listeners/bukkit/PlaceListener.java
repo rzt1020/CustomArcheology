@@ -31,6 +31,9 @@ public class PlaceListener extends BaseListener {
 
     @EventHandler
     public void onPlayerPlaceBlock(PlayerInteractEvent event) {
+        if (event.getPlayer().getGameMode() == GameMode.SPECTATOR) {
+            return;
+        }
         if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK) ) {
             return;
         }
