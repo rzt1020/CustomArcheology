@@ -83,7 +83,6 @@ public class ChunkManager extends BaseManager {
         }
         PersistentDataChunk dataChunk = loadedChunks.get(chunk);
         dataChunk.registerNewBlock(block, location);
-
     }
 
     public void loadChunk(Chunk chunk) {

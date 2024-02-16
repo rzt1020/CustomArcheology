@@ -52,7 +52,12 @@ public class FakeTileBlock {
         String suffix = nameParts[nameParts.length - 1];
         String blockId = blockName.replace("_" + suffix, "");
         this.block = BlockManager.getInstance().getBlock(blockId);
-        this.entityId = Integer.parseInt(suffix);
+        int tempID = suffix.hashCode();
+        if (tempID >= 0) {
+            this.entityId = tempID;
+        } else {
+            this.entityId = -tempID;
+        }
         this.reward = reward;
     }
 

@@ -2,6 +2,7 @@ package cn.myrealm.customarcheology.mechanics.cores;
 
 
 import cn.myrealm.customarcheology.CustomArcheology;
+import cn.myrealm.customarcheology.enums.Config;
 import cn.myrealm.customarcheology.enums.NamespacedKeys;
 import cn.myrealm.customarcheology.mechanics.persistent_data.ItemStackTagType;
 import cn.myrealm.customarcheology.mechanics.persistent_data.LocationTagType;
@@ -40,7 +41,7 @@ public class PersistentDataChunk {
         }
     }
     private void loadBlockLocations() {
-        for (String  blockName : blockNameList) {
+        for (String blockName : blockNameList) {
             Location location = null;
             if (chunk.getPersistentDataContainer().has(NamespacedKeys.ARCHEOLOGY_BLOCK_LOC.getNamespacedKey(blockName), LOCATION_TYPE)) {
                 location = chunk.getPersistentDataContainer().get(NamespacedKeys.ARCHEOLOGY_BLOCK_LOC.getNamespacedKey(blockName), LOCATION_TYPE);
@@ -108,7 +109,12 @@ public class PersistentDataChunk {
     }
 
     public void registerNewBlock(ArcheologyBlock block, Location location) {
-        String blockName = block.getName() + "_" + CustomArcheology.RANDOM.nextInt();
+        String blockName;
+        if (Config.BLOCK_SAVE.asString().equals("UUID")) {
+            blockName = block.getName() + "_" + UUID.randomUUID();
+        } else {
+            blockName = block.getName() + "_" + CustomArcheology.RANDOM.nextInt();
+        }
         blockNameList.add(blockName);
         FakeTileBlock fakeTileBlock = new FakeTileBlock(blockName, location, null);
         if (fakeTileBlock.isValid()) {

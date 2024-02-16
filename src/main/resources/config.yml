@@ -22,6 +22,8 @@ database:
     password: root
     database: minecraft
 settings:
+  # Support value: UUID or RANDOM
+  block-save: UUID
   start-custom-model-data:
     block: 10000
     tool: 10000

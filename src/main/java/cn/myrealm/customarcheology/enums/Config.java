@@ -25,6 +25,7 @@ public enum Config {
     STRUCTURE_DISTANCE("settings.structure-distance", 16),
     ITEM_SCALE("settings.item-scale", 0.5),
     BLOCK_SCALE("settings.block-scale", 0.25),
+    BLOCK_SAVE("settings.block-save", "UUID"),
     //symbols
     VANILLA_SYMBOL("settings.symbols.vanilla", "minecraft"),
     CUSTOM_TOOL_SYMBOL("settings.symbols.custom-tool", "ca_tool"),

@@ -32,18 +32,31 @@ public final class CustomArcheology extends JavaPlugin {
     private final List<BaseManager> managers = new ArrayList<>();
     public static ProtocolManager protocolManager;
     public static final Random RANDOM = new Random();
+    public static boolean isPaper = false;
 
     @Override
     public void onEnable() {
         plugin = this;
         protocolManager = ProtocolLibrary.getProtocolManager();
+
+        try {
+            Class.forName("com.destroystokyo.paper.PaperConfig");
+            isPaper = true;
+        }
+        catch (ClassNotFoundException e) {
+            isPaper = false;
+        }
+
+        if (isPaper) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fEnabled paper only feature!");
+        }
+
         outputDefaultFiles();
 
         initPlugin();
         registerDefaultListeners();
         registerDefaultCommands();
 
-        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fYour server version: " + Bukkit.getVersion());
         Bukkit.getConsoleSender().sendMessage(Messages.ENABLE_MESSAGE.getMessageWithPrefix());
     }
 
