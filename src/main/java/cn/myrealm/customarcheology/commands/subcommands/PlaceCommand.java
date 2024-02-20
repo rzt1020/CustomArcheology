@@ -8,6 +8,7 @@ import cn.myrealm.customarcheology.enums.Permissions;
 import cn.myrealm.customarcheology.managers.managers.BlockManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 
@@ -84,6 +85,8 @@ public class PlaceCommand implements SubCommand {
 
         Location placeLocation = new Location(world, Integer.parseInt(args[THIRD_ARGUMENT]), Integer.parseInt(args[FOURTH_ARGUMENT]),
                 Integer.parseInt(args[FIRTH_ARGUMENT]));
+
+        placeLocation.getBlock().setType(Material.AIR);
 
         Bukkit.getScheduler().runTaskLater(CustomArcheology.plugin, () -> {
             blockManager.placeBlock(blockManager.getBlock(args[FIRST_ARGUMENT]), placeLocation);
