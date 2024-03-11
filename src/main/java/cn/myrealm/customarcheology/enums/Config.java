@@ -22,7 +22,6 @@ public enum Config {
     TOOL_START_CUSTOM_MODEL_DATA("settings.start-custom-model-data.tool", 10000),
     BLOCK_START_CUSTOM_MODEL_DATA("settings.start-custom-model-data.block", 10000),
     VISIBLE_DISTANCE("settings.visible-distance", 8),
-    STRUCTURE_DISTANCE("settings.structure-distance", 16),
     ITEM_SCALE("settings.item-scale", 0.5),
     BLOCK_SCALE("settings.block-scale", 0.25),
     BLOCK_SAVE("settings.block-save", "UUID"),

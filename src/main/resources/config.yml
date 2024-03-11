@@ -28,7 +28,6 @@ settings:
     block: 10000
     tool: 10000
   visible-distance: 8
-  structure-distance: 16
   item-scale: 0.5
   block-scale: 0.25
   symbols:
