@@ -8,13 +8,17 @@ recipe_1:
     - "ABA"
     - "AAA"
   ingredients:
-    A: minecraft:netherite_ingot
-    B: minecraft:brush
+    A:
+      material: netherite_ingot
+    B:
+      material: brush
 recipe_2:
   shape:
     - "AAA"
     - "ABA"
     - "AAA"
   ingredients:
-    A: minecraft:netherite_ingot
-    B: ca_tool:netherite_brush
+    A:
+      material: netherite_ingot
+    B:
+      material: netherite_brush

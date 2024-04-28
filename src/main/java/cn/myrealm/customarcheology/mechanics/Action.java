@@ -1,147 +1,27 @@
-package cn.myrealm.customarcheology.utils;
+package cn.myrealm.customarcheology.mechanics;
 
-
-import cn.myrealm.customarcheology.CustomArcheology;
-import cn.myrealm.customarcheology.enums.Config;
 import cn.myrealm.customarcheology.managers.managers.system.LanguageManager;
-import cn.myrealm.customarcheology.utils.hooks.MythicMobs;
+import cn.myrealm.customarcheology.utils.CommonUtil;
+import cn.myrealm.customarcheology.utils.ItemUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.util.BoundingBox;
-import pers.neige.neigeitems.utils.ItemUtils;
 
-import java.awt.*;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-/**
- * @author rzt1020
- */
-public class BasicUtil {
-    private BasicUtil() {
-    }
-    public static List<Player> getNearbyPlayers(Location location) {
-        int visibleDistance = Config.VISIBLE_DISTANCE.asInt();
-        Collection<Entity> entities = Objects.requireNonNull(location.getWorld()).getNearbyEntities(location, visibleDistance, visibleDistance, visibleDistance);
-        List<Player> players = new ArrayList<>();
-        for (Entity entity : entities) {
-            if (entity instanceof Player player) {
-                players.add(player);
-            }
-        }
-        return players;
-    }
-    public static boolean checkClass(String className, String methodName) {
-        try {
-            Class<?> targetClass = Class.forName(className);
-            Method[] methods = targetClass.getDeclaredMethods();
-
-            for (Method method : methods) {
-                if (method.getName().equals(methodName)) {
-                    return true;
-                }
-            }
-
-            return false;
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
-    }
-    private static final Pattern RANGE_PATTERN = Pattern.compile("(-?\\d+)(?:\\s*~\\s*(-?\\d+))?");
-
-    public static Point parseRange(String input) {
-        if (Objects.isNull(input)) {
-            return null;
-        }
-
-        Matcher matcher = RANGE_PATTERN.matcher(input);
-
-        if (matcher.find()) {
-            int start = Integer.parseInt(matcher.group(1));
-            int end;
-
-            if (matcher.group(2) != null) {
-                end = Integer.parseInt(matcher.group(2));
-            } else {
-                end = start;
-            }
-            return new Point(start, end);
-        }
-
-        return null;
-    }
-
-    public static Block getRandomBlock(Chunk chunk, Point range) {
-        int x = CustomArcheology.RANDOM.nextInt(16);
-        int z = CustomArcheology.RANDOM.nextInt(16);
-
-        int y = range.x + CustomArcheology.RANDOM.nextInt(range.y - range.x + 1);
-
-        World world = chunk.getWorld();
-
-        int actualX = chunk.getX() * 16 + x;
-        int actualZ = chunk.getZ() * 16 + z;
-
-        return world.getBlockAt(actualX, y, actualZ);
-    }
-
-    public static int getRandomIntFromPoint(Point point) {
-        return CustomArcheology.RANDOM.nextInt((point.y - point.x) + 1) + point.x;
-    }
-
-    public static Block getGaussianRandomBlock(Chunk chunk, Point range, double gaussianMean, double gaussianStdDev) {
-        int yValue = (int) Math.round(gaussianMean + CustomArcheology.RANDOM.nextGaussian() * gaussianStdDev);
-        if (yValue < chunk.getWorld().getMinHeight() || yValue > chunk.getWorld().getMaxHeight()  || yValue < range.x || yValue > range.y) {
-            return getGaussianRandomBlock(chunk, range, gaussianMean, gaussianStdDev);
-        }
-        Block newBlock = getRandomBlock(chunk, range);
-        return newBlock.getWorld().getBlockAt(newBlock.getX(), yValue, newBlock.getZ());
-    }
-
-    public static String getItemName(ItemStack displayItem) {
-        if (displayItem == null || displayItem.getItemMeta() == null) {
-            return "";
-        }
-        if (Bukkit.getPluginManager().isPluginEnabled("NeigeItems")) {
-            return ItemUtils.getItemName(displayItem);
-        }
-        if (displayItem.getItemMeta().hasDisplayName()) {
-            return displayItem.getItemMeta().getDisplayName();
-        }
-        StringBuilder result = new StringBuilder();
-        for (String word : displayItem.getType().name().toLowerCase().split("_")) {
-            if (!word.isEmpty()) {
-                char firstChar = Character.toUpperCase(word.charAt(0));
-                String restOfWord = word.substring(1);
-                result.append(firstChar).append(restOfWord).append(" ");
-            }
-        }
-        return result.toString();
-    }
-
+public class Action {
     public static void runAction(Player player, Location location, ItemStack reward, String action) {
         if (player != null) {
             action = action.replace("{player}", player.getName());
         }
         if (reward != null) {
-            action = action.replace("{reward}", getItemName(reward));
+            action = action.replace("{reward}", ItemUtil.getItemName(reward));
         }
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             action = PlaceholderAPI.setPlaceholders(player, action);
@@ -220,12 +100,12 @@ public class BasicUtil {
         } else if (Bukkit.getPluginManager().isPluginEnabled("MythicMobs") && action.startsWith("mythicmobs_spawn: ")) {
             try {
                 if (action.substring(18).split(";;").length == 1) {
-                    MythicMobs.summonMythicMobs(location,
+                    CommonUtil.summonMythicMobs(location,
                             action.substring(18).split(";;")[0],
                             1);
                 }
                 else if (action.substring(18).split(";;").length == 2) {
-                    MythicMobs.summonMythicMobs(location,
+                    CommonUtil.summonMythicMobs(location,
                             action.substring(18).split(";;")[0],
                             Integer.parseInt(action.substring(18).split(";;")[1]));
                 }
@@ -236,7 +116,7 @@ public class BasicUtil {
                             Double.parseDouble(action.substring(18).split(";;")[3]),
                             Double.parseDouble(action.substring(18).split(";;")[4])
                     );
-                    MythicMobs.summonMythicMobs(loc,
+                    CommonUtil.summonMythicMobs(loc,
                             action.substring(18).split(";;")[0],
                             1);
                 }
@@ -247,7 +127,7 @@ public class BasicUtil {
                             Double.parseDouble(action.substring(18).split(";;")[4]),
                             Double.parseDouble(action.substring(18).split(";;")[5])
                     );
-                    MythicMobs.summonMythicMobs(loc,
+                    CommonUtil.summonMythicMobs(loc,
                             action.substring(18).split(";;")[0],
                             Integer.parseInt(action.substring(18).split(";;")[1]));
                 }

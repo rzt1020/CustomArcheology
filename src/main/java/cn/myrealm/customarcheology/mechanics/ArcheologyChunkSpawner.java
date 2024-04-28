@@ -7,7 +7,7 @@ import cn.myrealm.customarcheology.managers.managers.BlockManager;
 import cn.myrealm.customarcheology.mechanics.cores.ArcheologyBlock;
 import cn.myrealm.customarcheology.mechanics.cores.PersistentDataChunk;
 import cn.myrealm.customarcheology.mechanics.persistent_data.StringArrayTagType;
-import cn.myrealm.customarcheology.utils.BasicUtil;
+import cn.myrealm.customarcheology.utils.CommonUtil;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -54,7 +54,7 @@ public class ArcheologyChunkSpawner {
             if (block.isStructure() && CustomArcheology.canUseStructure) {
                 for (GeneratedStructure gs : chunk.getStructures(block.getStructure())) {
                     for (int i = 0; i < maxPerChunk; i++) {
-                        Block newBlock = BasicUtil.getRandomBlock(chunk, distribution);
+                        Block newBlock = CommonUtil.getRandomBlock(chunk, distribution);
                         if (!usedBlocks.contains(newBlock) && Objects.equals(newBlock.getType(), block.getType())) {
                             if (Objects.isNull(biomes) || biomes.contains(newBlock.getBiome())) {
                                 if (!gs.getBoundingBox().contains(newBlock.getBoundingBox())) {
@@ -68,7 +68,7 @@ public class ArcheologyChunkSpawner {
                 }
             } else if (block.isGaussian()) {
                 for (int i = 0; i < maxPerChunk; i++) {
-                    Block newBlock = BasicUtil.getGaussianRandomBlock(chunk, distribution, block.getGaussianMean(), block.getGaussianStdDev());
+                    Block newBlock = CommonUtil.getGaussianRandomBlock(chunk, distribution, block.getGaussianMean(), block.getGaussianStdDev());
                     if (!usedBlocks.contains(newBlock) && Objects.equals(newBlock.getType(), block.getType())) {
                         if (Objects.isNull(biomes) || biomes.contains(newBlock.getBiome())) {
                             setBlock(newBlock.getLocation(), block);
@@ -78,7 +78,7 @@ public class ArcheologyChunkSpawner {
                 }
             } else {
                 for (int i = 0; i < maxPerChunk; i++) {
-                    Block newBlock = BasicUtil.getRandomBlock(chunk, distribution);
+                    Block newBlock = CommonUtil.getRandomBlock(chunk, distribution);
                     if (!usedBlocks.contains(newBlock) && Objects.equals(newBlock.getType(), block.getType())) {
                         if (Objects.isNull(biomes) || biomes.contains(newBlock.getBiome())) {
                             setBlock(newBlock.getLocation(), block);

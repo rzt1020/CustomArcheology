@@ -8,13 +8,17 @@ recipe_1:
     - "ABA"
     - "AAA"
   ingredients:
-    A: minecraft:diamond
-    B: ca_tool:archaeological_shovel
+    A:
+      material: diamond
+    B:
+      material: archaeological_shovel
 recipe_2:
   shape:
     - "AAA"
     - "ABA"
     - "AAA"
   ingredients:
-    A: minecraft:diamond
-    B: ca_tool:diamond_archaeological_shovel
+    A:
+      material: diamond
+    B:
+      material: diamond_archaeological_shovel

@@ -8,5 +8,7 @@ recipe_1:
     - " BA"
     - "B  "
   ingredients:
-    A: minecraft:copper_ingot
-    B: minecraft:stick
+    A:
+      material: copper_ingot
+    B:
+      material: stick

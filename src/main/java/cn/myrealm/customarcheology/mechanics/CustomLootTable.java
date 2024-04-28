@@ -1,15 +1,16 @@
 package cn.myrealm.customarcheology.mechanics;
 
 import cn.myrealm.customarcheology.CustomArcheology;
-import cn.myrealm.customarcheology.enums.Config;
 import cn.myrealm.customarcheology.enums.NamespacedKeys;
 import cn.myrealm.customarcheology.mechanics.persistent_data.ItemStackTagType;
 import cn.myrealm.customarcheology.mechanics.persistent_data.StringArrayTagType;
-import cn.myrealm.customarcheology.utils.BasicUtil;
-import cn.myrealm.customarcheology.utils.ItemUtil;
+import cn.myrealm.customarcheology.utils.CommonUtil;
+import cn.myrealm.customarcheology.utils.Item.BuildItem;
+import cn.myrealm.customarcheology.utils.Item.DebuildItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.loot.LootContext;
@@ -28,8 +29,8 @@ import java.util.stream.Collectors;
  */
 public class CustomLootTable {
 
-    private static final String MATERIAL = "material";
-    private static final String DISPLAY = "display";
+    private static final String MATERIAL = "reward";
+    private static final String DISPLAY = "display-item";
     private static final String AMOUNT = "amount";
     private static final String CHANCE = "chance";
     private static final String ACTIONS = "actions";
@@ -53,9 +54,12 @@ public class CustomLootTable {
     }
 
     public Reward loadReward(ConfigurationSection section) {
-        String itemIdentifier = section.getString(MATERIAL, null);
-        String displayIdentifier = section.getString(DISPLAY, null);
-        Point amount = BasicUtil.parseRange(section.getString(AMOUNT, "1"));
+        ConfigurationSection itemIdentifier = section.getConfigurationSection(MATERIAL);
+        ConfigurationSection displayIdentifier = section.getConfigurationSection(DISPLAY);
+        Point amount = CommonUtil.parseRange(section.getString(AMOUNT, "1"));
+        if (amount == null) {
+            amount = new Point(1, 1);
+        }
         List<String> actions = section.getStringList(ACTIONS);
         if (actions.isEmpty()) {
             actions = null;
@@ -86,15 +90,15 @@ public class CustomLootTable {
     }
 
     public static class Reward {
-        private final String realItem;
-        private final String displayItem;
+        private final ConfigurationSection realItem;
+        private final ConfigurationSection displayItem;
         private final Point amount;
         private final int chance;
         private final List<String> actions;
         private final List<String> spawnActions;
 
-        public Reward(@NotNull String realItem,
-                      @Nullable String displayItem,
+        public Reward(@NotNull ConfigurationSection realItem,
+                      @Nullable ConfigurationSection displayItem,
                       @Nullable List<String> actions,
                       @Nullable List<String> spawnActions,
                       @NotNull Point amount,
@@ -108,19 +112,16 @@ public class CustomLootTable {
         }
 
         public Reward(ItemStack itemStack) {
-            this(Config.VANILLA_SYMBOL.asString() + ":" + itemStack.getType(), null, null, null, new Point(itemStack.getAmount(), itemStack.getAmount()), 1);
+            this(DebuildItem.debuildItem(itemStack, new MemoryConfiguration()), null, null, null, new Point(itemStack.getAmount(), itemStack.getAmount()), 1);
         }
 
 
         public ItemStack generateItem() {
-            ItemStack realItemStack = ItemUtil.getItemStackByItemIdentifier(realItem);
-            if (Objects.isNull(realItemStack)) {
-                return null;
-            }
-            int amountValue = BasicUtil.getRandomIntFromPoint(this.amount);
+            ItemStack realItemStack = BuildItem.buildItemStack(realItem);
+            int amountValue = CommonUtil.getRandomIntFromPoint(this.amount);
             realItemStack.setAmount(amountValue);
             if (Objects.nonNull(displayItem)) {
-                ItemStack displayItemStack = ItemUtil.getItemStackByItemIdentifier(displayItem);
+                ItemStack displayItemStack = BuildItem.buildItemStack(displayItem);
                 Objects.requireNonNull(displayItemStack.getItemMeta());
                 ItemMeta itemMeta = displayItemStack.getItemMeta();
                 itemMeta.getPersistentDataContainer().set(NamespacedKeys.ARCHEOLOGY_REAL_ITEM.getNamespacedKey(), new ItemStackTagType(), realItemStack);
@@ -160,6 +161,9 @@ public class CustomLootTable {
             int totalChance = rewardsList.stream()
                     .mapToInt(Reward::getChance)
                     .sum();
+            if (totalChance <= 0) {
+                return rewardsList.get(0);
+            }
             int randomChance = CustomArcheology.RANDOM.nextInt(totalChance);
             int accumulatedChance = 0;
 

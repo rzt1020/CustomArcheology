@@ -8,13 +8,17 @@ recipe_1:
     - "ABA"
     - "AAA"
   ingredients:
-    A: minecraft:diamond
-    B: minecraft:brush
+    A:
+      material: diamond
+    B:
+      material: brush
 recipe_2:
   shape:
     - "AAA"
     - "ABA"
     - "AAA"
   ingredients:
-    A: minecraft:diamond
-    B: ca_tool:diamond_brush
+    A:
+      material: diamond
+    B:
+      material: diamond_brush

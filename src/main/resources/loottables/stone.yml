@@ -1,25 +1,30 @@
 rewards:
   reward_1:
-    material: minecraft:emerald
+    reward:
+      material: emerald
     amount: 1
     chance: 1
   reward_2:
-    material: minecraft:diamond
+    reward:
+      material: diamond
     amount: 1
     chance: 1
   reward_3:
-    display: minecraft:iron_ingot
+    display-item:
+      material: iron_ingot
     amount: 1~2
     chance: 10
     actions:
       - 'console_command: say hello, {player}'
   reward_4:
-    display: minecraft:dirt
+    display-item:
+      material: dirt
     amount: 1~3
     chance: 20
     spawn-actions:
       - 'entity_spawn: ZOMBIE'
   reward_5:
-    material: ca_block:suspicious_stone
+    reward:
+      material: suspicious_stone
     amount: 10~32
     chance: 10

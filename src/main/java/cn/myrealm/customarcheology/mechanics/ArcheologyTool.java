@@ -4,10 +4,12 @@ import cn.myrealm.customarcheology.CustomArcheology;
 import cn.myrealm.customarcheology.enums.NamespacedKeys;
 import cn.myrealm.customarcheology.managers.managers.system.LanguageManager;
 import cn.myrealm.customarcheology.managers.managers.system.TextureManager;
+import cn.myrealm.customarcheology.utils.Item.BuildItem;
 import cn.myrealm.customarcheology.utils.ItemUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -43,7 +45,15 @@ public class ArcheologyTool {
         Bukkit.getScheduler().runTaskLater(CustomArcheology.plugin,() -> {
             int recipeIndex = 1;
             while (Objects.nonNull(config.get(RECIPE_ + recipeIndex))) {
-                Recipe recipe = new Recipe(config.getStringList(RECIPE_ + recipeIndex + ".shape"), Objects.requireNonNull(config.getConfigurationSection(RECIPE_ + recipeIndex + ".ingredients")).getValues(false));
+                Map<String, ConfigurationSection> singleRecipe = new HashMap<>();
+                ConfigurationSection ingredientSection = config.getConfigurationSection(RECIPE_ + recipeIndex + ".ingredients");
+                if (ingredientSection == null) {
+                    continue;
+                }
+                for (String key : ingredientSection.getKeys(false)) {
+                    singleRecipe.put(key, ingredientSection.getConfigurationSection(key));
+                }
+                Recipe recipe = new Recipe(config.getStringList(RECIPE_ + recipeIndex + ".shape"), Objects.requireNonNull(singleRecipe));
                 this.recipes.put(RECIPE_ + recipeIndex, recipe);
                 recipeIndex ++;
             }
@@ -77,7 +87,7 @@ public class ArcheologyTool {
         private NamespacedKey key;
         private final ItemStack[] ingredients;
 
-        public Recipe(List<String> shapeList, Map<String, Object> ingredientMap) {
+        public Recipe(List<String> shapeList, Map<String, ConfigurationSection> ingredientMap) {
             this.shape = new String[3][3];
             for (int i = 0; i < shapeList.size(); i++) {
                 shape[i] = shapeList.get(i).split("");
@@ -87,9 +97,9 @@ public class ArcheologyTool {
             for (int i = 0; i < CRAFTING_TABLE_SIZE; i++) {
                 for (int j = 0; j < CRAFTING_TABLE_SIZE; j++) {
                     String ingredientKey = shape[i][j];
-                    String itemIdentifier = (String) ingredientMap.get(ingredientKey);
-                    if (Objects.nonNull(itemIdentifier)) {
-                        ingredients[i * 3 + j] = ItemUtil.getItemStackByItemIdentifier(itemIdentifier);
+                    ConfigurationSection section = (ConfigurationSection) ingredientMap.get(ingredientKey);
+                    if (Objects.nonNull(section)) {
+                        ingredients[i * 3 + j] = BuildItem.buildItemStack(section);
                     }
                 }
             }

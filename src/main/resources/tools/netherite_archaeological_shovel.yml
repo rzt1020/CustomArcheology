@@ -8,13 +8,17 @@ recipe_1:
     - "ABA"
     - "AAA"
   ingredients:
-    A: minecraft:netherite_ingot
-    B: ca_tool:archaeological_shovel
+    A:
+      material: netherite_ingot
+    B:
+      material: archaeological_shovel
 recipe_2:
   shape:
     - "AAA"
     - "ABA"
     - "AAA"
   ingredients:
-    A: minecraft:netherite_ingot
-    B: ca_tool:archaeological_shovel
+    A:
+      material: netherite_ingot
+    B:
+      material: archaeological_shovel

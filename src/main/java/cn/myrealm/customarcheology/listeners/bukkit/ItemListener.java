@@ -3,8 +3,9 @@ package cn.myrealm.customarcheology.listeners.bukkit;
 
 import cn.myrealm.customarcheology.enums.NamespacedKeys;
 import cn.myrealm.customarcheology.listeners.BaseListener;
+import cn.myrealm.customarcheology.mechanics.Action;
 import cn.myrealm.customarcheology.mechanics.persistent_data.StringArrayTagType;
-import cn.myrealm.customarcheology.utils.BasicUtil;
+import cn.myrealm.customarcheology.utils.CommonUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -39,7 +40,7 @@ public class ItemListener extends BaseListener {
                 if (Objects.nonNull(actions)) {
                     for (int i = 0; i < event.getEntity().getItemStack().getAmount(); i++) {
                         for (String action : actions) {
-                            BasicUtil.runAction(null, event.getLocation(), event.getEntity().getItemStack(), action);
+                            Action.runAction(null, event.getLocation(), event.getEntity().getItemStack(), action);
                         }
                     }
                 }
@@ -61,7 +62,7 @@ public class ItemListener extends BaseListener {
             if (Objects.nonNull(actions)) {
                 for (int i = 0; i < event.getItem().getItemStack().getAmount(); i++) {
                     for (String action : actions) {
-                        BasicUtil.runAction(player, event.getItem().getLocation(), event.getItem().getItemStack(), action);
+                        Action.runAction(player, event.getItem().getLocation(), event.getItem().getItemStack(), action);
                     }
                 }
             }

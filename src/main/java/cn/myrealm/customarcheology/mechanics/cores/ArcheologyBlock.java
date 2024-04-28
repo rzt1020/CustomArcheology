@@ -8,7 +8,7 @@ import cn.myrealm.customarcheology.managers.managers.LootManager;
 import cn.myrealm.customarcheology.managers.managers.system.LanguageManager;
 import cn.myrealm.customarcheology.managers.managers.system.TextureManager;
 import cn.myrealm.customarcheology.mechanics.CustomLootTable;
-import cn.myrealm.customarcheology.utils.BasicUtil;
+import cn.myrealm.customarcheology.utils.CommonUtil;
 import cn.myrealm.customarcheology.utils.ItemUtil;
 import org.bukkit.*;
 import org.bukkit.block.Biome;
@@ -123,7 +123,7 @@ public class ArcheologyBlock {
                 }
             });
         }
-        distribution = BasicUtil.parseRange(Keys.DISTRIBUTION.asString(config));
+        distribution = CommonUtil.parseRange(Keys.DISTRIBUTION.asString(config));
         maxPerChunk =  Keys.MAX_PER_CHUNK.asInt(config);
     }
     public List<Biome> getBiomes() {

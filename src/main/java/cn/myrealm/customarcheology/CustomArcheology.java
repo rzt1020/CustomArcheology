@@ -11,10 +11,12 @@ import cn.myrealm.customarcheology.managers.managers.*;
 import cn.myrealm.customarcheology.managers.managers.system.DatabaseManager;
 import cn.myrealm.customarcheology.managers.managers.system.LanguageManager;
 import cn.myrealm.customarcheology.managers.managers.system.TextureManager;
-import cn.myrealm.customarcheology.utils.BasicUtil;
+import cn.myrealm.customarcheology.utils.CommonUtil;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import org.bukkit.Bukkit;
+import org.bukkit.Particle;
+import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.nio.file.Files;
@@ -68,7 +70,7 @@ public final class CustomArcheology extends JavaPlugin {
         managers.add(new BlockManager(this));
         managers.add(new ChunkManager(this));
         managers.add(new ToolManager(this));
-        canUseStructure = BasicUtil.checkClass("org.bukkit.Chunk", "getStructures");
+        canUseStructure = CommonUtil.checkClass("org.bukkit.Chunk", "getStructures");
         if (!canUseStructure) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §cCan not register structure type generate method" +
                     " in this server. Try to update your server core jar to latest 1.20.4+ version to fix.");
@@ -187,9 +189,7 @@ public final class CustomArcheology extends JavaPlugin {
                 Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fCan not output default config file: " + names[names.length - 1]);
             }
         });
-        if (Bukkit.getVersion().contains("1.20.1") || (Bukkit.getVersion().contains("1.20")
-                && (Bukkit.getVersion().split("1.20").length == 1 ||
-                !Bukkit.getVersion().split("1.20")[1].startsWith(".")))) {
+        if (CommonUtil.getMinorVersion(20, 2)) {
             FILES_LOW_VERSION.forEach(file -> {
                 try {
                     if (!Files.exists(Paths.get(getDataFolder().getPath() + "/" + file))) {
@@ -200,6 +200,22 @@ public final class CustomArcheology extends JavaPlugin {
                     Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fCan not output default config file: " + names[names.length - 1]);
                 }
             });
+        }
+    }
+
+    public static Particle getCorrectParticle() {
+        if (CommonUtil.getMinorVersion(20, 5)) {
+            return Particle.BLOCK;
+        } else {
+            return Particle.BLOCK_DUST;
+        }
+    }
+
+    public static EntityType getEntityType() {
+        if (CommonUtil.getMinorVersion(20, 5)) {
+            return EntityType.ITEM;
+        } else {
+            return EntityType.DROPPED_ITEM;
         }
     }
 }

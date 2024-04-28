@@ -8,7 +8,7 @@ import cn.myrealm.customarcheology.managers.managers.BlockManager;
 import cn.myrealm.customarcheology.managers.managers.ChunkManager;
 import cn.myrealm.customarcheology.managers.managers.PlayerManager;
 import cn.myrealm.customarcheology.mechanics.persistent_data.ItemStackTagType;
-import cn.myrealm.customarcheology.utils.BasicUtil;
+import cn.myrealm.customarcheology.utils.CommonUtil;
 import cn.myrealm.customarcheology.utils.PacketUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -70,7 +70,7 @@ public class FakeTileBlock {
             return;
         }
 
-        List<Player> players = BasicUtil.getNearbyPlayers(location);
+        List<Player> players = CommonUtil.getNearbyPlayers(location);
         players.removeAll(sentPlayers);
         sentPlayers.addAll(players);
 
@@ -139,7 +139,7 @@ public class FakeTileBlock {
         particleTask = new BukkitRunnable() {
             @Override
             public void run() {
-                Objects.requireNonNull(finalLocation.getWorld()).spawnParticle(Particle.BLOCK_DUST, finalLocation, 5, 0.1, 0.1, 0.1, block.getType().createBlockData());
+                Objects.requireNonNull(finalLocation.getWorld()).spawnParticle(CustomArcheology.getCorrectParticle(), finalLocation, 5, 0.1, 0.1, 0.1, block.getType().createBlockData());
             }
         };
         particleTask.runTaskTimer(CustomArcheology.plugin, 0, 10);
@@ -170,7 +170,7 @@ public class FakeTileBlock {
     }
 
     public void spawnReward(BlockFace blockFace) {
-        List<Player> players = BasicUtil.getNearbyPlayers(location);
+        List<Player> players = CommonUtil.getNearbyPlayers(location);
         if (Objects.isNull(reward)) {
             reward = block.roll(tool);
         }
@@ -195,7 +195,7 @@ public class FakeTileBlock {
             return;
         }
 
-        List<Player> players = BasicUtil.getNearbyPlayers(location);
+        List<Player> players = CommonUtil.getNearbyPlayers(location);
 
         if (state.isFinished) {
             if (Objects.nonNull(particleTask) && !particleTask.isCancelled()) {
@@ -204,7 +204,7 @@ public class FakeTileBlock {
             PacketUtil.removeEntity(players, entityId + 1);
             PacketUtil.removeEntity(players, entityId);
             PacketUtil.changeBlock(players, this.location, state.getMaterial());
-            Item item = (Item) Objects.requireNonNull(location.getWorld()).spawnEntity(location, EntityType.DROPPED_ITEM);
+            Item item = (Item) Objects.requireNonNull(location.getWorld()).spawnEntity(location, CustomArcheology.getEntityType());
             if (Objects.nonNull(reward.getItemMeta()) && reward.getItemMeta().getPersistentDataContainer().has(NamespacedKeys.ARCHEOLOGY_REAL_ITEM.getNamespacedKey(), new ItemStackTagType())) {
                 ItemStack realItem = Objects.requireNonNull(reward.getItemMeta().getPersistentDataContainer().get(NamespacedKeys.ARCHEOLOGY_REAL_ITEM.getNamespacedKey(), new ItemStackTagType()));
                 item.setItemStack(realItem);
@@ -216,7 +216,7 @@ public class FakeTileBlock {
             ChunkManager chunkManager = ChunkManager.getInstance();
             chunkManager.removeBlock(this.location);
             this.location.getBlock().setType(state.getMaterial());
-            Objects.requireNonNull(this.location.getWorld()).spawnParticle(Particle.BLOCK_DUST, this.location.clone().add(0.5,0.5,0.5), 100, 0.3, 0.3, 0.3, block.getType().createBlockData());
+            Objects.requireNonNull(this.location.getWorld()).spawnParticle(CustomArcheology.getCorrectParticle(), this.location.clone().add(0.5,0.5,0.5), 100, 0.3, 0.3, 0.3, block.getType().createBlockData());
         } else {
             PacketUtil.teleportEntity(players, entityId + 1, location);
             PacketUtil.updateItemDisplay(players, block.generateItemStack(1, state), entityId,  null, null);
