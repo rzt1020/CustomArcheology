@@ -30,13 +30,3 @@ settings:
   visible-distance: 8
   item-scale: 0.5
   block-scale: 0.25
-  symbols:
-    vanilla: "minecraft"
-    custom-tool: "ca_tool"
-    custom-block: "ca_block"
-    itemsadder: "itemsadder"
-    oraxen: "oraxen"
-    mythicmobs: "mythicmobs"
-    mmoitems: "mmoitems"
-    eco: "eco"
-    neigeitems: 'neigeitems'

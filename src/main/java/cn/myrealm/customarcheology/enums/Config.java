@@ -25,16 +25,6 @@ public enum Config {
     ITEM_SCALE("settings.item-scale", 0.5),
     BLOCK_SCALE("settings.block-scale", 0.25),
     BLOCK_SAVE("settings.block-save", "UUID"),
-    //symbols
-    VANILLA_SYMBOL("settings.symbols.vanilla", "minecraft"),
-    CUSTOM_TOOL_SYMBOL("settings.symbols.custom-tool", "ca_tool"),
-    CUSTOM_BLOCK_SYMBOL("settings.symbols.custom-block", "ca_block"),
-    MYTHICMOBS_SYMBOL("settings.symbols.mythicmobs", "mythicmobs"),
-    ITEMSADDER_SYMBOL("settings.symbols.itemsadder", "itemsadder"),
-    ORAXEN_SYMBOL("settings.symbols.oraxen", "oraxen"),
-    MMOITEMS_SYMBOL("settings.symbols.mmoitems", "mmoitems"),
-    ECO_SYMBOL("settings.symbols.eco", "eco"),
-    NEIGEITEMS_SYMBOL("settings.symbols.neigeitems", "neigeitems"),
     // auto copy resource pack
     AUTO_COPY_RESOURCEPACK_ENABLED("auto-copy-resourcepack.enabled", true),
     AUTO_COPY_RESOURCEPACK_PLUGIN("auto-copy-resourcepack.plugin", "ItemsAdder"),
