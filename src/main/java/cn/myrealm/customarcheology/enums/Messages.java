@@ -13,6 +13,7 @@ public enum Messages {
     // information
     ENABLE_MESSAGE("info.enable-message"),
     RELOAD_SUCCESS("info.reload-success"),
+    GENERATED_SUCCESS("info.generated-success"),
     TEXTURE_PACK_CREATED("info.texture-pack-created"),
     WORLD_HEAD("info.world-head"),
     WORLD_DETAIL("info.world-detail"),

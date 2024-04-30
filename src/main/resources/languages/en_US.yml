@@ -8,6 +8,7 @@ info:
   block-loaded: "Loaded Archeology Block: {block-id}!"
   loottable-loaded: "Loaded Loot Table: {loottable-id}!"
   tool-loaded: "Loaded Tool: {tool-id}!"
+  generated-success: "Generated hold item's item format at plugin config folder, please copy them into your menu or shop configs!"
 error:
   incorrect-command: "Wrong command usage, if you need help, use /customarcheology help"
   executing-command: "There is something wrong when using this command: {error}"

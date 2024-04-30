@@ -8,6 +8,7 @@ info:
   block-loaded: "考古方块{block-id}加载成功"
   loottable-loaded: "奖励表{loottable-id}加载成功"
   tool-loaded: "工具{tool-id}加载成功"
+  generated-success: "成功在插件根目录下生成Item Format格式文件!"
 error:
   incorrect-command: "指令错误"
   executing-command: "执行指令时遇到问题:{error}"

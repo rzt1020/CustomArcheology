@@ -97,7 +97,7 @@ public final class CustomArcheology extends JavaPlugin {
         command.registerSubCommand(new HelpCommand());
         command.registerSubCommand(new ReloadCommand());
         command.registerSubCommand(new GiveCommand());
-        command.registerSubCommand(new TestCommand());
+        command.registerSubCommand(new GenerateItemFormatCommand());
         command.registerSubCommand(new ArchifyCommand());
         command.registerSubCommand(new DeArchifyCommand());
         command.registerSubCommand(new PlaceCommand());
