@@ -56,83 +56,83 @@ public class Action {
                 p.sendMessage(LanguageManager.parseColor(action.substring(14)));
             }
         } else if (action.startsWith("effect: ") && player != null) {
-            try {
-                if (PotionEffectType.getByName(action.substring(8).split(";;")[0].toUpperCase()) != null) {
-                    PotionEffect effect = new PotionEffect(PotionEffectType.getByName(action.split(";;")[0].toUpperCase()),
-                            Integer.parseInt(action.substring(8).split(";;")[2]),
-                            Integer.parseInt(action.substring(8).split(";;")[1]) - 1,
-                            true,
-                            true,
-                            true);
-                    player.addPotionEffect(effect);
-                }
-            }
-            catch (ArrayIndexOutOfBoundsException ignored) {
+            PotionEffectType potionEffectType = PotionEffectType.getByName(action.substring(8).split(";;")[0].toUpperCase());
+            if (potionEffectType != null) {
+                PotionEffect effect = new PotionEffect(potionEffectType,
+                        Integer.parseInt(action.substring(8).split(";;")[2]),
+                        Integer.parseInt(action.substring(8).split(";;")[1]) - 1,
+                        true,
+                        true,
+                        true);
+                player.addPotionEffect(effect);
             }
         } else if (action.startsWith("teleport: ") && player != null) {
-            try {
-                if (action.split(";;").length == 4) {
-                    Location loc = new Location(Bukkit.getWorld(action.substring(10).split(";;")[0]),
-                            Double.parseDouble(action.substring(10).split(";;")[1]),
-                            Double.parseDouble(action.substring(10).split(";;")[2]),
-                            Double.parseDouble(action.substring(10).split(";;")[3]),
-                            player.getLocation().getYaw(),
-                            player.getLocation().getPitch());
-                    player.teleport(loc);
-                }
-                else if (action.split(";;").length == 6) {
-                    Location loc = new Location(Bukkit.getWorld(action.split(";;")[0]),
-                            Double.parseDouble(action.substring(10).split(";;")[1]),
-                            Double.parseDouble(action.substring(10).split(";;")[2]),
-                            Double.parseDouble(action.substring(10).split(";;")[3]),
-                            Float.parseFloat(action.substring(10).split(";;")[4]),
-                            Float.parseFloat(action.substring(10).split(";;")[5]));
-                    player.teleport(loc);
-                }
+            if (action.split(";;").length == 4) {
+                Location loc = new Location(Bukkit.getWorld(action.substring(10).split(";;")[0]),
+                        Double.parseDouble(action.substring(10).split(";;")[1]),
+                        Double.parseDouble(action.substring(10).split(";;")[2]),
+                        Double.parseDouble(action.substring(10).split(";;")[3]),
+                        player.getLocation().getYaw(),
+                        player.getLocation().getPitch());
+                player.teleport(loc);
             }
-            catch (ArrayIndexOutOfBoundsException ignored) {
+            else if (action.split(";;").length == 6) {
+                Location loc = new Location(Bukkit.getWorld(action.split(";;")[0]),
+                        Double.parseDouble(action.substring(10).split(";;")[1]),
+                        Double.parseDouble(action.substring(10).split(";;")[2]),
+                        Double.parseDouble(action.substring(10).split(";;")[3]),
+                        Float.parseFloat(action.substring(10).split(";;")[4]),
+                        Float.parseFloat(action.substring(10).split(";;")[5]));
+                player.teleport(loc);
             }
         } else if (action.startsWith("entity_spawn: ")) {
-            EntityType entity = EntityType.valueOf(action.substring(14).toUpperCase());
-            if (location.getWorld() != null && entity != null) {
+            if (action.split(";;").length == 1 && player != null) {
+                EntityType entity = EntityType.valueOf(action.substring(14).split(";;")[0].toUpperCase());
+                player.getLocation().getWorld().spawnEntity(player.getLocation(), entity);
+            } else if (action.split(";;").length == 5) {
+                World world = Bukkit.getWorld(action.substring(14).split(";;")[1]);
+                Location tempLocation = new Location(world,
+                        Double.parseDouble(action.substring(14).split(";;")[2]),
+                        Double.parseDouble(action.substring(14).split(";;")[3]),
+                        Double.parseDouble(action.substring(14).split(";;")[4]));
+                EntityType entity = EntityType.valueOf(action.substring(14).split(";;")[0].toUpperCase());
+                if (tempLocation.getWorld() == null) {
+                    return;
+                }
                 location.getWorld().spawnEntity(location, entity);
             }
         } else if (Bukkit.getPluginManager().isPluginEnabled("MythicMobs") && action.startsWith("mythicmobs_spawn: ")) {
-            try {
-                if (action.substring(18).split(";;").length == 1) {
-                    CommonUtil.summonMythicMobs(location,
-                            action.substring(18).split(";;")[0],
-                            1);
-                }
-                else if (action.substring(18).split(";;").length == 2) {
-                    CommonUtil.summonMythicMobs(location,
-                            action.substring(18).split(";;")[0],
-                            Integer.parseInt(action.substring(18).split(";;")[1]));
-                }
-                else if (action.substring(18).split(";;").length == 5) {
-                    World world = Bukkit.getWorld(action.substring(18).split(";;")[1]);
-                    Location loc = new Location(world,
-                            Double.parseDouble(action.substring(18).split(";;")[2]),
-                            Double.parseDouble(action.substring(18).split(";;")[3]),
-                            Double.parseDouble(action.substring(18).split(";;")[4])
-                    );
-                    CommonUtil.summonMythicMobs(loc,
-                            action.substring(18).split(";;")[0],
-                            1);
-                }
-                else if (action.substring(18).split(";;").length == 6) {
-                    World world = Bukkit.getWorld(action.substring(18).split(";;")[2]);
-                    Location loc = new Location(world,
-                            Double.parseDouble(action.substring(18).split(";;")[3]),
-                            Double.parseDouble(action.substring(18).split(";;")[4]),
-                            Double.parseDouble(action.substring(18).split(";;")[5])
-                    );
-                    CommonUtil.summonMythicMobs(loc,
-                            action.substring(18).split(";;")[0],
-                            Integer.parseInt(action.substring(18).split(";;")[1]));
-                }
+            if (action.substring(18).split(";;").length == 1) {
+                CommonUtil.summonMythicMobs(location,
+                        action.substring(18).split(";;")[0],
+                        1);
             }
-            catch (ArrayIndexOutOfBoundsException ignored) {
+            else if (action.substring(18).split(";;").length == 2) {
+                CommonUtil.summonMythicMobs(location,
+                        action.substring(18).split(";;")[0],
+                        Integer.parseInt(action.substring(18).split(";;")[1]));
+            }
+            else if (action.substring(18).split(";;").length == 5) {
+                World world = Bukkit.getWorld(action.substring(18).split(";;")[1]);
+                Location loc = new Location(world,
+                        Double.parseDouble(action.substring(18).split(";;")[2]),
+                        Double.parseDouble(action.substring(18).split(";;")[3]),
+                        Double.parseDouble(action.substring(18).split(";;")[4])
+                );
+                CommonUtil.summonMythicMobs(loc,
+                        action.substring(18).split(";;")[0],
+                        1);
+            }
+            else if (action.substring(18).split(";;").length == 6) {
+                World world = Bukkit.getWorld(action.substring(18).split(";;")[2]);
+                Location loc = new Location(world,
+                        Double.parseDouble(action.substring(18).split(";;")[3]),
+                        Double.parseDouble(action.substring(18).split(";;")[4]),
+                        Double.parseDouble(action.substring(18).split(";;")[5])
+                );
+                CommonUtil.summonMythicMobs(loc,
+                        action.substring(18).split(";;")[0],
+                        Integer.parseInt(action.substring(18).split(";;")[1]));
             }
         } else if (action.startsWith("console_command: ")) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), action.substring(17));
