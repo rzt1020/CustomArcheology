@@ -6,6 +6,7 @@
 config-files:
   generate-default-files: true
   language: en_US
+
 auto-copy-resourcepack:
   enabled: true
   # If you are using Oraxen, please change this to Oraxen.
@@ -13,6 +14,7 @@ auto-copy-resourcepack:
   plugin: "ItemsAdder"
   # If you are using Oraxen, please change this to "/pack/assets".
   path: "/contents/customarcheology/resourcepack/"
+
 database:
   use-mysql: false
   mysql:
@@ -21,6 +23,7 @@ database:
     user: root
     password: root
     database: minecraft
+
 settings:
   # Support value: UUID or RANDOM
   block-save: UUID

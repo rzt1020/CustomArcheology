@@ -274,8 +274,8 @@ public class TextureManager extends BaseManager {
 
     private void copyResourcePack() {
         try {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fCopying your resource pack to "
-                    + Config.AUTO_COPY_RESOURCEPACK_PATH.asString() + "!");
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fCopying your resource pack to " +
+                    Config.AUTO_COPY_RESOURCEPACK_PLUGIN.asString() + Config.AUTO_COPY_RESOURCEPACK_PATH.asString() + "!");
             if (!Bukkit.getPluginManager().isPluginEnabled(Config.AUTO_COPY_RESOURCEPACK_PLUGIN.asString())) {
                 Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §cError: " + Config.AUTO_COPY_RESOURCEPACK_PLUGIN.asString() +
                         " is not installed in your server! Maybe its have errors when loading or you just typo!");
