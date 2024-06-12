@@ -42,6 +42,11 @@
       <option name="url" value="https://nexus.phoenixdevt.fr/repository/maven-public/" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="oss-sonatype" />
+      <option name="name" value="oss-sonatype" />
+      <option name="url" value="https://s01.oss.sonatype.org/content/repositories/snapshots/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="jitpack-repo" />
       <option name="name" value="jitpack-repo" />
       <option name="url" value="https://jitpack.io" />
@@ -50,6 +55,11 @@
       <option name="id" value="rosewood-repo" />
       <option name="name" value="rosewood-repo" />
       <option name="url" value="https://repo.rosewooddev.io/repository/public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="worldedit" />
+      <option name="name" value="worldedit" />
+      <option name="url" value="https://maven.enginehub.org/repo/" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="auxilor" />

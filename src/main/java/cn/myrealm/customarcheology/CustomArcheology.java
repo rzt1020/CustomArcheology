@@ -5,6 +5,7 @@ import cn.myrealm.customarcheology.commands.subcommands.*;
 import cn.myrealm.customarcheology.enums.Config;
 import cn.myrealm.customarcheology.enums.Messages;
 import cn.myrealm.customarcheology.listeners.bukkit.*;
+import cn.myrealm.customarcheology.hooks.BetterStructuresHook;
 import cn.myrealm.customarcheology.listeners.protocol.DigListener;
 import cn.myrealm.customarcheology.managers.BaseManager;
 import cn.myrealm.customarcheology.managers.managers.*;
@@ -91,6 +92,11 @@ public final class CustomArcheology extends JavaPlugin {
         new BreakListener(this).registerBukkitListener();
         new BrushListener(this).registerBukkitListener();
         new ItemListener(this).registerBukkitListener();
+        // Hook Listener
+        if (CommonUtil.checkPluginLoad("BetterStructures") && Config.HOOK_BETTERSTRUCTURES.asBoolean()) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fHooking into BetterStructures...");
+            new BetterStructuresHook(this).registerBukkitListener();
+        }
     }
     public void registerDefaultCommands() {
         MainCommand command = new MainCommand();

@@ -8,6 +8,8 @@ import org.bukkit.configuration.file.FileConfiguration;
  */
 
 public enum Config {
+    // log
+    LOG_GENERATED_BLOCK("log-generated-block", false),
     // config_files
     CONFIG_FILES_GENERATE_DEFAULT_FILES("config-files.generate-default-files", true),
     CONFIG_FILES_LANGUAGE("config-files.language", "en_US"),
@@ -25,6 +27,7 @@ public enum Config {
     ITEM_SCALE("settings.item-scale", 0.5),
     BLOCK_SCALE("settings.block-scale", 0.25),
     BLOCK_SAVE("settings.block-save", "UUID"),
+    HOOK_BETTERSTRUCTURES("settings.hook.betterstructures", true),
     // auto copy resource pack
     AUTO_COPY_RESOURCEPACK_ENABLED("auto-copy-resourcepack.enabled", true),
     AUTO_COPY_RESOURCEPACK_PLUGIN("auto-copy-resourcepack.plugin", "ItemsAdder"),

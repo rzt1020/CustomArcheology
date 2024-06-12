@@ -1,13 +1,13 @@
 general:
-  display_name: "&fSuspicious Netherrack"
-  replace_block: netherrack
-  generate_biomes: all
+  display-name: "&fSuspicious Netherrack"
+  replace-block: netherrack
+  biomes: all
   distribution: 1 ~ 127
-  max_per_chunk: 16
-  loot_tables:
+  max-per-chunk: 16
+  loot-tables:
     - "stone"
 
-brush_tools:
+brush-tools:
   diamond_archaeological_shovel:
     efficiency: 1.0
   netherite_archaeological_shovel:

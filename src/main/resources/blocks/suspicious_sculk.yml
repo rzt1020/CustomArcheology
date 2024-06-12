@@ -1,15 +1,15 @@
 general:
-  display_name: "&fSuspicious Sculk"
-  replace_block: sculk
-  generate_biomes: all
-  distribution: ~64 ~ 0
+  display-name: "&fSuspicious Sculk"
+  replace-block: sculk
+  biomes: all
+  distribution: -64 ~ 0
   structure:
     type: ancient_city
-  max_per_chunk: 16
-  loot_tables:
+  max-per-chunk: 16
+  loot-tables:
     - stone
 
-brush_tools:
+brush-tools:
   archaeological_shovel:
     efficiency: 1.0
   diamond_archaeological_shovel:

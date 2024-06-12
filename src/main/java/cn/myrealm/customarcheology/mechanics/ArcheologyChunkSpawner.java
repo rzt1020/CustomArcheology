@@ -2,12 +2,14 @@ package cn.myrealm.customarcheology.mechanics;
 
 
 import cn.myrealm.customarcheology.CustomArcheology;
+import cn.myrealm.customarcheology.enums.Config;
 import cn.myrealm.customarcheology.enums.NamespacedKeys;
 import cn.myrealm.customarcheology.managers.managers.BlockManager;
 import cn.myrealm.customarcheology.mechanics.cores.ArcheologyBlock;
 import cn.myrealm.customarcheology.mechanics.cores.PersistentDataChunk;
 import cn.myrealm.customarcheology.mechanics.persistent_data.StringArrayTagType;
 import cn.myrealm.customarcheology.utils.CommonUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -29,6 +31,7 @@ public class ArcheologyChunkSpawner {
     private final PersistentDataChunk dataChunk;
     private final List<ArcheologyBlock> blocks;
     private final List<String> spawnedBlocks;
+
     public ArcheologyChunkSpawner(Chunk chunk, PersistentDataChunk dataChunk) {
         this.chunk = chunk;
         this.dataChunk = dataChunk;
@@ -76,7 +79,7 @@ public class ArcheologyChunkSpawner {
                     }
                     usedBlocks.add(newBlock);
                 }
-            } else {
+            } else if (!block.isBetterStructure() || !Config.HOOK_BETTERSTRUCTURES.asBoolean()) {
                 for (int i = 0; i < maxPerChunk; i++) {
                     Block newBlock = CommonUtil.getRandomBlock(chunk, distribution);
                     if (!usedBlocks.contains(newBlock) && Objects.equals(newBlock.getType(), block.getType())) {
@@ -89,19 +92,17 @@ public class ArcheologyChunkSpawner {
             }
         });
         spawnedBlocks.addAll(blocks.stream().map(ArcheologyBlock::getName).toList());
-        String [] array = new String[spawnedBlocks.size()];
+        String[] array = new String[spawnedBlocks.size()];
         spawnedBlocks.toArray(array);
         chunk.getPersistentDataContainer().set(NamespacedKeys.ARCHIFY_ARRAY.getNamespacedKey(), STRING_ARRAY_TYPE, array);
     }
 
     private void setBlock(Location location, ArcheologyBlock block) {
+        if (Config.LOG_GENERATED_BLOCK.asBoolean()) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fGenerated " + block.getName() + " archeology block at: " +
+                    location.getWorld().getName() + ", " + location.getBlockX() + ", " +
+                    location.getBlockY() + ", " + location.getBlockZ() + ", rule: Chunk!");
+        }
         dataChunk.registerNewBlock(block, location);
     }
-    /*private void setStructureBlock(Location location, ArcheologyBlock block) {
-        ChunkManager.getInstance().getPersistentDataChunk(location).registerNewBlock(block, location);
-    }
-    private Block getChunkBlock() {
-        return chunk.getWorld().getBlockAt(chunk.getX() * 16 + 8, 0, chunk.getZ() * 16 + 8);
-    }
-     */
 }

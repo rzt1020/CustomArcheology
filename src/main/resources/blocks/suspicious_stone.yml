@@ -1,16 +1,16 @@
 general:
-  display_name: "&fSuspicious Stone"
-  replace_block: stone
-  generate_biomes: all
+  display-name: "&fSuspicious Stone"
+  replace-block: stone
+  biomes: all
   distribution: 0 ~ 127
   gaussian:
     mean: 32.0
-    standard_deviation: 64.0
-  max_per_chunk: 16
-  loot_tables:
+    standard-deviation: 64.0
+  max-per-chunk: 16
+  loot-tables:
     - "stone"
 
-brush_tools:
+brush-tools:
   archaeological_shovel:
     efficiency: 1.0
   diamond_archaeological_shovel:

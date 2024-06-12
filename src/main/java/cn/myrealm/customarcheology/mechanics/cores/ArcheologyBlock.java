@@ -63,6 +63,7 @@ public class ArcheologyBlock {
         itemStack.setAmount(amount);
         return itemStack;
     }
+
     public ItemStack generateItemStack(int amount, State state) {
         ItemStack itemStack = generateItemStack(amount);
         ItemMeta itemMeta = itemStack.getItemMeta();
@@ -76,6 +77,7 @@ public class ArcheologyBlock {
     public void placeBlock(Location location) {
         location.getBlock().setType(replaceBlock);
     }
+
     private void loadConfig() {
         ConfigurationSection section = Keys.STATES.asSection(config);
         replaceBlock = Material.getMaterial(Keys.REPLACE_BLOCK.asString(config).toUpperCase());
@@ -109,11 +111,15 @@ public class ArcheologyBlock {
 
         valid = true;
         displayName = Keys.DISPLAY_NAME.asString(config);
-        if (Keys.GENERATE_BIOMES.isDef(config)) {
+        if (Keys.GENERATE_BIOMES.isDef(config) ||
+                (config.contains("general.generate_biomes") && config.getString("general.generate_biomes").equals("all"))) {
             biomes = null;
         } else {
             biomes = new ArrayList<>();
             List<String> biomesName = Keys.GENERATE_BIOMES.asStringList(config);
+            if (biomesName.isEmpty()) {
+                biomesName = config.getStringList("general.generate_biomes");
+            }
             biomesName.forEach(name -> {
                 try {
                     Biome biome = Biome.valueOf(name.toUpperCase());
@@ -126,6 +132,7 @@ public class ArcheologyBlock {
         distribution = CommonUtil.parseRange(Keys.DISTRIBUTION.asString(config));
         maxPerChunk =  Keys.MAX_PER_CHUNK.asInt(config);
     }
+
     public List<Biome> getBiomes() {
         return biomes;
     }
@@ -195,7 +202,7 @@ public class ArcheologyBlock {
     }
 
     public boolean isStructure() {
-        return Objects.nonNull(Keys.STRUCTURE.asSection(config));
+        return config.contains("general.structure.type");
     }
     public Structure getStructure() {
         String structureName = Keys.STRUCTURE_TYPE.asString(config);
@@ -204,6 +211,14 @@ public class ArcheologyBlock {
         }
         return null;
     }
+
+    public boolean isBetterStructure() {
+        return config.contains("general.region.betterstructures");
+    }
+    public boolean containsBetterStructure(String id) {
+        return Keys.BETTERSTRUCTURE_TYPE.asStringList(config).contains(id) || Keys.BETTERSTRUCTURE_TYPE.asString(config).equals("all");
+    }
+
     public Sound getPlaceSound() {
         return Sound.valueOf(Keys.PLACE_SOUND.asString(config).toUpperCase());
     }
@@ -228,14 +243,14 @@ enum Keys {
     EFFICIENCY("efficiency", 1.0d),
     TOOL_LOOT_TABLES("loot_table", null),
     STATES("states", null),
-    GENERATE_BIOMES("general.generate_biomes", "all"),
+    GENERATE_BIOMES("general.biomes", "all"),
     DISTRIBUTION("general.distribution", null),
     MAX_PER_CHUNK("general.max_per_chunk", 0),
     GAUSSIAN("general.gaussian", null),
     MEAN("general.gaussian.mean", 0D),
     STANDARD_DEVIATION("general.gaussian.standard_deviation", 1D),
-    STRUCTURE("general.structure", null),
     STRUCTURE_TYPE("general.structure.type", null),
+    BETTERSTRUCTURE_TYPE("general.region.betterstructures", null),
     PLACE_SOUND("general.sound.place", "BLOCK_STONE_PLACE"),
     BRUSH_SOUND("general.sound.brush", "BLOCK_SUSPICIOUS_SAND_BREAK"),
     CONSUME_DURABILITY("general.consume_durability", 1);
@@ -249,12 +264,15 @@ enum Keys {
     }
 
     public boolean isDef(ConfigurationSection section) {
-        return Objects.equals(section.get(key), def);
+        return Objects.equals(section.get(key), def) || Objects.equals(section.get(key.replace("_", "-")), def);
     }
 
     public String asString(ConfigurationSection section) {
         if (Objects.isNull(section)) {
             return (String) def;
+        }
+        if (Objects.nonNull(section.getString(key.replace("_", "-")))) {
+            return section.getString(key.replace("_", "-"));
         }
         return section.getString(key, (String) def);
     }
@@ -263,12 +281,18 @@ enum Keys {
         if (Objects.isNull(section)) {
             return null;
         }
+        if (Objects.nonNull(section.getConfigurationSection(key.replace("_", "-")))) {
+            return section.getConfigurationSection(key.replace("_", "-"));
+        }
         return section.getConfigurationSection(key);
     }
 
     public Double asDouble(ConfigurationSection section) {
         if (Objects.isNull(section)) {
             return (Double) def;
+        }
+        if (section.contains(key.replace("_", "-"))) {
+            return section.getDouble(key.replace("_", "-"));
         }
         return section.getDouble(key, (Double) def);
     }
@@ -277,11 +301,18 @@ enum Keys {
         if (Objects.isNull(section)) {
             return new ArrayList<>();
         }
+        if (section.contains(key.replace("_", "-"))) {
+            return section.getStringList(key.replace("_", "-"));
+        }
         return section.getStringList(key);
     }
+
     public Integer asInt(ConfigurationSection section) {
         if (Objects.isNull(section)) {
             return (Integer) def;
+        }
+        if (section.contains(key.replace("_", "-"))) {
+            return section.getInt(key.replace("_", "-"));
         }
         return section.getInt(key, (Integer) def);
     }

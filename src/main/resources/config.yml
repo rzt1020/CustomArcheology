@@ -3,6 +3,8 @@
 # Read the Wiki here: customarcheology.superiormc.cn
 # Purchase the plugin, and you can get free texture expansion pack with 5 tools, 6 blocks included!
 
+log-generated-block: false
+
 config-files:
   generate-default-files: true
   language: en_US
@@ -33,3 +35,5 @@ settings:
   visible-distance: 8
   item-scale: 0.5
   block-scale: 0.25
+  hook:
+    betterstructures: true

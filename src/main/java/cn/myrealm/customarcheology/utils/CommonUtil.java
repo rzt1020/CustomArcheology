@@ -12,6 +12,7 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.util.BoundingBox;
 
 import java.awt.*;
 import java.lang.reflect.Method;
@@ -103,6 +104,21 @@ public class CommonUtil {
         int actualZ = chunk.getZ() * 16 + z;
 
         return world.getBlockAt(actualX, y, actualZ);
+    }
+
+    public static Block getRandomBlock(World world, BoundingBox box) {
+        int minX = (int) Math.floor(box.getMinX());
+        int minY = (int) Math.floor(box.getMinY());
+        int minZ = (int) Math.floor(box.getMinZ());
+        int maxX = (int) Math.floor(box.getMaxX());
+        int maxY = (int) Math.floor(box.getMaxY());
+        int maxZ = (int) Math.floor(box.getMaxZ());
+
+        int x = minX + CustomArcheology.RANDOM.nextInt(maxX - minX + 1);
+        int y = minY + CustomArcheology.RANDOM.nextInt(maxY - minY + 1);
+        int z = minZ + CustomArcheology.RANDOM.nextInt(maxZ - minZ + 1);
+
+        return world.getBlockAt(x, y, z);
     }
 
     public static int getRandomIntFromPoint(Point point) {

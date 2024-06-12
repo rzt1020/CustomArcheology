@@ -1,23 +1,23 @@
 general:
-  display_name: "&fSuspicious Deepslate"
-  replace_block: deepslate
-  generate_biomes: all
-  distribution: 0 ~ 127
+  display-name: "&fSuspicious Deepslate"
+  replace-block: deepslate
+  biomes: all
+  distribution: -64 ~ 0
   gaussian:
-    mean: 32.0
-    standard_deviation: 64.0
-  max_per_chunk: 16
-  loot_tables:
+    mean: -32.0
+    standard-deviation: 16.0
+  max-per-chunk: 16
+  loot-tables:
     - "stone"
 
-brush_tools:
+brush-tools:
   archaeological_shovel:
     efficiency: 1.0
   diamond_archaeological_shovel:
     efficiency: 2.0
   netherite_archaeological_shovel:
     efficiency: 3.0
-    loot_table: netherite_tool
+    loot-table: netherite_tool
 
 states:
   default:
