@@ -11,6 +11,11 @@ softdepend:
   - MMOItems
   - PlaceholderAPI
   - BetterStructures
+  - MythicDungeons
+  - NeigeItems
+  - EcoItems
+  - EcoArmor
+
 main: cn.myrealm.customarcheology.CustomArcheology
 api-version: '1.20'
 commands:

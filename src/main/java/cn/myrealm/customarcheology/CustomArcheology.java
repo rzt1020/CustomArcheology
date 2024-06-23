@@ -4,6 +4,7 @@ import cn.myrealm.customarcheology.commands.MainCommand;
 import cn.myrealm.customarcheology.commands.subcommands.*;
 import cn.myrealm.customarcheology.enums.Config;
 import cn.myrealm.customarcheology.enums.Messages;
+import cn.myrealm.customarcheology.hooks.mythicdungeons.FunctionPlaceBlock;
 import cn.myrealm.customarcheology.listeners.bukkit.*;
 import cn.myrealm.customarcheology.hooks.BetterStructuresHook;
 import cn.myrealm.customarcheology.listeners.protocol.DigListener;
@@ -15,6 +16,8 @@ import cn.myrealm.customarcheology.managers.managers.system.TextureManager;
 import cn.myrealm.customarcheology.utils.CommonUtil;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
+import net.playavalon.mythicdungeons.MythicDungeons;
+import net.playavalon.mythicdungeons.utility.GUIHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Particle;
 import org.bukkit.entity.EntityType;
@@ -37,6 +40,8 @@ public final class CustomArcheology extends JavaPlugin {
     public static ProtocolManager protocolManager;
     public static final Random RANDOM = new Random();
     public static boolean canUseStructure = false;
+    public static int majorVersion = 0;
+    public static int miniorVersion = 0;
 
     @Override
     public void onEnable() {
@@ -73,8 +78,23 @@ public final class CustomArcheology extends JavaPlugin {
         managers.add(new ToolManager(this));
         canUseStructure = CommonUtil.checkClass("org.bukkit.Chunk", "getStructures");
         if (!canUseStructure) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §cCan not register structure type generate method" +
-                    " in this server. Try to update your server core jar to latest 1.20.4+ version to fix.");
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §6Warning: Can not register structure type generate method" +
+                    " in this server. Try to update your server core jar to LATEST 1.20.4 or Minecraft 1.20.4 newer version to fix.");
+        }
+        if (CommonUtil.getClass("net.playavalon.mythicdungeons.MythicDungeons")) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fHooking into MythicDungeons...");
+            MythicDungeons.inst().registerFunction(FunctionPlaceBlock.class);
+            GUIHandler.initFunctionMenu();
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fFixing dungeon config loading...");
+            MythicDungeons.inst().reloadAllDungeons();
+        }
+        try {
+            String[] versionParts = Bukkit.getBukkitVersion().split("-")[0].split("\\.");
+            majorVersion = versionParts.length > 1 ? Integer.parseInt(versionParts[1]) : 0;
+            miniorVersion = versionParts.length > 2 ? Integer.parseInt(versionParts[2]) : 0;
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fYour Minecraft version is: 1." + majorVersion + "." + miniorVersion + "!");
+        } catch (Throwable throwable) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §cError: Can not get your Minecraft version! Default set to 1.0.0.");
         }
     }
     public void disablePlugin() {

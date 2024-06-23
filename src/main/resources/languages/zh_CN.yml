@@ -2,7 +2,7 @@ prefix: "<#98FB98>[CustomArcheology]&r "
 info:
   enable-message: "成功加载插件，作者：rzt1020！"
   reload-success: "成功重载插件"
-  texture-pack-created: "成功创建材质包在: plugins\\CustomArcheology\\pack"
+  texture-pack-created: "成功创建材质包在: plugins/CustomArcheology/pack"
   world-head: "<#98FB98>&lCustomArcheology &7世界 {world-name} 信息"
   world-detail: "&f{block-id} &7- {state}"
   block-loaded: "考古方块{block-id}加载成功"

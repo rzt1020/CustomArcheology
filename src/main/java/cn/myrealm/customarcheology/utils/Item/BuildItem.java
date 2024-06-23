@@ -25,6 +25,8 @@ import org.bukkit.entity.TropicalFish;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.*;
 import org.bukkit.inventory.meta.components.FoodComponent;
+import org.bukkit.inventory.meta.components.JukeboxPlayableComponent;
+import org.bukkit.inventory.meta.components.ToolComponent;
 import org.bukkit.inventory.meta.trim.ArmorTrim;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
 import org.bukkit.inventory.meta.trim.TrimPattern;
@@ -34,10 +36,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
+import java.util.*;
 
 public class BuildItem {
     public static ItemStack buildItemStack(ConfigurationSection section,
@@ -160,7 +159,11 @@ public class BuildItem {
                 if (foodSaturation > 0) {
                     foodComponent.setSaturation((float) foodSaturation);
                 }
-                for (String effects : section.getStringList("effects")) {
+                ConfigurationSection convertItem = section.getConfigurationSection("convert");
+                if (CommonUtil.getMajorVersion(21) && convertItem != null) {
+                    foodComponent.setUsingConvertsTo(buildItemStack(convertItem, args));
+                }
+                for (String effects : foodKey.getStringList("effects")) {
                     String[] effectParseResult = effects.replace(" ", "").split(",");
                     if (effectParseResult.length < 4) {
                         continue;
@@ -181,6 +184,54 @@ public class BuildItem {
                         foodComponent.addEffect(potionEffect, Float.parseFloat(effectParseResult[effectParseResult.length - 1]));
                     }
                 }
+                meta.setFood(foodComponent);
+            }
+        }
+
+        if (CommonUtil.getMajorVersion(21)) {
+            ConfigurationSection toolKey = section.getConfigurationSection("tool");
+            ToolComponent toolComponent = meta.getTool();
+            if (toolKey != null) {
+                int damagePerBlock = toolKey.getInt("damage-per-block", -1);
+                if (damagePerBlock >= 0) {
+                    toolComponent.setDamagePerBlock(damagePerBlock);
+                }
+                double miningSpeed = toolKey.getDouble("mining-speed", -1);
+                if (miningSpeed > 0) {
+                    toolComponent.setDefaultMiningSpeed((float) miningSpeed);
+                }
+                for (String rules : toolKey.getStringList("rules")) {
+                    String[] ruleParseResult = rules.replace(" ", "").split(",");
+                    if (ruleParseResult.length < 3) {
+                        continue;
+                    }
+                    Collection<Material> materials = new ArrayList<>();
+                    int i = 0;
+                    for (String singleMaterial : ruleParseResult) {
+                        Material material = Material.getMaterial(singleMaterial.toUpperCase());
+                        if (material == null) {
+                            break;
+                        }
+                        materials.add(material);
+                        i ++;
+                    }
+                    float speed = Float.parseFloat(ruleParseResult[i]);
+                    boolean correctForDrop = Boolean.parseBoolean(ruleParseResult[i + 1]);
+                    toolComponent.addRule(materials, speed, correctForDrop);
+                }
+                meta.setTool(toolComponent);
+            }
+        }
+
+        if (CommonUtil.getMajorVersion(21)) {
+            JukeboxPlayableComponent jukeboxPlayableComponent = meta.getJukeboxPlayable();
+            String song = section.getString("song");
+            if (song != null) {
+                jukeboxPlayableComponent.setSongKey(CommonUtil.parseNamespacedKey(song));
+                if (section.contains("show-song")) {
+                    jukeboxPlayableComponent.setShowInTooltip(section.getBoolean("show-song"));
+                }
+                meta.setJukeboxPlayable(jukeboxPlayableComponent);
             }
         }
 
@@ -273,13 +324,23 @@ public class BuildItem {
                     }
 
                     if (attribName != null && attribOperation != null) {
-                        AttributeModifier modifier = new AttributeModifier(
-                                id,
-                                attribName,
-                                attribAmount,
-                                Enums.getIfPresent(AttributeModifier.Operation.class, attribOperation)
-                                        .or(AttributeModifier.Operation.ADD_NUMBER),
-                                slot);
+                        AttributeModifier modifier;
+                        if (CommonUtil.getMajorVersion(21)) {
+                            modifier = new AttributeModifier(
+                                    CommonUtil.parseNamespacedKey(attribName),
+                                    attribAmount,
+                                    Enums.getIfPresent(AttributeModifier.Operation.class, attribOperation)
+                                            .or(AttributeModifier.Operation.ADD_NUMBER),
+                                    slot);
+                        } else {
+                            modifier = new AttributeModifier(
+                                    id,
+                                    attribName,
+                                    attribAmount,
+                                    Enums.getIfPresent(AttributeModifier.Operation.class, attribOperation)
+                                            .or(AttributeModifier.Operation.ADD_NUMBER),
+                                    slot);
+                        }
 
                         meta.addAttributeModifier(attributeInst, modifier);
                     }
@@ -415,8 +476,7 @@ public class BuildItem {
         }
 
         // Leather Armor Color
-        if (meta instanceof LeatherArmorMeta) {
-            LeatherArmorMeta leather = (LeatherArmorMeta) meta;
+        if (meta instanceof LeatherArmorMeta leather) {
             String colorKey = section.getString("color");
             if (colorKey != null) {
                 leather.setColor(CommonUtil.parseColor(colorKey));
@@ -425,8 +485,7 @@ public class BuildItem {
 
         // Axolotl Bucket
         if (CommonUtil.getMajorVersion(17)) {
-            if (meta instanceof AxolotlBucketMeta) {
-                AxolotlBucketMeta bucket = (AxolotlBucketMeta) meta;
+            if (meta instanceof AxolotlBucketMeta bucket) {
                 String variantStr = section.getString("color");
                 if (variantStr != null) {
                     Axolotl.Variant variant = Enums.getIfPresent(Axolotl.Variant.class, variantStr.toUpperCase()).orNull();
@@ -438,8 +497,7 @@ public class BuildItem {
         }
 
         // Tropical Fish Bucket
-        if (meta instanceof TropicalFishBucketMeta) {
-            TropicalFishBucketMeta tropical = (TropicalFishBucketMeta) meta;
+        if (meta instanceof TropicalFishBucketMeta tropical) {
             String colorKey = section.getString("color");
             String patternColorKey = section.getString("pattern-color");
             String patternKey = section.getString("pattern");
@@ -455,8 +513,7 @@ public class BuildItem {
         }
 
         // Skull
-        if (meta instanceof SkullMeta) {
-            SkullMeta skullMeta = (SkullMeta) meta;
+        if (meta instanceof SkullMeta skullMeta) {
             String skullTextureNameKey = section.getString("skull-meta", section.getString("skull"));
             if (skullTextureNameKey != null) {
                 if (skullTextureNameKey.length() > 16) {
@@ -476,8 +533,7 @@ public class BuildItem {
         }
 
         // Firework
-        if (meta instanceof FireworkMeta) {
-            FireworkMeta fireworkMeta = (FireworkMeta) meta;
+        if (meta instanceof FireworkMeta fireworkMeta) {
 
             int power = section.getInt("power");
             if (power > 0 && power < 128) {
@@ -520,8 +576,7 @@ public class BuildItem {
         }
 
         // Firework Effect
-        if (meta instanceof FireworkEffectMeta) {
-            FireworkEffectMeta fireworkEffectMeta = (FireworkEffectMeta) meta;
+        if (meta instanceof FireworkEffectMeta fireworkEffectMeta) {
 
             ConfigurationSection fireworkKey = section.getConfigurationSection("firework");
             if (fireworkKey != null) {
@@ -552,14 +607,13 @@ public class BuildItem {
         }
 
         // Suspicious Stew
-        if (meta instanceof SuspiciousStewMeta) {
-            SuspiciousStewMeta stewMeta = (SuspiciousStewMeta) meta;
+        if (meta instanceof SuspiciousStewMeta stewMeta) {
             for (String effects : section.getStringList("effects")) {
                 String[] effectParseResult = effects.replace(" ", "").split(",");
                 if (effectParseResult.length < 3) {
                     continue;
                 }
-                PotionEffectType potionEffectType = null;
+                PotionEffectType potionEffectType;
                 if (CommonUtil.getMajorVersion(20)) {
                     potionEffectType = Registry.POTION_EFFECT_TYPE.get(CommonUtil.parseNamespacedKey(effectParseResult[0]));
                 } else {
@@ -579,8 +633,7 @@ public class BuildItem {
 
         // Bundle
         if (CommonUtil.getMajorVersion(17)) {
-            if (meta instanceof BundleMeta) {
-                BundleMeta bundleMeta = (BundleMeta) meta;
+            if (meta instanceof BundleMeta bundleMeta) {
                 ConfigurationSection bundleContentKey = section.getConfigurationSection("contents");
 
                 if (bundleContentKey != null) {
@@ -596,12 +649,10 @@ public class BuildItem {
         }
 
         // Block
-        if (meta instanceof BlockStateMeta) {
-            BlockStateMeta blockStateMeta = (BlockStateMeta) meta;
+        if (meta instanceof BlockStateMeta blockStateMeta) {
             BlockState state = blockStateMeta.getBlockState();
 
-            if (state instanceof CreatureSpawner) {
-                CreatureSpawner spawner = (CreatureSpawner) state;
+            if (state instanceof CreatureSpawner spawner) {
                 String spawnerKey = section.getString("spawner");
                 if (spawnerKey != null) {
                     EntityType entityType = Enums.getIfPresent(EntityType.class, spawnerKey.toUpperCase()).orNull();
@@ -651,8 +702,7 @@ public class BuildItem {
                     box.update(true);
                     blockStateMeta.setBlockState(box);
                 }
-            } else if (CommonUtil.getMajorVersion(20) && state instanceof BrushableBlock) {
-                BrushableBlock brushableBlock = (BrushableBlock) state;
+            } else if (CommonUtil.getMajorVersion(20) && state instanceof BrushableBlock brushableBlock) {
                 ConfigurationSection brushableContentKey = section.getConfigurationSection("content");
                 if (brushableContentKey != null) {
                     brushableBlock.setItem(buildItemStack(brushableContentKey, args));
@@ -663,8 +713,7 @@ public class BuildItem {
 
         // Ominous Bottle
         if (CommonUtil.getMinorVersion(20, 5)) {
-            if (meta instanceof OminousBottleMeta) {
-                OminousBottleMeta ominousBottleMeta = (OminousBottleMeta) meta;
+            if (meta instanceof OminousBottleMeta ominousBottleMeta) {
                 int ominousPowerKey = section.getInt("power", -1);
                 if (ominousPowerKey > 0) {
                     ominousBottleMeta.setAmplifier(ominousPowerKey);
@@ -674,11 +723,10 @@ public class BuildItem {
 
         // Music Instrument
         if (CommonUtil.getMajorVersion(19)) {
-            if (meta instanceof MusicInstrumentMeta) {
-                MusicInstrumentMeta musicInstrumentMeta = (MusicInstrumentMeta) meta;
+            if (meta instanceof MusicInstrumentMeta musicInstrumentMeta) {
                 String musicKey = section.getString("music");
                 if (musicKey != null) {
-                    MusicInstrument musicInstrument = null;
+                    MusicInstrument musicInstrument;
                     if (CommonUtil.getMinorVersion(20, 4)) {
                         musicInstrument = Registry.INSTRUMENT.get(CommonUtil.parseNamespacedKey(musicKey));
 

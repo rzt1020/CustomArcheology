@@ -2,7 +2,7 @@ prefix: "<#98FB98>[CustomArcheology]&f "
 info:
   enable-message: "Plugin is loaded, author: rzt1020!"
   reload-success: "Plugin reloaded."
-  texture-pack-created: "Successfully created resource pack at plugins\\CustomArcheology\\pack!"
+  texture-pack-created: "Successfully created resource pack at plugins/CustomArcheology/pack!"
   world-head: "<#98FB98>&lCustomArcheology &7World {world-name} info"
   world-detail: "&f{block-id} &7- {state}"
   block-loaded: "Loaded Archeology Block: {block-id}!"

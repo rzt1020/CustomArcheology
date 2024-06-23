@@ -164,30 +164,12 @@ public class CommonUtil {
     }
 
     public static boolean getMajorVersion(int version) {
-        String[] parts = Bukkit.getVersion().split("\\.");
-        if (parts.length >= 2) {
-            try {
-                return Integer.parseInt(parts[1]) >= version;
-            } catch (NumberFormatException e) {
-                return false;
-            }
-        }
-        return false;
+        return CustomArcheology.majorVersion >= version;
     }
 
     public static boolean getMinorVersion(int majorVersion, int minorVersion) {
-        if (!getMajorVersion(majorVersion)) {
-            return false;
-        }
-        String[] parts = Bukkit.getVersion().split("\\.");
-        if (parts.length >= 3) {
-            try {
-                return Integer.parseInt(parts[2].replace(")", "")) >= minorVersion;
-            } catch (NumberFormatException e) {
-                return false;
-            }
-        }
-        return 0 >= minorVersion;
+        return CustomArcheology.majorVersion > majorVersion || (CustomArcheology.majorVersion == majorVersion &&
+                CustomArcheology.miniorVersion >= minorVersion);
     }
 
     public static NamespacedKey parseNamespacedKey(String key) {

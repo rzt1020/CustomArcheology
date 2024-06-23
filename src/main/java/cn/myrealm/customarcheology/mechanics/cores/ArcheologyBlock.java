@@ -153,7 +153,6 @@ public class ArcheologyBlock {
 
     public ItemStack roll(ItemStack tool) {
         String toolId = ItemUtil.getToolId(tool);
-        Bukkit.getConsoleSender().sendMessage(toolId);
         ConfigurationSection section = Objects.requireNonNull(Keys.BRUSH_TOOLS.asSection(config)).getConfigurationSection(toolId);
         String lootTableName = Keys.TOOL_LOOT_TABLES.asString(section);
         if (lootTableName == null || LootManager.getInstance().getCustomLootTable(lootTableName) == null) {

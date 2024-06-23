@@ -32,11 +32,16 @@ public class MainCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command, @NonNull String label, String[] args) {
-        if (args.length == 0 && Permissions.COMMAND_HELP.hasPermission(sender)) {
-            try {
-                SUB_COMMANDS.get("help").execute(sender, args);
-            } catch (Exception e) {
-                sender.sendMessage(Messages.ERROR_EXECUTING_COMMAND + e.getMessage());
+
+        if (args.length == 0) {
+            if (Permissions.COMMAND_HELP.hasPermission(sender)) {
+                try {
+                    SUB_COMMANDS.get("help").execute(sender, args);
+                } catch (Exception e) {
+                    sender.sendMessage(Messages.ERROR_EXECUTING_COMMAND + e.getMessage());
+                }
+            } else {
+                sender.sendMessage(Messages.ERROR_INCORRECT_COMMAND.getMessageWithPrefix());
             }
             return true;
         }
