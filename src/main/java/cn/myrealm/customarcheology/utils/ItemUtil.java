@@ -1,6 +1,7 @@
 package cn.myrealm.customarcheology.utils;
 
 import cn.myrealm.customarcheology.enums.NamespacedKeys;
+import cn.myrealm.customarcheology.managers.managers.LocateManager;
 import cn.myrealm.customarcheology.managers.managers.system.LanguageManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -23,10 +24,23 @@ public class ItemUtil {
 
     public static String getItemName(ItemStack displayItem) {
         if (displayItem == null || displayItem.getItemMeta() == null) {
-            return "";
+            return "ERROR: Unknown Item";
         }
-        if (Bukkit.getPluginManager().isPluginEnabled("NeigeItems")) {
+        if (displayItem.getItemMeta().hasDisplayName()) {
+            return displayItem.getItemMeta().getDisplayName();
+        }
+        if (LocateManager.enableThis() && LocateManager.locateManager != null) {
+            return LocateManager.locateManager.getLocateName(displayItem);
+        }
+        if (CommonUtil.checkPluginLoad("NeigeItems")) {
             return ItemUtils.getItemName(displayItem);
+        }
+        return getItemNameWithoutVanilla(displayItem);
+    }
+
+    public static String getItemNameWithoutVanilla(ItemStack displayItem) {
+        if (displayItem == null || displayItem.getItemMeta() == null) {
+            return "ERROR: Unknown Item";
         }
         if (displayItem.getItemMeta().hasDisplayName()) {
             return displayItem.getItemMeta().getDisplayName();

@@ -48,34 +48,23 @@ public final class CustomArcheology extends JavaPlugin {
         plugin = this;
         protocolManager = ProtocolLibrary.getProtocolManager();
 
+        try {
+            String[] versionParts = Bukkit.getBukkitVersion().split("-")[0].split("\\.");
+            majorVersion = versionParts.length > 1 ? Integer.parseInt(versionParts[1]) : 0;
+            miniorVersion = versionParts.length > 2 ? Integer.parseInt(versionParts[2]) : 0;
+        } catch (Throwable throwable) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §cError: Can not get your Minecraft version! Default set to 1.0.0.");
+        }
+
         outputDefaultFiles();
 
         initPlugin();
         registerDefaultListeners();
         registerDefaultCommands();
 
-        Bukkit.getConsoleSender().sendMessage(Messages.ENABLE_MESSAGE.getMessageWithPrefix());
-    }
-
-    @Override
-    public void onDisable() {
-        disablePlugin();
-    }
-
-    public void reloadPlugin() {
-        disablePlugin();
-        initPlugin();
-    }
-    public void initPlugin() {
-        managers.clear();
-        managers.add(new DatabaseManager(this));
-        managers.add(new LanguageManager(this));
-        managers.add(new TextureManager(this));
-        managers.add(new PlayerManager(this));
-        managers.add(new LootManager(this));
-        managers.add(new BlockManager(this));
-        managers.add(new ChunkManager(this));
-        managers.add(new ToolManager(this));
+        if (LocateManager.enableThis()) {
+            managers.add(new LocateManager(this));
+        }
         canUseStructure = CommonUtil.checkClass("org.bukkit.Chunk", "getStructures");
         if (!canUseStructure) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §6Warning: Can not register structure type generate method" +
@@ -88,15 +77,33 @@ public final class CustomArcheology extends JavaPlugin {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fFixing dungeon config loading...");
             MythicDungeons.inst().reloadAllDungeons();
         }
-        try {
-            String[] versionParts = Bukkit.getBukkitVersion().split("-")[0].split("\\.");
-            majorVersion = versionParts.length > 1 ? Integer.parseInt(versionParts[1]) : 0;
-            miniorVersion = versionParts.length > 2 ? Integer.parseInt(versionParts[2]) : 0;
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fYour Minecraft version is: 1." + majorVersion + "." + miniorVersion + "!");
-        } catch (Throwable throwable) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §cError: Can not get your Minecraft version! Default set to 1.0.0.");
-        }
+
+        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fYour Minecraft version is: 1." + majorVersion + "." + miniorVersion + "!");
+        Bukkit.getConsoleSender().sendMessage(Messages.ENABLE_MESSAGE.getMessageWithPrefix());
     }
+
+    @Override
+    public void onDisable() {
+        disablePlugin();
+    }
+
+    public void 【reloadPlugin() {
+        disablePlugin();
+        initPlugin();
+    }
+
+    public void initPlugin() {
+        managers.clear();
+        managers.add(new DatabaseManager(this));
+        managers.add(new LanguageManager(this));
+        managers.add(new TextureManager(this));
+        managers.add(new PlayerManager(this));
+        managers.add(new LootManager(this));
+        managers.add(new BlockManager(this));
+        managers.add(new ChunkManager(this));
+        managers.add(new ToolManager(this));
+    }
+
     public void disablePlugin() {
         for (BaseManager manager : managers) {
             manager.disable();

@@ -31,8 +31,11 @@ public enum Config {
     // auto copy resource pack
     AUTO_COPY_RESOURCEPACK_ENABLED("auto-copy-resourcepack.enabled", true),
     AUTO_COPY_RESOURCEPACK_PLUGIN("auto-copy-resourcepack.plugin", "ItemsAdder"),
-    AUTO_COPY_RESOURCEPACK_PATH("auto-copy-resourcepack.path", "/contents/customarcheology/resourcepack/");
-
+    AUTO_COPY_RESOURCEPACK_PATH("auto-copy-resourcepack.path", "/contents/customarcheology/resourcepack/"),
+    // minecraft locate file
+    CONFIG_FILES_MINECRAFT_LOCATE_FILE_ENABLED("config-files.minecraft-locate-file.enabled", true),
+    CONFIG_FILES_MINECRAFT_LOCATE_FILE_GENERATE_NEW_ONE("config-files.minecraft-locate-file.generate-new-one", false),
+    CONFIG_FILES_MINECRAFT_LOCATE_FILE_FILE("config-files.minecraft-locate-file.file", "zh_cn.json");
 
     private final String key;
     private final Object def;
