@@ -31,6 +31,6 @@ command:
 game:
   brush-no-permission: "你没有权限发掘该方块!"
   can-not-brush: "你不能使用该物品发掘该方块!"
-  already-burshing: "其他玩家正在发掘该考古方块!"
+  already-brushing: "其他玩家正在发掘该考古方块!"
   give: "成功给予{item-id}x{amount}给{player}!"
   place: "成功放置{block-id}在{world} {pos}!"

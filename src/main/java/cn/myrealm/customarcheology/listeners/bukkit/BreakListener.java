@@ -3,6 +3,7 @@ package cn.myrealm.customarcheology.listeners.bukkit;
 
 import cn.myrealm.customarcheology.listeners.BaseListener;
 import cn.myrealm.customarcheology.managers.managers.ChunkManager;
+import cn.myrealm.customarcheology.mechanics.cores.ArcheologyBlock;
 import cn.myrealm.customarcheology.utils.PacketUtil;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -53,16 +54,18 @@ public class BreakListener extends BaseListener {
         }
         Location loc = Objects.requireNonNull(event.getClickedBlock()).getLocation();
         ChunkManager chunkManager = ChunkManager.getInstance();
-        if (chunkManager.isArcheologyBlock(loc)) {
-            Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                PacketUtil.changeBlock(Collections.singletonList(event.getPlayer()), loc, Material.BARRIER);
-            },1);
+        ArcheologyBlock block = chunkManager.getArcheologyBlock(loc);
+        if (block != null) {
+            loc.getBlock().setType(Material.BARRIER);
         }
     }
 
     @EventHandler
     public void onLeftClick(PlayerInteractEvent event) {
-        if (!event.getAction().equals(Action.LEFT_CLICK_BLOCK) || !event.getPlayer().getGameMode().equals(GameMode.SURVIVAL)) {
+        if (!event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
+            return;
+        }
+        if (!event.getPlayer().getGameMode().equals(GameMode.SURVIVAL) && !event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
             return;
         }
         Location loc = Objects.requireNonNull(event.getClickedBlock()).getLocation();

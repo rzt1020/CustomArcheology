@@ -78,6 +78,9 @@ public final class CustomArcheology extends JavaPlugin {
             MythicDungeons.inst().reloadAllDungeons();
         }
 
+        if (Config.DEBUG.asBoolean()) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fDebug mode enabled.");
+        }
         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fYour Minecraft version is: 1." + majorVersion + "." + miniorVersion + "!");
         Bukkit.getConsoleSender().sendMessage(Messages.ENABLE_MESSAGE.getMessageWithPrefix());
     }
@@ -87,12 +90,13 @@ public final class CustomArcheology extends JavaPlugin {
         disablePlugin();
     }
 
-    public void 【reloadPlugin() {
+    public void reloadPlugin() {
         disablePlugin();
         initPlugin();
     }
 
     public void initPlugin() {
+        CustomArcheology.plugin.reloadConfig();
         managers.clear();
         managers.add(new DatabaseManager(this));
         managers.add(new LanguageManager(this));

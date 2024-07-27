@@ -10,6 +10,7 @@ import cn.myrealm.customarcheology.managers.managers.PlayerManager;
 import cn.myrealm.customarcheology.mechanics.persistent_data.ItemStackTagType;
 import cn.myrealm.customarcheology.utils.CommonUtil;
 import cn.myrealm.customarcheology.utils.PacketUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
@@ -23,6 +24,8 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import java.util.*;
+
+import static cn.myrealm.customarcheology.CustomArcheology.plugin;
 
 /**
  * @author rzt1020
@@ -56,6 +59,9 @@ public class FakeTileBlock {
         } else {
             this.entityId = -tempID;
         }
+        if (Config.DEBUG.asBoolean()) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fEntity ID: " + entityId);
+        }
         this.reward = reward;
     }
 
@@ -76,7 +82,7 @@ public class FakeTileBlock {
             return;
         }
 
-        PacketUtil.changeBlock(players, location, Material.BARRIER);
+        location.getBlock().setType(Material.BARRIER);
         PacketUtil.spawnItemDisplay(players, location, block.generateItemStack(1), entityId, null, null);
     }
 
@@ -87,7 +93,7 @@ public class FakeTileBlock {
             return;
         }
 
-        PacketUtil.changeBlock(players, location, location.getBlock().getType());
+        location.getBlock().setType(block.getType());
         PacketUtil.removeEntity(players, entityId);
     }
 
@@ -100,6 +106,9 @@ public class FakeTileBlock {
     }
 
     public void play(BlockFace blockFace, ItemStack tool) {
+        if (Config.DEBUG.asBoolean()) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fTrying start play effect.");
+        }
         this.tool = tool;
         if (isPlaying) {
             return;
@@ -110,6 +119,9 @@ public class FakeTileBlock {
             effectInit(blockFace);
             spawnReward(blockFace);
             int taskId = order.pop();
+            if (Config.DEBUG.asBoolean()) {
+                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fInit new effect.");
+            }
             nextTask = taskMap.get(taskId).cloneTask();
             nextTask.run();
         } else {
@@ -117,8 +129,11 @@ public class FakeTileBlock {
                 complete.push(nextTask.getTaskId());
             }
             int taskId = order.pop();
+            if (Config.DEBUG.asBoolean()) {
+                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fGetting next effect.");
+            }
             nextTask = taskMap.get(taskId).cloneTask();
-            nextTask.runTaskLater(CustomArcheology.plugin, (long) (nextTask.getState().getHardness() * 20 / efficiency));
+            nextTask.runTaskLater(plugin, (long) (nextTask.getState().getHardness() * 20 / efficiency));
         }
         playParticleEffect(blockFace);
     }
@@ -140,7 +155,7 @@ public class FakeTileBlock {
                 Objects.requireNonNull(finalLocation.getWorld()).spawnParticle(CustomArcheology.getCorrectParticle(), finalLocation, 5, 0.1, 0.1, 0.1, block.getType().createBlockData());
             }
         };
-        particleTask.runTaskTimer(CustomArcheology.plugin, 0, 10);
+        particleTask.runTaskTimer(plugin, 0, 10);
     }
 
     private void effectInit(BlockFace blockFace) {
@@ -160,7 +175,7 @@ public class FakeTileBlock {
         for (int i = 1; i <= block.getStates().size(); i++) {
             taskMap.put(i, new EffectTask(this, block.getStates().get(i - 1), loc.add(vector).clone(), i));
         }
-        taskMap.put(block.getStates().size() + 1, new EffectTask(this, block.getFinishedState(), loc.clone(), block.getStates().size()+1));
+        taskMap.put(block.getStates().size() + 1, new EffectTask(this, block.getFinishedState(), loc.clone(), block.getStates().size() + 1));
         for (int i = taskMap.size() - 1; i >= 0 ; i--) {
             order.push(i);
         }
@@ -189,6 +204,10 @@ public class FakeTileBlock {
     }
 
     public void effect(EffectTask task, State state, Location location) {
+        if (Config.DEBUG.asBoolean()) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fPlaying effect.");
+        }
+
         if (Objects.isNull(task) || Objects.isNull(nextTask) || task.getTaskId() != nextTask.getTaskId()) {
             return;
         }
@@ -201,7 +220,7 @@ public class FakeTileBlock {
             }
             PacketUtil.removeEntity(players, entityId + 1);
             PacketUtil.removeEntity(players, entityId);
-            PacketUtil.changeBlock(players, this.location, state.getMaterial());
+            this.location.getBlock().setType(state.getMaterial());
             Item item = (Item) Objects.requireNonNull(location.getWorld()).spawnEntity(location, CustomArcheology.getEntityType());
             if (Objects.nonNull(reward.getItemMeta()) && reward.getItemMeta().getPersistentDataContainer().has(NamespacedKeys.ARCHEOLOGY_REAL_ITEM.getNamespacedKey(), new ItemStackTagType())) {
                 ItemStack realItem = Objects.requireNonNull(reward.getItemMeta().getPersistentDataContainer().get(NamespacedKeys.ARCHEOLOGY_REAL_ITEM.getNamespacedKey(), new ItemStackTagType()));
@@ -217,7 +236,7 @@ public class FakeTileBlock {
             Objects.requireNonNull(this.location.getWorld()).spawnParticle(CustomArcheology.getCorrectParticle(), this.location.clone().add(0.5,0.5,0.5), 100, 0.3, 0.3, 0.3, block.getType().createBlockData());
         } else {
             PacketUtil.teleportEntity(players, entityId + 1, location);
-            PacketUtil.updateItemDisplay(players, block.generateItemStack(1, state), entityId,  null, null);
+            PacketUtil.updateItemDisplay(players, block.generateItemStack(1, state), entityId, null, null);
         }
 
         if (isPlaying) {
@@ -225,7 +244,7 @@ public class FakeTileBlock {
             if (!order.isEmpty()) {
                 int taskId = order.pop();
                 nextTask = taskMap.get(taskId).cloneTask();
-                nextTask.runTaskLater(CustomArcheology.plugin, (long) (state.getHardness() * 20 / efficiency));
+                nextTask.runTaskLater(plugin, (long) (state.getHardness() * 20 / efficiency));
             } else {
                 nextTask = null;
                 tool = null;
@@ -241,7 +260,7 @@ public class FakeTileBlock {
             } else {
                 int taskId = complete.pop();
                 nextTask = taskMap.get(taskId).cloneTask();
-                nextTask.runTaskLater(CustomArcheology.plugin, 5L);
+                nextTask.runTaskLater(plugin, 5L);
             }
         }
         if (nextTask != null && nextTask.getState().isFinished) {
@@ -277,7 +296,7 @@ public class FakeTileBlock {
         }
         int taskId = complete.pop();
         nextTask = taskMap.get(taskId).cloneTask();
-        nextTask.runTaskLater(CustomArcheology.plugin, 40L);
+        nextTask.runTaskLater(plugin, 40L);
 
     }
 
@@ -293,7 +312,7 @@ public class FakeTileBlock {
     }
 }
 
-class EffectTask extends BukkitRunnable{
+class EffectTask extends BukkitRunnable {
     private final FakeTileBlock block;
     private final State state;
     private final Location location;
@@ -309,12 +328,15 @@ class EffectTask extends BukkitRunnable{
     public void run() {
         block.effect(this, state, location);
     }
+
     public State getState() {
         return state;
     }
+
     public EffectTask cloneTask() {
         return new EffectTask(block, state, location, taskId);
     }
+
     @Override
     public int getTaskId() {
         return taskId;

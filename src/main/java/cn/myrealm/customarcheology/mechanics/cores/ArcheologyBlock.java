@@ -74,10 +74,6 @@ public class ArcheologyBlock {
         return itemStack;
     }
 
-    public void placeBlock(Location location) {
-        location.getBlock().setType(replaceBlock);
-    }
-
     private void loadConfig() {
         ConfigurationSection section = Keys.STATES.asSection(config);
         replaceBlock = Material.getMaterial(Keys.REPLACE_BLOCK.asString(config).toUpperCase());

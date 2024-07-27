@@ -13,6 +13,8 @@ public enum Config {
     // config_files
     CONFIG_FILES_GENERATE_DEFAULT_FILES("config-files.generate-default-files", true),
     CONFIG_FILES_LANGUAGE("config-files.language", "en_US"),
+    // debug
+    DEBUG("debug", false),
     // database
     USE_MYSQL("database.use-mysql", false),
     MYSQL_HOST("database.mysql.host", "localhost"),
@@ -59,9 +61,9 @@ public enum Config {
         FileConfiguration config = CustomArcheology.plugin.getConfig();
         return config.getBoolean(key, (Boolean) def);
     }
+
     public double asDouble() {
         FileConfiguration config = CustomArcheology.plugin.getConfig();
         return config.getDouble(key, (Double) def);
     }
-
 }

@@ -31,6 +31,6 @@ command:
 game:
   brush-no-permission: "You don't have permission to brush!"
   can-not-brush: "You can not brush this block by this item!"
-  already-burshing: "Other player is already archeology here!"
+  already-brushing: "Other player is already archeology here!"
   give: "Successfully give {item-id}x{amount} to {player}!"
   place: "Successfully place {block-id} at {world} {pos}!"

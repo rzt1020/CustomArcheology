@@ -5,11 +5,8 @@ import cn.myrealm.customarcheology.CustomArcheology;
 import cn.myrealm.customarcheology.enums.Permissions;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.*;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -33,16 +30,6 @@ public class PacketUtil {
         animationPacket.getIntegers().write(1, 0);
 
         CustomArcheology.protocolManager.sendServerPacket(player, animationPacket);
-    }
-    public static void changeBlock(List<Player> player, Location blockLocation, Material material) {
-        PacketContainer blockChangePacket = CustomArcheology.protocolManager.createPacket(PacketType.Play.Server.BLOCK_CHANGE);
-
-        blockChangePacket.getBlockPositionModifier().write(0, new BlockPosition(blockLocation.getBlockX(), blockLocation.getBlockY(), blockLocation.getBlockZ()));
-        blockChangePacket.getBlockData().write(0, WrappedBlockData.createData(material));
-
-        for (Player p : player) {
-            CustomArcheology.protocolManager.sendServerPacket(p, blockChangePacket);
-        }
     }
     public static void spawnItemDisplay(List<Player> player, Location location, ItemStack displayItem, int entityId, @Nullable Vector3f scale, @Nullable Quaternionf rotation) {
         PacketContainer spawnPacket = new PacketContainer(PacketType.Play.Server.SPAWN_ENTITY);
@@ -69,9 +56,7 @@ public class PacketUtil {
         glowMetaDataPacket.getIntegers().write(0, entityId);
 
         WrappedDataWatcher entityMetaData = new WrappedDataWatcher();
-        if (Bukkit.getVersion().contains("1.20.1") || (Bukkit.getVersion().contains("1.20")
-                && (Bukkit.getVersion().split("1.20").length == 1 ||
-                !Bukkit.getVersion().split("1.20")[1].startsWith(".")))) {
+        if (!CommonUtil.getMinorVersion(20, 2)) {
             if (Objects.nonNull(scale)) {
                 entityMetaData.setObject(11, WrappedDataWatcher.Registry.get(Vector3f.class), scale);
             }
@@ -134,7 +119,6 @@ public class PacketUtil {
 
     public static void teleportEntity(List<Player> players, int entityId, Location location) {
         PacketContainer teleportPacket = new PacketContainer(PacketType.Play.Server.ENTITY_TELEPORT);
-
 
         teleportPacket.getIntegers().write(0, entityId);
         teleportPacket.getDoubles().write(0, location.getX() + 0.5);

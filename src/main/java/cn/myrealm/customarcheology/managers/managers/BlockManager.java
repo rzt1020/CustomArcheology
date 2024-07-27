@@ -117,8 +117,6 @@ public class BlockManager extends BaseManager {
         }
     }
 
-
-
     public static BlockManager getInstance() {
         return instance;
     }
@@ -135,10 +133,6 @@ public class BlockManager extends BaseManager {
         return blocksMap.get(name).generateItemStack(amount);
     }
     public void placeBlock(ArcheologyBlock block, Location location) {
-        block.placeBlock(location);
-        Bukkit.getScheduler().runTaskLater(CustomArcheology.plugin, () -> registerNewBlock(block, location), 1);
-    }
-    public void registerNewBlock(ArcheologyBlock block, Location location) {
         location = location.getBlock().getLocation();
         ChunkManager chunkManager = ChunkManager.getInstance();
         Chunk chunk = location.getChunk();

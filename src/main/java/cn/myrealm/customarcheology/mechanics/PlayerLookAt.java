@@ -1,10 +1,8 @@
 package cn.myrealm.customarcheology.mechanics;
 
 import cn.myrealm.customarcheology.CustomArcheology;
-import cn.myrealm.customarcheology.enums.Permissions;
-import cn.myrealm.customarcheology.managers.managers.ChunkManager;
-import org.bukkit.Color;
-import org.bukkit.Particle;
+import cn.myrealm.customarcheology.enums.Config;
+import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -43,17 +41,20 @@ public class PlayerLookAt {
         } catch (Exception ignored) {
         }
         if (Objects.isNull(lookAtBlock)) {
-            lookAtBlockChange(null, block);
+            lookAtBlockChange();
             lookAtBlock = block;
             return;
         }
         if (!lookAtBlock.equals(block)) {
-            lookAtBlockChange(lookAtBlock, block);
+            lookAtBlockChange();
             lookAtBlock = block;
         }
     }
-    public void lookAtBlockChange(Block before, Block after) {
+    public void lookAtBlockChange() {
         if (Objects.nonNull(task)) {
+            if (Config.DEBUG.asBoolean()) {
+                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fChange look at block.");
+            }
             task.run();
             task = null;
         }
