@@ -43,9 +43,6 @@ public class HelpCommand implements SubCommand {
         if (!Permissions.COMMAND_HELP.hasPermission(sender)) {
             return;
         }
-        if (args.length != NONE_ARGUMENT) {
-            sender.sendMessage(getUsage());
-        }
         sender.sendMessage(Messages.COMMAND_HELP_HEAD.getMessage());
         for (SubCommand subCommand : MainCommand.HELP_SUB_COMMANDS.values()) {
             sender.sendMessage(Messages.COMMAND_HELP_DETAIL.getMessage("command-usage", subCommand.getUsage(), "command-description", subCommand.getDescription()));
