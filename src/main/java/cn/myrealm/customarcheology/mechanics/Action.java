@@ -1,5 +1,6 @@
 package cn.myrealm.customarcheology.mechanics;
 
+import cn.myrealm.customarcheology.CustomArcheology;
 import cn.myrealm.customarcheology.managers.managers.system.LanguageManager;
 import cn.myrealm.customarcheology.utils.CommonUtil;
 import cn.myrealm.customarcheology.utils.ItemUtil;
@@ -14,8 +15,11 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.Collection;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Action {
+
     public static void runAction(Player player, Location location, ItemStack reward, String action) {
         if (player != null) {
             action = action.replace("{player}", player.getName());
@@ -23,8 +27,18 @@ public class Action {
         if (reward != null) {
             action = action.replace("{reward}", ItemUtil.getItemName(reward));
         }
-        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+        if (CommonUtil.checkPluginLoad("PlaceholderAPI")) {
             action = PlaceholderAPI.setPlaceholders(player, action);
+        }
+        Pattern pattern = Pattern.compile("~\\d+$");
+        Matcher matcher = pattern.matcher(action);
+        if (matcher.find()) {
+            String number = matcher.group().substring(1);
+            int realNumber = Integer.parseInt(number);
+            if (CustomArcheology.RANDOM.nextInt(100) > realNumber) {
+                return;
+            }
+            action = action.replaceAll("~\\d+$", "");
         }
         if (action.startsWith("sound: ") && player != null) {
             // By: iKiwo

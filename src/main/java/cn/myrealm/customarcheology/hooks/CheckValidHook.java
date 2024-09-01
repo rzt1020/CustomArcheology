@@ -52,7 +52,7 @@ public class CheckValidHook {
         }
         if (CommonUtil.checkPluginLoad("eco")) {
             if (Items.getCustomItem(itemStack) != null) {
-                return new String[]{"eco", Items.getCustomItem(itemStack).getKey().getKey()};
+                return new String[]{"eco", Items.getCustomItem(itemStack).getKey().toString()};
             }
         }
         if (CommonUtil.checkPluginLoad("MythicMobs")) {

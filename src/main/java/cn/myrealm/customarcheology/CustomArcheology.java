@@ -4,7 +4,6 @@ import cn.myrealm.customarcheology.commands.MainCommand;
 import cn.myrealm.customarcheology.commands.subcommands.*;
 import cn.myrealm.customarcheology.enums.Config;
 import cn.myrealm.customarcheology.enums.Messages;
-import cn.myrealm.customarcheology.hooks.mythicdungeons.FunctionPlaceBlock;
 import cn.myrealm.customarcheology.listeners.bukkit.*;
 import cn.myrealm.customarcheology.hooks.BetterStructuresHook;
 import cn.myrealm.customarcheology.listeners.protocol.DigListener;
@@ -16,8 +15,6 @@ import cn.myrealm.customarcheology.managers.managers.system.TextureManager;
 import cn.myrealm.customarcheology.utils.CommonUtil;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import net.playavalon.mythicdungeons.MythicDungeons;
-import net.playavalon.mythicdungeons.utility.GUIHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Particle;
 import org.bukkit.entity.EntityType;
@@ -70,14 +67,6 @@ public final class CustomArcheology extends JavaPlugin {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §6Warning: Can not register structure type generate method" +
                     " in this server. Try to update your server core jar to LATEST 1.20.4 or Minecraft 1.20.4 newer version to fix.");
         }
-        if (CommonUtil.getClass("net.playavalon.mythicdungeons.MythicDungeons")) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fHooking into MythicDungeons...");
-            MythicDungeons.inst().registerFunction(FunctionPlaceBlock.class);
-            GUIHandler.initFunctionMenu();
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fFixing dungeon config loading...");
-            MythicDungeons.inst().reloadAllDungeons();
-        }
-
         if (Config.DEBUG.asBoolean()) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fDebug mode enabled.");
         }
