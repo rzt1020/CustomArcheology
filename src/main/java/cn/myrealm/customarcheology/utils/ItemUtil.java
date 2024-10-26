@@ -3,7 +3,6 @@ package cn.myrealm.customarcheology.utils;
 import cn.myrealm.customarcheology.enums.NamespacedKeys;
 import cn.myrealm.customarcheology.managers.managers.LocateManager;
 import cn.myrealm.customarcheology.managers.managers.system.LanguageManager;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -29,8 +28,8 @@ public class ItemUtil {
         if (displayItem.getItemMeta().hasDisplayName()) {
             return displayItem.getItemMeta().getDisplayName();
         }
-        if (LocateManager.enableThis() && LocateManager.locateManager != null) {
-            return LocateManager.locateManager.getLocateName(displayItem);
+        if (LocateManager.enableThis() && LocateManager.instance != null) {
+            return LocateManager.instance.getLocateName(displayItem);
         }
         if (CommonUtil.checkPluginLoad("NeigeItems")) {
             return ItemUtils.getItemName(displayItem);

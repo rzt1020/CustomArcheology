@@ -20,7 +20,7 @@ import java.util.Map;
 
 public class LocateManager extends BaseManager {
 
-    public static LocateManager locateManager;
+    public static LocateManager instance;
 
     private Map<String, String> locateMap;
 
@@ -32,7 +32,7 @@ public class LocateManager extends BaseManager {
 
     public LocateManager(JavaPlugin plugin) {
         super(plugin);
-        locateManager = this;
+        instance = this;
     }
 
     @Override

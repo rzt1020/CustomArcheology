@@ -1,11 +1,14 @@
 package cn.myrealm.customarcheology.utils.Item;
 
+import cn.myrealm.customarcheology.CustomArcheology;
 import cn.myrealm.customarcheology.hooks.ItemsHook;
 import cn.myrealm.customarcheology.managers.managers.BlockManager;
+import cn.myrealm.customarcheology.managers.managers.HookManager;
 import cn.myrealm.customarcheology.managers.managers.ToolManager;
 import cn.myrealm.customarcheology.managers.managers.system.LanguageManager;
 import cn.myrealm.customarcheology.utils.CommonUtil;
 import com.google.common.base.Enums;
+import com.google.common.collect.MultimapBuilder;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import org.bukkit.*;
@@ -35,6 +38,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -69,7 +73,7 @@ public class BuildItem {
                 } else if (pluginName.equals("EcoArmor") && !itemID.contains(";;")) {
                     itemID = itemID + ";;" + section.getString("hook-item-type");
                 }
-                ItemStack hookItem = ItemsHook.getHookItem(pluginName, itemID);
+                ItemStack hookItem = HookManager.getHookManager().getHookItem(pluginName, itemID);
                 if (hookItem != null) {
                     item = hookItem;
                 }
@@ -277,6 +281,9 @@ public class BuildItem {
                 ItemFlag itemFlag = Enums.getIfPresent(ItemFlag.class, flag).orNull();
                 if (itemFlag != null) {
                     meta.addItemFlags(itemFlag);
+                }
+                if (CommonUtil.getMinorVersion(20, 6) && itemFlag == ItemFlag.HIDE_ATTRIBUTES && meta.getAttributeModifiers() == null) {
+                    meta.setAttributeModifiers(MultimapBuilder.hashKeys().hashSetValues().build());
                 }
             }
         }
@@ -521,7 +528,24 @@ public class BuildItem {
         if (meta instanceof SkullMeta skullMeta) {
             String skullTextureNameKey = section.getString("skull-meta", section.getString("skull"));
             if (skullTextureNameKey != null) {
-                if (skullTextureNameKey.length() > 16) {
+                if (CustomArcheology.newSkullMethod) {
+                    try {
+                        Class<?> profileClass = Class.forName("net.minecraft.world.item.component.ResolvableProfile");
+                        Constructor<?> constroctor = profileClass.getConstructor(GameProfile.class);
+                        GameProfile profile = new GameProfile(UUID.randomUUID(), "");
+                        profile.getProperties().put("textures", new Property("textures", skullTextureNameKey));
+                        try {
+                            Method mtd = skullMeta.getClass().getDeclaredMethod("setProfile", profileClass);
+                            mtd.setAccessible(true);
+                            mtd.invoke(skullMeta, constroctor.newInstance(profile));
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[ManyouItems] §cError: Can not parse skull texture in a item!");
+                        }
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
                     GameProfile profile = new GameProfile(UUID.randomUUID(), "");
                     profile.getProperties().put("textures", new Property("textures", skullTextureNameKey));
                     try {
@@ -529,10 +553,9 @@ public class BuildItem {
                         mtd.setAccessible(true);
                         mtd.invoke(skullMeta, profile);
                     } catch (Exception exception) {
+                        exception.printStackTrace();
                         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[ManyouItems] §cError: Can not parse skull texture in a item!");
                     }
-                } else {
-                    skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer(skullTextureNameKey));
                 }
             }
         }

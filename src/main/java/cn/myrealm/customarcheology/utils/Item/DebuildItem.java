@@ -1,6 +1,8 @@
 package cn.myrealm.customarcheology.utils.Item;
 
+import cn.myrealm.customarcheology.CustomArcheology;
 import cn.myrealm.customarcheology.hooks.CheckValidHook;
+import cn.myrealm.customarcheology.managers.managers.HookManager;
 import cn.myrealm.customarcheology.utils.CommonUtil;
 import com.google.common.collect.Multimap;
 import com.mojang.authlib.GameProfile;
@@ -36,9 +38,9 @@ public class DebuildItem {
 
     public static ConfigurationSection debuildItem(ItemStack itemStack, ConfigurationSection section) {
 
-        if (CheckValidHook.checkValid(itemStack) != null) {
-            section.set("hook-plugin", CheckValidHook.checkValid(itemStack)[0]);
-            section.set("hook-item", CheckValidHook.checkValid(itemStack)[1]);
+        if (HookManager.getHookManager().getHookItemPluginAndID(itemStack) != null) {
+            section.set("hook-plugin", HookManager.getHookManager().getHookItemPluginAndID(itemStack)[0]);
+            section.set("hook-item", HookManager.getHookManager().getHookItemPluginAndID(itemStack)[1]);
         } else {
             // Material
             section.set("material", itemStack.getType().name());
@@ -332,18 +334,34 @@ public class DebuildItem {
 
         // Skull
         if (meta instanceof SkullMeta skullMeta) {
-            if (skullMeta.hasOwner()) {
+            if (skullMeta.hasOwner() && skullMeta.getOwningPlayer().getName() != null) {
                 section.set("skull", skullMeta.getOwningPlayer().getName());
             } else {
                 try {
                     Field field = skullMeta.getClass().getDeclaredField("profile");
                     field.setAccessible(true);
-                    GameProfile gameProfile = (GameProfile) field.get(skullMeta);
-                    if (gameProfile != null) {
-                        Property property = gameProfile.getProperties().get("textures").iterator().next();
-                        section.set("skull", property.getValue());
+                    if (CustomArcheology.newSkullMethod) {
+                        Object playerProfile = field.get(skullMeta);
+                        if (playerProfile != null) {
+                            Field field2 = playerProfile.getClass().getDeclaredField("f");
+                            field2.setAccessible(true);
+                            GameProfile gameProfile = (GameProfile) field2.get(playerProfile);
+                            if (gameProfile != null) {
+                                Property property = gameProfile.getProperties().get("textures").iterator().next();
+                                Field field3 = property.getClass().getDeclaredField("value");
+                                field3.setAccessible(true);
+                                section.set("skull", field3.get(property));
+                            }
+                        }
+                    } else {
+                        GameProfile gameProfile = (GameProfile) field.get(skullMeta);
+                        if (gameProfile != null) {
+                            Property property = gameProfile.getProperties().get("textures").iterator().next();
+                            section.set("skull", property.getValue());
+                        }
                     }
                 } catch (Exception exception) {
+                    exception.printStackTrace();
                     Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[ManyouItems] §cError: Can not parse skull texture in a item!");
                 }
             }

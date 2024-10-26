@@ -37,6 +37,7 @@ public final class CustomArcheology extends JavaPlugin {
     public static ProtocolManager protocolManager;
     public static final Random RANDOM = new Random();
     public static boolean canUseStructure = false;
+    public static boolean newSkullMethod;
     public static int majorVersion = 0;
     public static int miniorVersion = 0;
 
@@ -67,8 +68,9 @@ public final class CustomArcheology extends JavaPlugin {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §6Warning: Can not register structure type generate method" +
                     " in this server. Try to update your server core jar to LATEST 1.20.4 or Minecraft 1.20.4 newer version to fix.");
         }
-        if (Config.DEBUG.asBoolean()) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fDebug mode enabled.");
+        if (!CommonUtil.checkClass("com.mojang.authlib.properties.Property", "getValue") && CommonUtil.getMinorVersion(21, 1)) {
+            newSkullMethod = true;
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fNew AuthLib found, enabled new skull get method!");
         }
         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[CustomArcheology] §fYour Minecraft version is: 1." + majorVersion + "." + miniorVersion + "!");
         Bukkit.getConsoleSender().sendMessage(Messages.ENABLE_MESSAGE.getMessageWithPrefix());
@@ -90,6 +92,7 @@ public final class CustomArcheology extends JavaPlugin {
         managers.add(new DatabaseManager(this));
         managers.add(new LanguageManager(this));
         managers.add(new TextureManager(this));
+        managers.add(new HookManager(this));
         managers.add(new PlayerManager(this));
         managers.add(new LootManager(this));
         managers.add(new BlockManager(this));

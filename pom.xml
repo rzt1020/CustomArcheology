@@ -6,7 +6,7 @@
 
     <groupId>cn.myrealm</groupId>
     <artifactId>CustomArcheology</artifactId>
-    <version>1.4.5</version>
+    <version>1.4.8</version>
     <packaging>jar</packaging>
 
     <name>CustomArcheology</name>
