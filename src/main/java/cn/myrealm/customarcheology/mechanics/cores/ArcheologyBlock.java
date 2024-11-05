@@ -215,10 +215,10 @@ public class ArcheologyBlock {
     }
 
     public Sound getPlaceSound() {
-        return Sound.valueOf(Keys.PLACE_SOUND.asString(config).toUpperCase());
+        return Registry.SOUNDS.get(CommonUtil.parseNamespacedKey(Keys.PLACE_SOUND.asString(config)));
     }
     public Sound getBrushSound() {
-        return Sound.valueOf(Keys.BRUSH_SOUND.asString(config).toUpperCase());
+        return Registry.SOUNDS.get(CommonUtil.parseNamespacedKey(Keys.BRUSH_SOUND.asString(config).toUpperCase()));
     }
     public int getConsumeDurability() {
         return Keys.CONSUME_DURABILITY.asInt(config);

@@ -5,14 +5,13 @@ import cn.myrealm.customarcheology.CustomArcheology;
 import cn.myrealm.customarcheology.enums.Permissions;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.reflect.accessors.FieldAccessor;
 import com.comphenix.protocol.wrappers.*;
-import org.bukkit.Bukkit;
+import net.minecraft.world.phys.Vec3;
+import net.net.minecraft.world.entity.PositionMoveRotation;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Vector;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -121,24 +120,27 @@ public class PacketUtil {
     }
 
     public static void teleportEntity(List<Player> players, int entityId, Location location) {
-        PacketContainer teleportPacket = new PacketContainer(PacketType.Play.Server.ENTITY_TELEPORT);
+        try {
+            PacketContainer teleportPacket = new PacketContainer(PacketType.Play.Server.ENTITY_TELEPORT);
 
-        teleportPacket.getIntegers().write(0, entityId);
-        if (CommonUtil.getMinorVersion(21, 2)) {
-            for (FieldAccessor fieldAccessor : teleportPacket.getModifier().getFields()) {
-                Bukkit.getConsoleSender().sendMessage(fieldAccessor.getField().getType().getName());
+            teleportPacket.getIntegers().write(0, entityId);
+            if (CommonUtil.getMinorVersion(21, 2)) {
+                Vec3 vec3 = new Vec3(location.getX() + 0.5, location.getY() + 0.5, location.getZ() + 0.5);
+                teleportPacket.getSpecificModifier(PositionMoveRotation.class).write(
+                        0,
+                        new PositionMoveRotation(vec3, Vec3.ZERO, 0f, 0f));
+            } else {
+                teleportPacket.getDoubles().write(0, location.getX() + 0.5);
+                teleportPacket.getDoubles().write(1, location.getY() + 0.5);
+                teleportPacket.getDoubles().write(2, location.getZ() + 0.5);
             }
 
-            // TODO...
-        } else {
-            teleportPacket.getDoubles().write(0, location.getX() + 0.5);
-            teleportPacket.getDoubles().write(1, location.getY() + 0.5);
-            teleportPacket.getDoubles().write(2, location.getZ() + 0.5);
-        }
 
-
-        for (Player player : players) {
-            CustomArcheology.protocolManager.sendServerPacket(player, teleportPacket);
+            for (Player player : players) {
+                CustomArcheology.protocolManager.sendServerPacket(player, teleportPacket);
+            }
+        } catch (Throwable throwable) {
+            // ignored
         }
     }
 
