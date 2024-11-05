@@ -7,7 +7,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.*;
 import net.minecraft.world.phys.Vec3;
-import net.net.minecraft.world.entity.PositionMoveRotation;
+import net.minecraft.world.entity.PositionMoveRotation;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -140,7 +140,7 @@ public class PacketUtil {
                 CustomArcheology.protocolManager.sendServerPacket(player, teleportPacket);
             }
         } catch (Throwable throwable) {
-            // ignored
+            throwable.printStackTrace();
         }
     }
 
