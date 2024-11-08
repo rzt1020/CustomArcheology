@@ -57,6 +57,11 @@
       <option name="url" value="https://repo.rosewooddev.io/repository/public/" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="codemc-releases" />
+      <option name="name" value="codemc-releases" />
+      <option name="url" value="https://repo.codemc.io/repository/maven-releases/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="worldedit" />
       <option name="name" value="worldedit" />
       <option name="url" value="https://maven.enginehub.org/repo/" />

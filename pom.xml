@@ -6,7 +6,7 @@
 
     <groupId>cn.myrealm</groupId>
     <artifactId>CustomArcheology</artifactId>
-    <version>1.4.9</version>
+    <version>1.5.0</version>
     <packaging>jar</packaging>
 
     <name>CustomArcheology</name>
@@ -109,7 +109,10 @@
             <id>worldedit</id>
             <url>https://maven.enginehub.org/repo/</url>
         </repository>
-
+        <repository>
+            <id>codemc-releases</id>
+            <url>https://repo.codemc.io/repository/maven-releases/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -132,13 +135,6 @@
             <version>1.4.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/MythicDungeons-1.4.0.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>com.comphenix.protocol</groupId>
-            <artifactId>ProtocolLib</artifactId>
-            <version>5.4.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/ProtocolLib.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.github.LoneDev6</groupId>
@@ -274,6 +270,12 @@
             <version>7.24.7.9</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/ExecutableItems-7.24.7.9.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.github.retrooper</groupId>
+            <artifactId>packetevents-spigot</artifactId>
+            <version>2.6.0</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

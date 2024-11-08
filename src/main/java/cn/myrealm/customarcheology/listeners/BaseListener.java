@@ -1,26 +1,19 @@
 package cn.myrealm.customarcheology.listeners;
 
-import cn.myrealm.customarcheology.CustomArcheology;
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.events.ListenerPriority;
-import com.comphenix.protocol.events.PacketAdapter;
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.event.PacketListener;
+import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * @author rzt1020
  */
-public abstract class BaseListener extends PacketAdapter implements Listener {
+public abstract class BaseListener implements Listener, PacketListener {
 
     protected final JavaPlugin plugin;
 
-    public BaseListener(JavaPlugin plugin, PacketType... types) {
-        super(plugin, ListenerPriority.NORMAL, types);
-        this.plugin = plugin;
-    }
-
     public BaseListener(JavaPlugin plugin) {
-        super(plugin, ListenerPriority.NORMAL, PacketType.Play.Server.RECIPES);
         this.plugin = plugin;
     }
 
@@ -29,7 +22,8 @@ public abstract class BaseListener extends PacketAdapter implements Listener {
     }
 
     public void registerProtocolListener() {
-        CustomArcheology.protocolManager.addPacketListener(this);
+        PacketEvents.getAPI().getEventManager().registerListener(
+                this, PacketListenerPriority.NORMAL);
     }
 
 }

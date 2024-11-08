@@ -13,8 +13,7 @@ import cn.myrealm.customarcheology.managers.managers.system.DatabaseManager;
 import cn.myrealm.customarcheology.managers.managers.system.LanguageManager;
 import cn.myrealm.customarcheology.managers.managers.system.TextureManager;
 import cn.myrealm.customarcheology.utils.CommonUtil;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
+import com.github.retrooper.packetevents.PacketEvents;
 import org.bukkit.Bukkit;
 import org.bukkit.Particle;
 import org.bukkit.entity.EntityType;
@@ -34,7 +33,6 @@ public final class CustomArcheology extends JavaPlugin {
 
     public static CustomArcheology plugin;
     private final List<BaseManager> managers = new ArrayList<>();
-    public static ProtocolManager protocolManager;
     public static final Random RANDOM = new Random();
     public static boolean canUseStructure = false;
     public static boolean newSkullMethod;
@@ -44,7 +42,6 @@ public final class CustomArcheology extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
-        protocolManager = ProtocolLibrary.getProtocolManager();
 
         try {
             String[] versionParts = Bukkit.getBukkitVersion().split("-")[0].split("\\.");
@@ -109,6 +106,7 @@ public final class CustomArcheology extends JavaPlugin {
     public void registerDefaultListeners() {
         // Protocol Listener
         new DigListener(this).registerProtocolListener();
+        PacketEvents.getAPI().init();
         // Bukkit Listener
         new PlayerListener(this).registerBukkitListener();
         new PlaceListener(this).registerBukkitListener();

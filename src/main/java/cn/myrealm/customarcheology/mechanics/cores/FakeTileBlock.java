@@ -10,6 +10,8 @@ import cn.myrealm.customarcheology.managers.managers.PlayerManager;
 import cn.myrealm.customarcheology.mechanics.persistent_data.ItemStackTagType;
 import cn.myrealm.customarcheology.utils.CommonUtil;
 import cn.myrealm.customarcheology.utils.PacketUtil;
+import com.github.retrooper.packetevents.util.Quaternion4f;
+import com.github.retrooper.packetevents.util.Vector3f;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -20,8 +22,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
 
 import java.util.*;
 
@@ -196,9 +196,9 @@ public class FakeTileBlock {
             scale = new Vector3f(size, size, size);
         }
 
-        Quaternionf rotation = null;
+        Quaternion4f rotation = null;
         if (blockFace.equals(BlockFace.NORTH) || blockFace.equals(BlockFace.SOUTH)) {
-            rotation = new Quaternionf(0, -1, 0, -1).normalize();
+            rotation = new Quaternion4f(0, -1, 0, -1);
         }
         PacketUtil.spawnItemDisplay(players, location, reward, entityId + 1, scale, rotation);
     }
@@ -303,12 +303,6 @@ public class FakeTileBlock {
 
     public ItemStack getReward() {
         return reward;
-    }
-
-    public void highlight(Player player) {
-        if (sentPlayers.contains(player)) {
-            PacketUtil.highlightEntity(List.of(player), entityId);
-        }
     }
 }
 

@@ -2,7 +2,7 @@ name: CustomArcheology
 authors: ['rzt1020', 'PQguanfang']
 version: '${project.version}'
 depend:
-  - ProtocolLib
+  - packetevents
 softdepend:
   - ItemsAdder
   - Oraxen
