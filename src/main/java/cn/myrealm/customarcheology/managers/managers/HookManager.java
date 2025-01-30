@@ -56,6 +56,9 @@ public class HookManager extends BaseManager {
         if (CommonUtil.checkPluginLoad("ExecutableItems")) {
             registerNewItemHook("ExecutableItems", new ItemExecutableItemsHook());
         }
+        if (CommonUtil.checkPluginLoad("Nexo")) {
+            registerNewItemHook("Nexo", new ItemNexoHook());
+        }
     }
 
     public void registerNewItemHook(String pluginName,

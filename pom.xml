@@ -6,7 +6,7 @@
 
     <groupId>cn.myrealm</groupId>
     <artifactId>CustomArcheology</artifactId>
-    <version>1.5.0</version>
+    <version>1.5.5</version>
     <packaging>jar</packaging>
 
     <name>CustomArcheology</name>
@@ -276,6 +276,13 @@
             <artifactId>packetevents-spigot</artifactId>
             <version>2.6.0</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.nexomc</groupId>
+            <artifactId>nexo</artifactId>
+            <version>0.5.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/nexo-0.5.0-dev.jar</systemPath>
         </dependency>
     </dependencies>
 </project>

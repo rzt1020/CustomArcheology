@@ -20,16 +20,14 @@ import org.bukkit.block.ShulkerBox;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.damage.DamageType;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Axolotl;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.TropicalFish;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.*;
-import org.bukkit.inventory.meta.components.FoodComponent;
-import org.bukkit.inventory.meta.components.JukeboxPlayableComponent;
-import org.bukkit.inventory.meta.components.ToolComponent;
-import org.bukkit.inventory.meta.components.UseCooldownComponent;
+import org.bukkit.inventory.meta.components.*;
 import org.bukkit.inventory.meta.trim.ArmorTrim;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
 import org.bukkit.inventory.meta.trim.TrimPattern;
@@ -37,6 +35,7 @@ import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
+import org.bukkit.tag.DamageTypeTags;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -215,6 +214,20 @@ public class BuildItem {
                     Collection<Material> materials = new ArrayList<>();
                     int i = 0;
                     for (String singleMaterial : ruleParseResult) {
+                        Tag<Material> tempVal1 = Bukkit.getTag(Tag.REGISTRY_ITEMS, CommonUtil.parseNamespacedKey(singleMaterial), Material.class);
+                        if (tempVal1 != null) {
+                            float speed = Float.parseFloat(ruleParseResult[1]);
+                            boolean correctForDrop = Boolean.parseBoolean(ruleParseResult[2]);
+                            toolComponent.addRule(tempVal1, speed, correctForDrop);
+                            continue;
+                        }
+                        Tag<Material> tempVal2 = Bukkit.getTag(Tag.REGISTRY_BLOCKS, CommonUtil.parseNamespacedKey(singleMaterial), Material.class);
+                        if (tempVal2 != null) {
+                            float speed = Float.parseFloat(ruleParseResult[1]);
+                            boolean correctForDrop = Boolean.parseBoolean(ruleParseResult[2]);
+                            toolComponent.addRule(tempVal2, speed, correctForDrop);
+                            continue;
+                        }
                         Material material = Material.getMaterial(singleMaterial.toUpperCase());
                         if (material == null) {
                             break;
@@ -326,6 +339,13 @@ public class BuildItem {
                 String attribName = subSection.getString("name");
                 double attribAmount = subSection.getDouble("amount");
                 String attribOperation = subSection.getString("operation");
+
+                Collection<AttributeModifier> tempVal2 = meta.getAttributeModifiers(attributeInst);
+                if (tempVal2 != null) {
+                    for (AttributeModifier tempVal1 : tempVal2) {
+                        meta.removeAttributeModifier(attributeInst, tempVal1);
+                    }
+                }
 
                 if (CommonUtil.getMinorVersion(20, 5)) {
                     String attribSlot = subSection.getString("slot");
@@ -821,6 +841,62 @@ public class BuildItem {
                 int cooldownSeconds = useCooldown.getInt("cooldown-seconds", -1);
                 if (cooldownSeconds >= 0) {
                     useCooldownComponent.setCooldownSeconds((float) cooldownSeconds);
+                }
+            }
+
+            // Equippable
+            ConfigurationSection equippable = section.getConfigurationSection("equippable");
+            if (equippable != null) {
+                EquippableComponent equippableComponent = meta.getEquippable();
+                List<String> entities = equippable.getStringList("entities");
+                if (!entities.isEmpty()) {
+                    for (String entity : entities) {
+                        Tag<EntityType> entityTag = Bukkit.getTag(Tag.REGISTRY_ENTITY_TYPES, CommonUtil.parseNamespacedKey(entity), EntityType.class);
+                        if (entityTag != null) {
+                            equippableComponent.setAllowedEntities(entityTag);
+                        } else {
+                            EntityType entityType = Registry.ENTITY_TYPE.get(CommonUtil.parseNamespacedKey(entity));
+                            if (entityType != null) {
+                                equippableComponent.setAllowedEntities(entityType);
+                            }
+                        }
+                    }
+                }
+                if (equippable.contains("dispensable")) {
+                    equippableComponent.setDispensable(equippable.getBoolean("dispensable"));
+                }
+                if (equippable.contains("swappable")) {
+                    equippableComponent.setSwappable(equippable.getBoolean("swappable"));
+                }
+                if (equippable.contains("damage-on-hurt")) {
+                    equippableComponent.setDamageOnHurt(equippable.getBoolean("damage-on-hurt"));
+                }
+                String cameraOverlay = equippable.getString("camera-overlay");
+                if (cameraOverlay != null) {
+                    equippableComponent.setCameraOverlay(CommonUtil.parseNamespacedKey(cameraOverlay));
+                }
+                String sound = equippable.getString("sound");
+                if (sound != null) {
+                    Sound equipSound = Registry.SOUNDS.get(CommonUtil.parseNamespacedKey(sound));
+                    equippableComponent.setEquipSound(equipSound);
+                }
+                String model = equippable.getString("model");
+                if (model != null) {
+                    equippableComponent.setModel(CommonUtil.parseNamespacedKey(model));
+                }
+                String slot = equippable.getString("slot");
+                if (slot != null) {
+                    equippableComponent.setSlot(EquipmentSlot.valueOf(slot.toUpperCase()));
+                }
+                meta.setEquippable(equippableComponent);
+            }
+
+            // Damage Resistant
+            String damageResistant = section.getString("damage-resistant");
+            if (damageResistant != null) {
+                Tag<DamageType> damageTypeTag = Bukkit.getTag(DamageTypeTags.REGISTRY_DAMAGE_TYPES, CommonUtil.parseNamespacedKey(damageResistant), DamageType.class);
+                if (damageTypeTag != null) {
+                    meta.setDamageResistant(damageTypeTag);
                 }
             }
         }

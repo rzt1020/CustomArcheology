@@ -6,10 +6,7 @@ import cn.myrealm.customarcheology.utils.CommonUtil;
 import com.google.common.collect.Multimap;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.BlockState;
@@ -18,14 +15,13 @@ import org.bukkit.block.CreatureSpawner;
 import org.bukkit.block.ShulkerBox;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.damage.DamageType;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.*;
-import org.bukkit.inventory.meta.components.FoodComponent;
-import org.bukkit.inventory.meta.components.JukeboxPlayableComponent;
-import org.bukkit.inventory.meta.components.ToolComponent;
-import org.bukkit.inventory.meta.components.UseCooldownComponent;
+import org.bukkit.inventory.meta.components.*;
 import org.bukkit.inventory.meta.trim.ArmorTrim;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
@@ -180,7 +176,7 @@ public class DebuildItem {
         // Glow
         if (CommonUtil.getMinorVersion(20, 5)) {
             if (meta.hasEnchantmentGlintOverride()) {
-                section.set("hide-tool-tip", "true");
+                section.set("glow", "true");
             }
         }
 
@@ -359,7 +355,9 @@ public class DebuildItem {
                         GameProfile gameProfile = (GameProfile) field.get(skullMeta);
                         if (gameProfile != null) {
                             Property property = gameProfile.getProperties().get("textures").iterator().next();
-                            section.set("skull", property.getValue());
+                            Field field3 = property.getClass().getDeclaredField("value");
+                            field3.setAccessible(true);
+                            section.set("skull", field3.get(property));
                         }
                     }
                 } catch (Exception exception) {
@@ -479,7 +477,6 @@ public class DebuildItem {
                     }
                 }
             } else if (CommonUtil.getMajorVersion(20) && state instanceof BrushableBlock brushableBlock) {
-
                 if (brushableBlock.getItem() != null && !brushableBlock.getItem().getType().isAir()) {
                     debuildItem(brushableBlock.getItem(), section.createSection("content"));
                 }
@@ -525,12 +522,12 @@ public class DebuildItem {
 
             // Item Model
             if (meta.hasItemModel()) {
-                section.set("item-model", meta.getItemModel());
+                section.set("item-model", meta.getItemModel().asString());
             }
 
             // Tooltip Style
             if (meta.hasTooltipStyle()) {
-                section.set("tooltip-style", meta.getTooltipStyle());
+                section.set("tooltip-style", meta.getTooltipStyle().asString());
             }
 
             // Item Cooldown
@@ -538,6 +535,45 @@ public class DebuildItem {
                 UseCooldownComponent useCooldownComponent = meta.getUseCooldown();
                 section.set("use-cooldown.cooldown-group", useCooldownComponent.getCooldownGroup());
                 section.set("use-cooldown.cooldown-seconds", useCooldownComponent.getCooldownSeconds());
+            }
+
+            // Equippable
+            if (meta.hasEquippable()) {
+                EquippableComponent equippableComponent = meta.getEquippable();
+                Collection<EntityType> entities = equippableComponent.getAllowedEntities();
+                if (entities != null && !entities.isEmpty()) {
+                    section.set("equippable.entities", entities);
+                }
+                if (!equippableComponent.isDamageOnHurt()) {
+                    section.set("equippable.damage-on-hurt", equippableComponent.isDamageOnHurt());
+                }
+                if (!equippableComponent.isDispensable()) {
+                    section.set("equippable.dispensable", equippableComponent.isDispensable());
+                }
+                if (!equippableComponent.isSwappable()) {
+                    section.set("equippable.swappable", equippableComponent.isSwappable());
+                }
+                NamespacedKey cameraOverlay = equippableComponent.getCameraOverlay();
+                if (cameraOverlay != null) {
+                    section.set("equippable.camera-overlay", cameraOverlay.asString());
+                }
+                NamespacedKey model = equippableComponent.getModel();
+                if (model != null) {
+                    section.set("equippable.model", model.asString());
+                }
+                section.set("equippable.equipment-slot", equippableComponent.getSlot().name());
+                Sound equipSound = equippableComponent.getEquipSound();
+                if (!equipSound.getKey().asString().equals("minecraft:item.armor.equip_generic")) {
+                    section.set("equippable.sound", equipSound.getKey().asString());
+                }
+            }
+
+            // Damage
+            if (meta.hasDamageResistant()) {
+                Tag<DamageType> damageTypeTag = meta.getDamageResistant();
+                if (damageTypeTag != null) {
+                    section.set("damage-resistant", damageTypeTag.getKey().asString());
+                }
             }
         }
 
