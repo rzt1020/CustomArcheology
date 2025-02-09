@@ -4,6 +4,16 @@ version: '${project.version}'
 depend:
   - packetevents
 softdepend:
+  - WorldGuard
+  - Towny
+  - Dominion
+  - Lands
+  - PlotSquared
+  - BentoBox
+  - Residence
+  - GriefPrevention
+  - HuskTowns
+  - HuskClaims
   - ItemsAdder
   - Oraxen
   - MythicMobs
@@ -15,6 +25,7 @@ softdepend:
   - EcoItems
   - EcoArmor
   - ExecutableItems
+  - NBTAPI
 
 main: cn.myrealm.customarcheology.CustomArcheology
 api-version: '1.20'
@@ -57,3 +68,5 @@ permissions:
     default: true
   customarcheology.play.highlight:
     default: op
+  customarcheology.bypass.protection:
+    default: false

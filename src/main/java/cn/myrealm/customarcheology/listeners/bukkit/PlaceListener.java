@@ -6,6 +6,7 @@ import cn.myrealm.customarcheology.enums.Config;
 import cn.myrealm.customarcheology.enums.NamespacedKeys;
 import cn.myrealm.customarcheology.listeners.BaseListener;
 import cn.myrealm.customarcheology.managers.managers.BlockManager;
+import cn.myrealm.customarcheology.managers.managers.HookManager;
 import cn.myrealm.customarcheology.mechanics.cores.ArcheologyBlock;
 import cn.myrealm.customarcheology.utils.PacketUtil;
 import org.bukkit.Bukkit;
@@ -59,6 +60,9 @@ public class PlaceListener extends BaseListener {
             return;
         }
         Location location = Objects.requireNonNull(event.getClickedBlock()).getRelative(event.getBlockFace()).getLocation();
+        if (!HookManager.getHookManager().getProtectionCanPlace(event.getPlayer(), location)) {
+            return;
+        }
         Bukkit.getScheduler().runTaskLater(CustomArcheology.plugin, () -> {
             Location playerLocation = event.getPlayer().getLocation().getBlock().getLocation();
             if (!location.getBlock().getType().isAir() || playerLocation.equals(location) || playerLocation.add(0, 1, 0).equals(location)) {

@@ -17,6 +17,11 @@
       <option name="url" value="https://oss.sonatype.org/content/groups/public/" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="codemc-repo" />
+      <option name="name" value="codemc-repo" />
+      <option name="url" value="https://repo.codemc.io/repository/maven-public/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="nexus" />
       <option name="name" value="nexus" />
       <option name="url" value="https://mvn.lumine.io/repository/maven-public/" />
@@ -72,6 +77,11 @@
       <option name="url" value="https://repo.auxilor.io/repository/maven-public/" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="glaremasters repo" />
+      <option name="name" value="glaremasters repo" />
+      <option name="url" value="https://repo.glaremasters.me/repository/towny/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="spigotmc-repo" />
       <option name="name" value="spigotmc-repo" />
       <option name="url" value="https://hub.spigotmc.org/nexus/content/repositories/snapshots/" />
@@ -90,6 +100,11 @@
       <option name="id" value="minecraft-repo" />
       <option name="name" value="minecraft-repo" />
       <option name="url" value="https://libraries.minecraft.net/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="william278.net" />
+      <option name="name" value="william278.net" />
+      <option name="url" value="https://repo.william278.net/releases" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="nexus" />

@@ -6,6 +6,7 @@ import cn.myrealm.customarcheology.managers.managers.HookManager;
 import cn.myrealm.customarcheology.managers.managers.ToolManager;
 import cn.myrealm.customarcheology.managers.managers.system.LanguageManager;
 import cn.myrealm.customarcheology.utils.CommonUtil;
+import cn.myrealm.customarcheology.utils.NBTUtil;
 import com.google.common.base.Enums;
 import com.google.common.collect.MultimapBuilder;
 import com.mojang.authlib.GameProfile;
@@ -900,6 +901,20 @@ public class BuildItem {
                 }
             }
         }
+
+        // NBT API
+        ConfigurationSection nbtSection = section.getConfigurationSection("nbt");
+        if (nbtSection != null && CommonUtil.checkPluginLoad("NBTAPI")) {
+            for (String nbtType : nbtSection.getKeys(false)) {
+                ConfigurationSection nbtTypeSection = nbtSection.getConfigurationSection(nbtType);
+                if (nbtTypeSection != null) {
+                    for (String nbtName : nbtTypeSection.getKeys(false)) {
+                        item = NBTUtil.addNBT(item, nbtType, nbtName, nbtTypeSection.get(nbtName));
+                    }
+                }
+            }
+        }
+
 
         item.setItemMeta(meta);
 

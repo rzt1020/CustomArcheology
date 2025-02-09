@@ -3,6 +3,7 @@ package cn.myrealm.customarcheology.utils.Item;
 import cn.myrealm.customarcheology.CustomArcheology;
 import cn.myrealm.customarcheology.managers.managers.HookManager;
 import cn.myrealm.customarcheology.utils.CommonUtil;
+import cn.myrealm.customarcheology.utils.NBTUtil;
 import com.google.common.collect.Multimap;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
@@ -573,6 +574,18 @@ public class DebuildItem {
                 Tag<DamageType> damageTypeTag = meta.getDamageResistant();
                 if (damageTypeTag != null) {
                     section.set("damage-resistant", damageTypeTag.getKey().asString());
+                }
+            }
+        }
+
+        // NBT API
+        if (CommonUtil.checkPluginLoad("NBTAPI")) {
+            Map<String, Object> result = NBTUtil.getAllNBT(itemStack);
+            for (String nbtName : result.keySet()) {
+                Object object = result.get(nbtName);
+                String nbtType = NBTUtil.getObjectType(object);
+                if (nbtType != null) {
+                    section.set("nbt." + nbtType + "." + nbtName, object);
                 }
             }
         }

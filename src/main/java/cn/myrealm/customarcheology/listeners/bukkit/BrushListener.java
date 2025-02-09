@@ -6,6 +6,7 @@ import cn.myrealm.customarcheology.enums.Messages;
 import cn.myrealm.customarcheology.enums.Permissions;
 import cn.myrealm.customarcheology.listeners.BaseListener;
 import cn.myrealm.customarcheology.managers.managers.ChunkManager;
+import cn.myrealm.customarcheology.managers.managers.HookManager;
 import cn.myrealm.customarcheology.managers.managers.PlayerManager;
 import cn.myrealm.customarcheology.mechanics.cores.FakeTileBlock;
 import org.bukkit.Bukkit;
@@ -42,6 +43,9 @@ public class BrushListener extends BaseListener {
         if (chunkManager.isArcheologyBlock(Objects.requireNonNull(event.getClickedBlock()).getLocation())) {
             if (!Permissions.PLAY_ARCHEOLOGY.hasPermission(event.getPlayer())) {
                 event.getPlayer().sendMessage(Messages.GAME_BRUSH_NO_PERMISSION.getMessageWithPrefix());
+                return;
+            }
+            if (!HookManager.getHookManager().getProtectionCanBreak(event.getPlayer(), event.getClickedBlock().getLocation())) {
                 return;
             }
             FakeTileBlock fakeTileBlock = chunkManager.getFakeTileBlock(event.getClickedBlock().getLocation());

@@ -1,6 +1,5 @@
 package cn.myrealm.customarcheology.listeners.protocol;
 
-
 import cn.myrealm.customarcheology.enums.Config;
 import cn.myrealm.customarcheology.listeners.BaseListener;
 import cn.myrealm.customarcheology.managers.managers.PlayerManager;
