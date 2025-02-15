@@ -5,7 +5,9 @@ import cn.myrealm.customarcheology.enums.Config;
 import cn.myrealm.customarcheology.enums.Messages;
 import cn.myrealm.customarcheology.enums.SQLs;
 import cn.myrealm.customarcheology.managers.BaseManager;
+import cn.myrealm.customarcheology.utils.CommonUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -197,7 +199,7 @@ public class TextureManager extends BaseManager {
                 override.delete(override.length() - 1, override.length());
             }
             try {
-                Files.write(new File(Path.PACK_MAIN_MODEL_PATH.toString(), "blue_dye.json").toPath(), Template.MAIN_MODEL_TEMPLATE.toString().replace("%overrides%", override.toString()).getBytes());
+                Files.write(new File(Path.PACK_MAIN_MODEL_PATH.toString(), Config.BLOCK_MATERIAL.asString().toLowerCase(Locale.ROOT) + ".json").toPath(), Template.MAIN_MODEL_TEMPLATE.toString().replace("%overrides%", override.toString()).getBytes());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -257,9 +259,16 @@ public class TextureManager extends BaseManager {
                 while (!overrides.containsKey(i)) {
                     i++;
                 }
-                override.append(", ").append(overrides.get(i));
+                if (!CommonUtil.getMinorVersion(21, 4)) {
+                    override.append(",").append(overrides.get(i));
+                } else {
+                    override.append(overrides.get(i)).append(",");
+                }
                 overrides.remove(i);
                 i++;
+            }
+            if (override.length() > 0 && CommonUtil.getMinorVersion(21, 4)) {
+                override.delete(override.length() - 1, override.length());
             }
             try {
                 Files.write(new File(Path.PACK_MAIN_MODEL_PATH.toString(), "brush.json").toPath(), Template.MAIN_BRUSH_MODEL_TEMPLATE.toString().replace("%overrides%", override.toString()).getBytes());
@@ -338,12 +347,20 @@ public class TextureManager extends BaseManager {
         }
     }
 
+    public static String getModelPath() {
+        Material material = Config.BLOCK_MATERIAL.asMaterial();
+        if (material.isBlock()) {
+            return "minecraft:block/" + Config.BLOCK_MATERIAL.asString().toLowerCase(Locale.ROOT);
+        }
+        return "minecraft:item/" + Config.BLOCK_MATERIAL.asString().toLowerCase(Locale.ROOT);
+    }
+
 }
 
 enum Path {
     // packs
     PACK_PATH(CustomArcheology.plugin.getDataFolder().getPath() + "/pack/"),
-    PACK_MAIN_MODEL_PATH(PACK_PATH + "assets/minecraft/models/item/"),
+    PACK_MAIN_MODEL_PATH(PACK_PATH + "assets/minecraft/models/item/", PACK_PATH + "assets/minecraft/items/"),
     PACK_BLOCK_MODEL_PATH(PACK_PATH + "assets/customarcheology/models/block/"),
     PACK_BLOCK_TEXTURE_PATH(PACK_PATH + "assets/customarcheology/textures/block/"),
     PACK_TOOL_MODEL_PATH(PACK_PATH + "assets/customarcheology/models/item/"),
@@ -353,21 +370,30 @@ enum Path {
     TOOL_TEXTURE_PATH(CustomArcheology.plugin.getDataFolder().getPath() + "/textures/tools/");
 
     private final String path;
-    Path(String path) {
-        this.path = path;
+
+    private final String newerVersionPath;
+
+    Path(String... path) {
+        this.path = path[0];
+        this.newerVersionPath = path[path.length - 1];
     }
 
     @Override
     public String toString() {
+        if (CommonUtil.getMinorVersion(21, 4)) {
+            return newerVersionPath;
+        }
         return path;
     }
 }
 
-enum Template{
+enum Template {
     // block templates
     BLOCK_MODEL_TEMPLATE("{\"parent\":\"block/cube_all\",\"textures\":{\"down\":\"customarcheology:block/%blockId%\",\"east\":\"customarcheology:block/%blockId%\",\"north\":\"customarcheology:block/%blockId%\",\"south\":\"customarcheology:block/%blockId%\",\"up\":\"customarcheology:block/%blockId%\",\"west\":\"customarcheology:block/%blockId%\",\"particle\":\"customarcheology:block/%blockId%\"}}"),
-    MAIN_MODEL_TEMPLATE("{\"parent\":\"minecraft:item/generated\",\"textures\":{\"layer0\":\"minecraft:item/blue_dye\"},\"overrides\":[%overrides%]}"),
-    OVERRIDE_TEMPLATE("{\"predicate\":{\"custom_model_data\":%custommodeldata%},\"model\":\"customarcheology:block/%blockId%\"}"),
+    MAIN_MODEL_TEMPLATE("{\"parent\":\"minecraft:item/generated\",\"textures\":{\"layer0\":\"" + TextureManager.getModelPath() + "\"},\"overrides\":[%overrides%]}",
+            "{\"model\":{\"type\": \"range_dispatch\",\"property\":\"custom_model_data\",\"fallback\":{\"type\":\"model\",\"model\":\"" + TextureManager.getModelPath() + "\"},\"entries\":[%overrides%]}}"),
+    OVERRIDE_TEMPLATE("{\"predicate\":{\"custom_model_data\":%custommodeldata%},\"model\":\"customarcheology:block/%blockId%\"}",
+            "{\"threshold\":%custommodeldata%,\"model\":{\"type\":\"model\",\"model\":\"customarcheology:block/%blockId%\"}}"),
     // brush templates
     BRUSH_MODEL_TEMPLATE("{\"parent\":\"item/handheld\",\"textures\":{\"layer0\":\"customarcheology:item/%toolId%\"}}"),
     BRUSHING_0_MODEL_TEMPLATE("{ \"parent\": \"item/generated\", \"textures\": { \"layer0\": \"customarcheology:item/%toolId%\" }, \"display\": { \"thirdperson_righthand\": { \"rotation\": [0, 0, 45], \"translation\": [0, 4.75, 0], \"scale\": [0.85, 0.85, 0.85] }, \"thirdperson_lefthand\": { \"rotation\": [0, 0, -45], \"translation\": [0, 4.75, 0], \"scale\": [0.85, 0.85, 0.85] }, \"firstperson_lefthand\": { \"rotation\": [90, -90, 25], \"translation\": [8, 0.5, -5.5] } } }"),
@@ -381,17 +407,25 @@ enum Template{
     BRUSHING_8_MODEL_TEMPLATE("{ \"parent\": \"item/generated\", \"textures\": { \"layer0\": \"customarcheology:item/%toolId%\" }, \"display\": { \"thirdperson_righthand\": { \"rotation\": [0, 0, 57.1353], \"translation\": [-1.5347, 4.647, 0], \"scale\": [0.85, 0.85, 0.85] }, \"thirdperson_lefthand\": { \"rotation\": [0, 0, -32.8647], \"translation\": [-1.5347, 4.647, 0], \"scale\": [0.85, 0.85, 0.85] }, \"firstperson_lefthand\": { \"rotation\": [90, -90, 25], \"translation\": [8, 0.5, -5.5] } } }"),
     BRUSHING_9_MODEL_TEMPLATE("{ \"parent\": \"item/generated\", \"textures\": { \"layer0\": \"customarcheology:item/%toolId%\" }, \"display\": { \"thirdperson_righthand\": { \"rotation\": [0, 0, 59.2658], \"translation\": [-1.8188, 4.4803, 0], \"scale\": [0.85, 0.85, 0.85] }, \"thirdperson_lefthand\": { \"rotation\": [0, 0, -30.7342], \"translation\": [-1.8188, 4.4803, 0], \"scale\": [0.85, 0.85, 0.85] }, \"firstperson_lefthand\": { \"rotation\": [90, -90, 25], \"translation\": [8, 0.5, -5.5] } } }"),
     BRUSHING_10_MODEL_TEMPLATE("{ \"parent\": \"item/generated\", \"textures\": { \"layer0\": \"customarcheology:item/%toolId%\" }, \"display\": { \"thirdperson_righthand\": { \"rotation\": [0, 0, 60], \"translation\": [-1.9167, 4.4167, 0], \"scale\": [0.85, 0.85, 0.85] }, \"thirdperson_lefthand\": { \"rotation\": [0, 0, -30], \"translation\": [-1.9167, 4.4167, 0], \"scale\": [0.85, 0.85, 0.85] }, \"firstperson_lefthand\": { \"rotation\": [90, -90, 25], \"translation\": [8, 0.5, -5.5] } } }"),
-    MAIN_BRUSH_MODEL_TEMPLATE("{ \"parent\": \"item/generated\", \"textures\": { \"layer0\": \"item/brush\" }, \"overrides\": [ {\"predicate\": {\"brushing\": 0.0}, \"model\": \"item/brush_brushing_0\"}, {\"predicate\": {\"brushing\": 0.05}, \"model\": \"item/brush_brushing_6\"}, {\"predicate\": {\"brushing\": 0.1}, \"model\": \"item/brush_brushing_7\"}, {\"predicate\": {\"brushing\": 0.15}, \"model\": \"item/brush_brushing_8\"}, {\"predicate\": {\"brushing\": 0.2}, \"model\": \"item/brush_brushing_9\"}, {\"predicate\": {\"brushing\": 0.25}, \"model\": \"item/brush_brushing_10\"}, {\"predicate\": {\"brushing\": 0.3}, \"model\": \"item/brush_brushing_9\"}, {\"predicate\": {\"brushing\": 0.35}, \"model\": \"item/brush_brushing_8\"}, {\"predicate\": {\"brushing\": 0.4}, \"model\": \"item/brush_brushing_7\"}, {\"predicate\": {\"brushing\": 0.45}, \"model\": \"item/brush_brushing_6\"}, {\"predicate\": {\"brushing\": 0.5}, \"model\": \"item/brush_brushing_0\"}, {\"predicate\": {\"brushing\": 0.55}, \"model\": \"item/brush_brushing_1\"}, {\"predicate\": {\"brushing\": 0.6}, \"model\": \"item/brush_brushing_2\"}, {\"predicate\": {\"brushing\": 0.65}, \"model\": \"item/brush_brushing_3\"}, {\"predicate\": {\"brushing\": 0.7}, \"model\": \"item/brush_brushing_4\"}, {\"predicate\": {\"brushing\": 0.75}, \"model\": \"item/brush_brushing_5\"}, {\"predicate\": {\"brushing\": 0.8}, \"model\": \"item/brush_brushing_4\"}, {\"predicate\": {\"brushing\": 0.85}, \"model\": \"item/brush_brushing_3\"}, {\"predicate\": {\"brushing\": 0.9}, \"model\": \"item/brush_brushing_2\"}, {\"predicate\": {\"brushing\": 0.95}, \"model\": \"item/brush_brushing_1\"}, {\"predicate\": {\"brushing\": 1.0}, \"model\": \"item/brush_brushing_0\"}%overrides%], \"display\": { \"thirdperson_righthand\": { \"rotation\": [0, 0, 45], \"translation\": [0, 5.25, 0], \"scale\": [0.85, 0.85, 0.85] }, \"thirdperson_lefthand\": { \"rotation\": [0, 0, -45], \"translation\": [0, 5.25, 0], \"scale\": [0.85, 0.85, 0.85] }, \"firstperson_righthand\": { \"rotation\": [0, -90, 25], \"translation\": [1.13, 3.2, 1.13], \"scale\": [0.68, 0.68, 0.68] }, \"firstperson_lefthand\": { \"rotation\": [90, -90, 25], \"translation\": [8, 0.5, -5.5] }, \"ground\": { \"translation\": [0, 2, 0], \"scale\": [0.5, 0.5, 0.5] } } }"),
-    OVERRIDE_BRUSH_TEMPLATE("{\"predicate\": {\"brushing\": 0.0, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_0\"}, {\"predicate\": {\"brushing\": 0.05, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_6\"}, {\"predicate\": {\"brushing\": 0.1, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_7\"}, {\"predicate\": {\"brushing\": 0.15, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_8\"}, {\"predicate\": {\"brushing\": 0.2, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_9\"}, {\"predicate\": {\"brushing\": 0.25, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_10\"}, {\"predicate\": {\"brushing\": 0.3, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_9\"}, {\"predicate\": {\"brushing\": 0.35, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_8\"}, {\"predicate\": {\"brushing\": 0.4, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_7\"}, {\"predicate\": {\"brushing\": 0.45, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_6\"}, {\"predicate\": {\"brushing\": 0.5, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_0\"}, {\"predicate\": {\"brushing\": 0.55, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_1\"}, {\"predicate\": {\"brushing\": 0.6, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_2\"}, {\"predicate\": {\"brushing\": 0.65, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_3\"}, {\"predicate\": {\"brushing\": 0.7, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_4\"}, {\"predicate\": {\"brushing\": 0.75, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_5\"}, {\"predicate\": {\"brushing\": 0.8, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_4\"}, {\"predicate\": {\"brushing\": 0.85, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_3\"}, {\"predicate\": {\"brushing\": 0.9, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_2\"}, {\"predicate\": {\"brushing\": 0.95, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_1\"}, {\"predicate\": {\"brushing\": 1.0, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_0\"}");
-
+    MAIN_BRUSH_MODEL_TEMPLATE("{ \"parent\": \"item/generated\", \"textures\": { \"layer0\": \"item/brush\" }, \"overrides\": [ {\"predicate\": {\"brushing\": 0.0}, \"model\": \"item/brush_brushing_0\"}, {\"predicate\": {\"brushing\": 0.05}, \"model\": \"item/brush_brushing_6\"}, {\"predicate\": {\"brushing\": 0.1}, \"model\": \"item/brush_brushing_7\"}, {\"predicate\": {\"brushing\": 0.15}, \"model\": \"item/brush_brushing_8\"}, {\"predicate\": {\"brushing\": 0.2}, \"model\": \"item/brush_brushing_9\"}, {\"predicate\": {\"brushing\": 0.25}, \"model\": \"item/brush_brushing_10\"}, {\"predicate\": {\"brushing\": 0.3}, \"model\": \"item/brush_brushing_9\"}, {\"predicate\": {\"brushing\": 0.35}, \"model\": \"item/brush_brushing_8\"}, {\"predicate\": {\"brushing\": 0.4}, \"model\": \"item/brush_brushing_7\"}, {\"predicate\": {\"brushing\": 0.45}, \"model\": \"item/brush_brushing_6\"}, {\"predicate\": {\"brushing\": 0.5}, \"model\": \"item/brush_brushing_0\"}, {\"predicate\": {\"brushing\": 0.55}, \"model\": \"item/brush_brushing_1\"}, {\"predicate\": {\"brushing\": 0.6}, \"model\": \"item/brush_brushing_2\"}, {\"predicate\": {\"brushing\": 0.65}, \"model\": \"item/brush_brushing_3\"}, {\"predicate\": {\"brushing\": 0.7}, \"model\": \"item/brush_brushing_4\"}, {\"predicate\": {\"brushing\": 0.75}, \"model\": \"item/brush_brushing_5\"}, {\"predicate\": {\"brushing\": 0.8}, \"model\": \"item/brush_brushing_4\"}, {\"predicate\": {\"brushing\": 0.85}, \"model\": \"item/brush_brushing_3\"}, {\"predicate\": {\"brushing\": 0.9}, \"model\": \"item/brush_brushing_2\"}, {\"predicate\": {\"brushing\": 0.95}, \"model\": \"item/brush_brushing_1\"}, {\"predicate\": {\"brushing\": 1.0}, \"model\": \"item/brush_brushing_0\"}%overrides%], \"display\": { \"thirdperson_righthand\": { \"rotation\": [0, 0, 45], \"translation\": [0, 5.25, 0], \"scale\": [0.85, 0.85, 0.85] }, \"thirdperson_lefthand\": { \"rotation\": [0, 0, -45], \"translation\": [0, 5.25, 0], \"scale\": [0.85, 0.85, 0.85] }, \"firstperson_righthand\": { \"rotation\": [0, -90, 25], \"translation\": [1.13, 3.2, 1.13], \"scale\": [0.68, 0.68, 0.68] }, \"firstperson_lefthand\": { \"rotation\": [90, -90, 25], \"translation\": [8, 0.5, -5.5] }, \"ground\": { \"translation\": [0, 2, 0], \"scale\": [0.5, 0.5, 0.5] } } }",
+            "{\"model\":{\"type\":\"range_dispatch\",\"property\":\"custom_model_data\",\"fallback\":{\"type\":\"range_dispatch\",\"property\":\"use_cycle\",\"entries\":[{\"model\":{\"type\":\"model\",\"model\":\"item/brush_brushing_0\"},\"threshold\":0.0},{\"model\":{\"type\":\"model\",\"model\":\"item/brush_brushing_6\"},\"threshold\":0.05},{\"model\":{\"type\":\"model\",\"model\":\"item/brush_brushing_7\"},\"threshold\":0.1},{\"model\":{\"type\":\"model\",\"model\":\"item/brush_brushing_8\"},\"threshold\":0.15},{\"model\":{\"type\":\"model\",\"model\":\"item/brush_brushing_9\"},\"threshold\":0.2},{\"model\":{\"type\":\"model\",\"model\":\"item/brush_brushing_10\"},\"threshold\":0.25},{\"model\":{\"type\":\"model\",\"model\":\"item/brush_brushing_9\"},\"threshold\":0.3},{\"model\":{\"type\":\"model\",\"model\":\"item/brush_brushing_8\"},\"threshold\":0.35},{\"model\":{\"type\":\"model\",\"model\":\"item/brush_brushing_7\"},\"threshold\":0.4},{\"model\":{\"type\":\"model\",\"model\":\"item/brush_brushing_6\"},\"threshold\":0.45},{\"model\":{\"type\":\"model\",\"model\":\"item/brush_brushing_0\"},\"threshold\":0.5},{\"model\":{\"type\":\"model\",\"model\":\"item/brush_brushing_1\"},\"threshold\":0.55},{\"model\":{\"type\":\"model\",\"model\":\"item/brush_brushing_2\"},\"threshold\":0.6},{\"model\":{\"type\":\"model\",\"model\":\"item/brush_brushing_3\"},\"threshold\":0.65},{\"model\":{\"type\":\"model\",\"model\":\"item/brush_brushing_4\"},\"threshold\":0.7},{\"model\":{\"type\":\"model\",\"model\":\"item/brush_brushing_5\"},\"threshold\":0.75},{\"model\":{\"type\":\"model\",\"model\":\"item/brush_brushing_4\"},\"threshold\":0.8},{\"model\":{\"type\":\"model\",\"model\":\"item/brush_brushing_3\"},\"threshold\":0.85},{\"model\":{\"type\":\"model\",\"model\":\"item/brush_brushing_2\"},\"threshold\":0.9},{\"model\":{\"type\":\"model\",\"model\":\"item/brush_brushing_1\"},\"threshold\":0.95},{\"model\":{\"type\":\"model\",\"model\":\"item/brush_brushing_0\"},\"threshold\":1.0}],\"scale\":0.1,\"fallback\":{\"model\":\"item/brush\",\"type\":\"model\"},\"period\":10},\"entries\":[%overrides%]}}"),
+    OVERRIDE_BRUSH_TEMPLATE("{\"predicate\": {\"brushing\": 0.0, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_0\"}, {\"predicate\": {\"brushing\": 0.05, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_6\"}, {\"predicate\": {\"brushing\": 0.1, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_7\"}, {\"predicate\": {\"brushing\": 0.15, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_8\"}, {\"predicate\": {\"brushing\": 0.2, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_9\"}, {\"predicate\": {\"brushing\": 0.25, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_10\"}, {\"predicate\": {\"brushing\": 0.3, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_9\"}, {\"predicate\": {\"brushing\": 0.35, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_8\"}, {\"predicate\": {\"brushing\": 0.4, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_7\"}, {\"predicate\": {\"brushing\": 0.45, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_6\"}, {\"predicate\": {\"brushing\": 0.5, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_0\"}, {\"predicate\": {\"brushing\": 0.55, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_1\"}, {\"predicate\": {\"brushing\": 0.6, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_2\"}, {\"predicate\": {\"brushing\": 0.65, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_3\"}, {\"predicate\": {\"brushing\": 0.7, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_4\"}, {\"predicate\": {\"brushing\": 0.75, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_5\"}, {\"predicate\": {\"brushing\": 0.8, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_4\"}, {\"predicate\": {\"brushing\": 0.85, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_3\"}, {\"predicate\": {\"brushing\": 0.9, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_2\"}, {\"predicate\": {\"brushing\": 0.95, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_1\"}, {\"predicate\": {\"brushing\": 1.0, \"custom_model_data\":%custommodeldata%}, \"model\": \"customarcheology:item/%toolId%_0\"}",
+            "{\"threshold\":%custommodeldata%,\"model\":{\"entries\":[{\"threshold\":0.0,\"model\":{\"type\":\"model\",\"model\":\"customarcheology:item/%toolId%_0\"}},{\"threshold\":0.05,\"model\":{\"type\":\"model\",\"model\":\"customarcheology:item/%toolId%_6\"}},{\"threshold\":0.1,\"model\":{\"type\":\"model\",\"model\":\"customarcheology:item/%toolId%_7\"}},{\"threshold\":0.15,\"model\":{\"type\":\"model\",\"model\":\"customarcheology:item/%toolId%_8\"}},{\"threshold\":0.2,\"model\":{\"type\":\"model\",\"model\":\"customarcheology:item/%toolId%_9\"}},{\"threshold\":0.25,\"model\":{\"type\":\"model\",\"model\":\"customarcheology:item/%toolId%_10\"}},{\"threshold\":0.3,\"model\":{\"type\":\"model\",\"model\":\"customarcheology:item/%toolId%_9\"}},{\"threshold\":0.35,\"model\":{\"type\":\"model\",\"model\":\"customarcheology:item/%toolId%_8\"}},{\"threshold\":0.4,\"model\":{\"type\":\"model\",\"model\":\"customarcheology:item/%toolId%_7\"}},{\"threshold\":0.45,\"model\":{\"type\":\"model\",\"model\":\"customarcheology:item/%toolId%_6\"}},{\"threshold\":0.5,\"model\":{\"type\":\"model\",\"model\":\"customarcheology:item/%toolId%_0\"}},{\"threshold\":0.55,\"model\":{\"type\":\"model\",\"model\":\"customarcheology:item/%toolId%_1\"}},{\"threshold\":0.6,\"model\":{\"type\":\"model\",\"model\":\"customarcheology:item/%toolId%_2\"}},{\"threshold\":0.65,\"model\":{\"type\":\"model\",\"model\":\"customarcheology:item/%toolId%_3\"}},{\"threshold\":0.7,\"model\":{\"type\":\"model\",\"model\":\"customarcheology:item/%toolId%_4\"}},{\"threshold\":0.75,\"model\":{\"type\":\"model\",\"model\":\"customarcheology:item/%toolId%_5\"}},{\"threshold\":0.8,\"model\":{\"type\":\"model\",\"model\":\"customarcheology:item/%toolId%_4\"}},{\"threshold\":0.85,\"model\":{\"type\":\"model\",\"model\":\"customarcheology:item/%toolId%_3\"}},{\"threshold\":0.9,\"model\":{\"type\":\"model\",\"model\":\"customarcheology:item/%toolId%_2\"}},{\"threshold\":0.95,\"model\":{\"type\":\"model\",\"model\":\"customarcheology:item/%toolId%_1\"}},{\"threshold\":1.0,\"model\":{\"type\":\"model\",\"model\":\"customarcheology:item/%toolId%_0\"}}],\"scale\":0.1,\"fallback\":{\"model\":\"item/brush\",\"type\":\"model\"},\"property\":\"use_cycle\",\"type\":\"model\",\"period\":10,\"model\":\"customarcheology:item/%toolId%\"}}\n");
 
     private final String template;
-    Template(String template) {
-        this.template = template;
+
+    private final String newerVersionTemplate;
+
+    Template(String... template) {
+        this.template = template[0];
+        this.newerVersionTemplate = template[template.length - 1];
     }
 
     @Override
     public String toString() {
+        if (CommonUtil.getMinorVersion(21, 4)) {
+            return newerVersionTemplate;
+        }
         return template;
     }
 }

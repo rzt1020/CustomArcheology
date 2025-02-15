@@ -63,6 +63,7 @@ public class PlaceListener extends BaseListener {
         if (!HookManager.getHookManager().getProtectionCanPlace(event.getPlayer(), location)) {
             return;
         }
+        event.setCancelled(true);
         Bukkit.getScheduler().runTaskLater(CustomArcheology.plugin, () -> {
             Location playerLocation = event.getPlayer().getLocation().getBlock().getLocation();
             if (!location.getBlock().getType().isAir() || playerLocation.equals(location) || playerLocation.add(0, 1, 0).equals(location)) {

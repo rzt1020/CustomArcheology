@@ -18,6 +18,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.Collections;
 import java.util.Objects;
 
+import static org.bukkit.Material.BARRIER;
+
 /**
  * @author rzt1020
  */
@@ -56,7 +58,7 @@ public class BreakListener extends BaseListener {
         ChunkManager chunkManager = ChunkManager.getInstance();
         ArcheologyBlock block = chunkManager.getArcheologyBlock(loc);
         if (block != null) {
-            loc.getBlock().setType(Material.BARRIER);
+            loc.getBlock().setType(BARRIER);
         }
     }
 

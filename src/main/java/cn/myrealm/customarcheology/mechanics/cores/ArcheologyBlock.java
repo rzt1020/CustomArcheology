@@ -2,6 +2,7 @@ package cn.myrealm.customarcheology.mechanics.cores;
 
 
 import cn.myrealm.customarcheology.CustomArcheology;
+import cn.myrealm.customarcheology.enums.Config;
 import cn.myrealm.customarcheology.enums.Messages;
 import cn.myrealm.customarcheology.enums.NamespacedKeys;
 import cn.myrealm.customarcheology.managers.managers.LootManager;
@@ -51,7 +52,7 @@ public class ArcheologyBlock {
         if (!isValid()) {
             throw new IllegalStateException("This block is not valid");
         }
-        ItemStack itemStack = new ItemStack(Material.BLUE_DYE);
+        ItemStack itemStack = new ItemStack(Config.BLOCK_MATERIAL.asMaterial());
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta != null) {
             itemMeta.setCustomModelData(defaultState.getCustomModelData());

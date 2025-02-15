@@ -1,7 +1,10 @@
 package cn.myrealm.customarcheology.enums;
 
 import cn.myrealm.customarcheology.CustomArcheology;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+
+import java.util.Locale;
 
 /**
  * @author rzt1020
@@ -29,6 +32,7 @@ public enum Config {
     ITEM_SCALE("settings.item-scale", 0.5),
     BLOCK_SCALE("settings.block-scale", 0.25),
     BLOCK_SAVE("settings.block-save", "UUID"),
+    BLOCK_MATERIAL("settings.block-material", "STONE"),
     HOOK_BETTERSTRUCTURES("settings.hook.betterstructures", true),
     // auto copy resource pack
     AUTO_COPY_RESOURCEPACK_ENABLED("auto-copy-resourcepack.enabled", true),
@@ -65,5 +69,9 @@ public enum Config {
     public double asDouble() {
         FileConfiguration config = CustomArcheology.plugin.getConfig();
         return config.getDouble(key, (Double) def);
+    }
+
+    public Material asMaterial() {
+        return Material.getMaterial(asString().toUpperCase(Locale.ROOT));
     }
 }
